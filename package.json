@@ -1,0 +1,19 @@
+{
+  "name": "est-o-auth",
+  "version": "1.0.0",
+  "description": "Use Estonina eID auth with OAuth",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/argoroots/est-o-auth.git"
+  },
+  "author": "Argo Roots <argo@roots.ee>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/argoroots/est-o-auth/issues"
+  },
+  "homepage": "https://github.com/argoroots/est-o-auth#readme"
+}
