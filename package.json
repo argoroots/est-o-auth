@@ -4,19 +4,18 @@
   "description": "Use Estonina eID auth with OAuth",
   "private": true,
   "scripts": {
-    "start": "node ./src/app.js",
+    "dev": "nodemon node ./src/server.js",
+    "start": "node ./src/server.js",
     "lint": "eslint ./ --fix --ignore-path .gitignore --ext .js"
   },
   "author": "Argo Roots <argo@roots.ee>",
   "license": "MIT",
-  "dependencies": {
-    "express": "4.17.2"
-  },
   "devDependencies": {
     "eslint": "7.32.0",
     "eslint-config-standard": "16.0.3",
     "eslint-plugin-import": "2.25.4",
     "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-promise": "5.2.0"
+    "eslint-plugin-promise": "5.2.0",
+    "nodemon": "2.0.15"
   }
 }
