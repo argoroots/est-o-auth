@@ -2,18 +2,21 @@
   "name": "est-o-auth",
   "version": "1.0.0",
   "description": "Use Estonina eID auth with OAuth",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/argoroots/est-o-auth.git"
+    "start": "node ./src/app.js",
+    "lint": "eslint ./ --fix --ignore-path .gitignore --ext .js"
   },
   "author": "Argo Roots <argo@roots.ee>",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/argoroots/est-o-auth/issues"
+  "dependencies": {
+    "express": "4.17.2"
   },
-  "homepage": "https://github.com/argoroots/est-o-auth#readme"
+  "devDependencies": {
+    "eslint": "7.32.0",
+    "eslint-config-standard": "16.0.3",
+    "eslint-plugin-import": "2.25.4",
+    "eslint-plugin-node": "11.1.0",
+    "eslint-plugin-promise": "5.2.0"
+  }
 }
