@@ -1,2 +1,1 @@
-# est-o-auth
- Use Estonina eID auth with OAuth
+# Use Estonian ID-card, Mobile-ID and Smart-ID for OAuth authentication
