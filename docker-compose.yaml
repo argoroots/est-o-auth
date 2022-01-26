@@ -1,7 +1,6 @@
 services:
     auth:
-        build:
-            context: https://github.com/argoroots/est-o-auth.git#main
+        build: .
         restart: unless-stopped
         environment:
             NODE_ENV: production
@@ -45,4 +44,4 @@ services:
         volumes:
             - ./data/certbot/conf:/etc/letsencrypt
             - ./data/certbot/www:/var/www/certbot
-        command: certonly --dry-run --webroot --webroot-path=/var/www/certbot --agree-tos -d auth.test -d id.auth.test
+        command: certonly --webroot --webroot-path=/var/www/certbot --agree-tos -d auth.entu.app -d id.auth.entu.app
