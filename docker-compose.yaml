@@ -17,3 +17,6 @@ services:
             - '80:80'
         depends_on:
             - auth
+
+    redis:
+        image: redis:6.2-alpine
