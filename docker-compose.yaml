@@ -17,8 +17,8 @@ services:
         ports:
             - 80:80
         environment:
-            AUTH_DOMAIN: auth.test
-            IDCARD_DOMAIN: id.auth.test
+            AUTH_DOMAIN: ${AUTH_DOMAIN}
+            IDCARD_DOMAIN: ${IDCARD_DOMAIN}
         volumes:
             - ./nginx/letsencrypt.conf.template:/etc/nginx/templates/letsencrypt.conf.template:ro
             - ./data/certbot/www:/var/www/certbot:ro
@@ -29,8 +29,8 @@ services:
         ports:
             - 443:443
         environment:
-            AUTH_DOMAIN: auth.test
-            IDCARD_DOMAIN: id.auth.test
+            AUTH_DOMAIN: ${AUTH_DOMAIN}
+            IDCARD_DOMAIN: ${IDCARD_DOMAIN}
         volumes:
             - ./nginx/auth.conf.template:/etc/nginx/templates/auth.conf.template:ro
             - ./nginx/id-card.conf.template:/etc/nginx/templates/id-card.conf.template:ro
@@ -44,5 +44,5 @@ services:
         volumes:
             - ./data/certbot/conf:/etc/letsencrypt
             - ./data/certbot/www:/var/www/certbot
-        command: certonly --webroot --webroot-path=/var/www/certbot --agree-tos --no-eff-email --email test@auth.test -d auth.test -d id.auth.test
-        # command: renew --webroot --webroot-path=/var/www/certbot --agree-tos --no-eff-email --email test@auth.test
+        command: certonly --dry-run --webroot --webroot-path=/var/www/certbot --agree-tos --no-eff-email --email $EMAIL -d $AUTH_DOMAIN -d $IDCARD_DOMAIN
+        # command: renew --webroot --webroot-path=/var/www/certbot --agree-tos --no-eff-email --email $EMAIL
