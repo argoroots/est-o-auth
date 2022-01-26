@@ -1,19 +1,3 @@
 services:
-    nginx_certbot:
-        image: nginx:1.20-alpine
-        restart: unless-stopped
-        ports:
-            - 80:80
-        environment:
-            DOMAIN: ${DOMAIN}
-            IDCARD_DOMAIN: ${IDCARD_DOMAIN}
-        volumes:
-            - ./nginx/letsencrypt.conf.template:/etc/nginx/templates/letsencrypt.conf.template:ro
-            - ./data/certbot/www:/var/www/certbot:ro
-
     certbot:
-        image: certbot/certbot
-        volumes:
-            - ./data/certbot/conf:/etc/letsencrypt
-            - ./data/certbot/www:/var/www/certbot
         command: renew --webroot --webroot-path=/var/www/certbot --agree-tos --no-eff-email --email $EMAIL
