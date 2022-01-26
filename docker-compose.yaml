@@ -4,8 +4,11 @@ services:
         container_name: nginx
         restart: unless-stopped
         ports:
-            - '443:443'
-            - '80:80'
+            - 80:80
+        environment:
+            AUTH_DOMAIN: auth.test
+        volumes:
+            - ./nginx/auth.conf.template:/etc/nginx/templates/auth.conf.template:ro
         depends_on:
             - auth
 
@@ -15,7 +18,7 @@ services:
         restart: unless-stopped
         environment:
             NODE_ENV: production
-            PORT: 8080
+            PORT: 80
         depends_on:
             - redis
 
