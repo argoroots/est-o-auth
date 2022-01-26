@@ -10,8 +10,8 @@ server {
     listen      443 ssl http2;
     listen      [::]:443 ssl http2;
 
-    ssl_certificate           /etc/nginx/letsencrypt/live/${IDCARD_DOMAIN}/fullchain.pem;
-    ssl_certificate_key       /etc/nginx/letsencrypt/live/${IDCARD_DOMAIN}/privkey.pem;
+    ssl_certificate           /etc/letsencrypt/live/${AUTH_DOMAIN}/fullchain.pem;
+    ssl_certificate_key       /etc/letsencrypt/live/${AUTH_DOMAIN}/privkey.pem;
 
     ssl_session_cache         off;
 
