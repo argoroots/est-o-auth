@@ -5,7 +5,7 @@ services:
         ports:
             - 80:80
         environment:
-            AUTH_DOMAIN: ${AUTH_DOMAIN}
+            DOMAIN: ${DOMAIN}
             IDCARD_DOMAIN: ${IDCARD_DOMAIN}
         volumes:
             - ./nginx/letsencrypt.conf.template:/etc/nginx/templates/letsencrypt.conf.template:ro
@@ -16,4 +16,4 @@ services:
         volumes:
             - ./data/certbot/conf:/etc/letsencrypt
             - ./data/certbot/www:/var/www/certbot
-        command: certonly --dry-run --webroot --webroot-path=/var/www/certbot --agree-tos --no-eff-email --email $EMAIL -d $AUTH_DOMAIN -d $IDCARD_DOMAIN
+        command: certonly --dry-run --webroot --webroot-path=/var/www/certbot --agree-tos --no-eff-email --email $EMAIL -d $DOMAIN -d $IDCARD_DOMAIN

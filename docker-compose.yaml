@@ -17,7 +17,7 @@ services:
         ports:
             - 443:443
         environment:
-            AUTH_DOMAIN: ${AUTH_DOMAIN}
+            DOMAIN: ${DOMAIN}
             IDCARD_DOMAIN: ${IDCARD_DOMAIN}
         volumes:
             - ./nginx/auth.conf.template:/etc/nginx/templates/auth.conf.template:ro

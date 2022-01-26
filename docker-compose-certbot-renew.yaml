@@ -5,7 +5,7 @@ services:
         ports:
             - 80:80
         environment:
-            AUTH_DOMAIN: ${AUTH_DOMAIN}
+            DOMAIN: ${DOMAIN}
             IDCARD_DOMAIN: ${IDCARD_DOMAIN}
         volumes:
             - ./nginx/letsencrypt.conf.template:/etc/nginx/templates/letsencrypt.conf.template:ro
