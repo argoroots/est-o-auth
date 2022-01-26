@@ -1,5 +1,6 @@
 FROM node:16-alpine
 WORKDIR /usr/src/est-o-auth
-ADD ./ ./
+COPY ./package*.json ./
 RUN npm ci --silent --production
+COPY ./ ./
 CMD npm start
