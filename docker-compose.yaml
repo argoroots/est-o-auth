@@ -44,4 +44,5 @@ services:
         volumes:
             - ./data/certbot/conf:/etc/letsencrypt
             - ./data/certbot/www:/var/www/certbot
-        command: certonly --webroot --webroot-path=/var/www/certbot --agree-tos -d auth.entu.app -d id.auth.entu.app
+        command: certonly --webroot --webroot-path=/var/www/certbot --agree-tos --no-eff-email --email test@auth.test -d auth.entu.app -d id.auth.entu.app
+        # command: renew --webroot --webroot-path=/var/www/certbot --agree-tos --no-eff-email --email test@auth.test
