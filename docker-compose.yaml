@@ -15,18 +15,6 @@ services:
         image: nginx:1.20-alpine
         restart: unless-stopped
         ports:
-            - 80:80
-        environment:
-            AUTH_DOMAIN: ${AUTH_DOMAIN}
-            IDCARD_DOMAIN: ${IDCARD_DOMAIN}
-        volumes:
-            - ./nginx/letsencrypt.conf.template:/etc/nginx/templates/letsencrypt.conf.template:ro
-            - ./data/certbot/www:/var/www/certbot:ro
-
-    nginx_ssl:
-        image: nginx:1.20-alpine
-        restart: unless-stopped
-        ports:
             - 443:443
         environment:
             AUTH_DOMAIN: ${AUTH_DOMAIN}
@@ -37,12 +25,3 @@ services:
             - ./data/certbot/conf:/etc/letsencrypt:ro
         depends_on:
             - auth
-            - certbot
-
-    certbot:
-        image: certbot/certbot
-        volumes:
-            - ./data/certbot/conf:/etc/letsencrypt
-            - ./data/certbot/www:/var/www/certbot
-        command: certonly --dry-run --webroot --webroot-path=/var/www/certbot --agree-tos --no-eff-email --email $EMAIL -d $AUTH_DOMAIN -d $IDCARD_DOMAIN
-        # command: renew --webroot --webroot-path=/var/www/certbot --agree-tos --no-eff-email --email $EMAIL
