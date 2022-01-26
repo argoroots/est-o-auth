@@ -3,6 +3,11 @@
 Use Estonian ID-card, Mobile-ID and Smart-ID as OAuth authentication provider
 
 ## Setup
+1. Clone this repository and go to its folder:
+    ```shell
+    $ git clone https://github.com/argoroots/est-o-auth.git ./est-o-auth
+    $ cd est-o-auth
+    ```
 1. Rename _env.example_ to _.env_:
     ```shell
     $ cp env.example .env
