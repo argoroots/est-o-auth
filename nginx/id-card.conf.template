@@ -23,9 +23,23 @@ server {
 
     # ID-Card SSL config
     ssl_client_certificate    /etc/id-card/id-card.pem.crt;
-    # ssl_crl                   /etc/id-card/id-card.cancels.pem.crl;
     ssl_verify_client         on;
     ssl_verify_depth          2;
+    ssl_ocsp                  leaf;
+    ssl_ocsp_cache            off;
+    resolver                  194.126.115.18;
+
+    # Determine IMCA and cancel, if not trusted
+    set $ocspr "";
+    if ($ssl_client_i_dn = "CN=ESTEID-SK 2015,organizationIdentifier=NTREE-10747013,O=AS Sertifitseerimiskeskus,C=EE") {
+        set $ocspr "http://aia.sk.ee/esteid2015";
+    }
+    if ($ssl_client_i_dn = "CN=ESTEID2018,organizationIdentifier=NTREE-10747013,O=SK ID Solutions AS,C=EE") {
+        set $ocspr "http://aia.sk.ee/esteid2018";
+    }
+    if ($ocspr = "") {
+        return 403;
+    }
 
     location / {
         if ($is_ssl_verification_failed) {
