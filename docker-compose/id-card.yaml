@@ -1,4 +1,12 @@
 services:
+    dhparams:
+        image: alpine:3
+        volumes:
+            - ./id-card/dhparams.sh:/usr/src/dhparams.sh:ro
+            - ./data/id-card:/usr/src/id-card
+        working_dir: /usr/src/id-card
+        command: /usr/src/dhparams.sh
+
     certs:
         image: alpine:3
         volumes:
