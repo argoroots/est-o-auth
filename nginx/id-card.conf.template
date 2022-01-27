@@ -1,9 +1,3 @@
-map '$request_method:$ssl_client_verify' $is_ssl_verification_failed {
-    default 1;
-    'POST:SUCCESS' 0;
-    'GET:SUCCESS' 0;
-}
-
 server {
     server_name ${IDCARD_DOMAIN};
     listen      443 ssl http2;
@@ -42,10 +36,6 @@ server {
     }
 
     location / {
-        if ($is_ssl_verification_failed) {
-            return 403;
-        }
-
         expires          -1;
 
         proxy_pass       http://auth;
