@@ -1,0 +1,8 @@
+services:
+    certs:
+        image: alpine:3
+        volumes:
+            - ./id-card/certs.sh:/usr/src/certs.sh:ro
+            - ./data/id-card:/usr/src/id-card
+        working_dir: /usr/src/id-card
+        command: /usr/src/certs.sh

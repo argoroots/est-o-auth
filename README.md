@@ -17,6 +17,10 @@ Use Estonian ID-card, Mobile-ID and Smart-ID as OAuth authentication provider
     ```shell
     $ docker-compose --project-directory ./ -f ./docker-compose/certbot.yaml up --abort-on-container-exit
     ```
+1. Get ID-Card certs:
+    ```shell
+    $ docker-compose --project-directory ./ -f ./docker-compose/id-card.yaml up
+    ```
 
 ## Run service
 To start oauth service run:
