@@ -12,8 +12,7 @@ Use Estonian ID-card, Mobile-ID and Smart-ID as OAuth authentication provider
     ```shell
     $ cp env.example .env
     ```
-1. Set correct domains for authentication and id-card services (Nginx needs separate domain for ID-Card authentication)
-1. Set correct e-mail address to get Let's Encrypt cert expiration notifications
+1. In _.env_ file, set correct domains for authentication and id-card services (Nginx needs separate domain for ID-Card authentication) and e-mail address to get Let's Encrypt cert expiration notifications
 1. Generate certs for HTTPS:
     ```shell
     $ docker-compose --project-directory ./ -f ./docker-compose/certbot.yaml up --abort-on-container-exit
