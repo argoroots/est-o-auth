@@ -23,8 +23,8 @@ server {
     #ssl_dhparam               /etc/letsencrypt/ssl-dhparams.pem;
 
     #ID-Card SSL config
-#    #ssl_crl                   /etc/nginx/cancels.pem.crl;
     ssl_client_certificate     /etc/id-card/id-card.pem.crt;
+    ssl_crl                    /etc/id-card/id-card.cancels.pem.crl;
     ssl_verify_client          on;
     ssl_verify_depth           2;
 
