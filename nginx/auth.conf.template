@@ -13,10 +13,13 @@ server {
     ssl_certificate_key       /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
     ssl_dhparam               /etc/nginx/dhparam.pem;
 
-    ssl_session_cache         off;
-    ssl_protocols             TLSv1.2 TLSv1.3;
-    ssl_ciphers               ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384;
+    ssl_protocols             TLSv1.3;
     ssl_prefer_server_ciphers on;
+
+    add_header                Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+    ssl_session_cache         shared:SSL:10m;
+    ssl_session_timeout       1h;
+    ssl_session_tickets       on;
 
     location / {
         if ($is_ssl_verification_failed) {
