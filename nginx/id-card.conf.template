@@ -4,7 +4,6 @@ map '$request_method:$ssl_client_verify' $is_ssl_verification_failed {
     'GET:SUCCESS' 0;
 }
 
-
 server {
     server_name ${IDCARD_DOMAIN};
     listen      443 ssl http2;
@@ -12,21 +11,18 @@ server {
 
     ssl_certificate           /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
     ssl_certificate_key       /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
+    # ssl_dhparam               /etc/letsencrypt/ssl-dhparams.pem;
 
     ssl_session_cache         off;
+    ssl_protocols             TLSv1.2 TLSv1.3;
+    ssl_ciphers               ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384;
+    ssl_prefer_server_ciphers on;
 
-    #ssl_ciphers               "ECDHE-RSA-AES256-GCM-SHA384";
-    #ssl_prefer_server_ciphers on;
-
-    #Use Let’s Encrypt maintained best-practices
-    #include                   /etc/letsencrypt/options-ssl-nginx.conf;
-    #ssl_dhparam               /etc/letsencrypt/ssl-dhparams.pem;
-
-    #ID-Card SSL config
-    ssl_client_certificate     /etc/id-card/id-card.pem.crt;
-    #ssl_crl                    /etc/id-card/id-card.cancels.pem.crl;
-    ssl_verify_client          on;
-    ssl_verify_depth           2;
+    # ID-Card SSL config
+    ssl_client_certificate    /etc/id-card/id-card.pem.crt;
+    # ssl_crl                   /etc/id-card/id-card.cancels.pem.crl;
+    ssl_verify_client         on;
+    ssl_verify_depth          2;
 
     location / {
         if ($is_ssl_verification_failed) {
