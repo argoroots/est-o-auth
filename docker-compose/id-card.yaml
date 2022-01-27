@@ -14,11 +14,3 @@ services:
             - ./data/id-card:/usr/src/id-card
         working_dir: /usr/src/id-card
         command: /usr/src/certs.sh
-
-    cancels:
-        image: alpine:3
-        volumes:
-            - ./id-card/cancels.sh:/usr/src/cancels.sh:ro
-            - ./data/id-card:/usr/src/id-card
-        working_dir: /usr/src/id-card
-        command: /usr/src/cancels.sh
