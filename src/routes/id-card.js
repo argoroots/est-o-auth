@@ -1,6 +1,18 @@
 const storage = require('../storage.js')
 
 async function getCode (headers, params, res) {
+  if (params.response_type !== 'code') {
+    res.writeHead(400, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Parameter response_type must be "code"' }))
+    return
+  }
+
+  if (!params.redirect_uri) {
+    res.writeHead(400, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Parameter redirect_uri is required' }))
+    return
+  }
+
   if (headers.ssl_client_verify !== 'SUCCESS' || !headers.ssl_client_s_dn) {
     res.writeHead(400, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify({ error: 'ID-Card error' }))
@@ -20,7 +32,8 @@ async function getCode (headers, params, res) {
 
   res.writeHead(200, { 'Content-Type': 'application/json' })
   res.end(JSON.stringify({
-    code: code
+    code: code,
+    state: params.state
   }))
 }
 
