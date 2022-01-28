@@ -1,14 +1,26 @@
 const storage = require('../storage.js')
 
 async function getCode (headers, params, res) {
-  console.log(headers)
-  console.log(params)
-
-  const user = {
-    idc: null,
-    email: null
+  if (headers.ssl_client_verify !== 'SUCCESS') {
+    throw new Error('ID-Card reading error')
   }
-  const code = await storage.saveUser(user)
+
+  if (!headers.ssl_client_s_dn) {
+    throw new Error('ID-Card reading error')
+  }
+
+  const userInfo = Object.fromEntries(headers.ssl_client_s_dn.split(',').map(x => {
+    const info = x.split('=')
+    return [info[0], info[1]]
+  }))
+
+  console.log(userInfo)
+
+  const code = await storage.saveUser({
+    idcode: userInfo.serialNumber,
+    firstname: userInfo.GN,
+    lastname: userInfo.SN
+  })
 
   res.writeHead(200, { 'Content-Type': 'application/json' })
   res.end(JSON.stringify({
