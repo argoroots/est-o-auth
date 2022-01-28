@@ -1,6 +1,10 @@
 const storage = require('../storage.js')
 
 async function getToken (headers, params, res) {
+  if (!params.code) {
+    throw new Error('Code is required')
+  }
+
   const token = await storage.getToken(params.code, 3600)
 
   res.writeHead(200, { 'Content-Type': 'application/json' })

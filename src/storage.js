@@ -18,6 +18,11 @@ async function saveUser (user) {
 async function getToken (code, expiresIn) {
   await client.connect()
   const user = await client.get('user:' + code)
+
+  if (!user) {
+    throw new Error('Invalid Code')
+  }
+
   await client.del('user:' + code)
   await client.disconnect()
 
