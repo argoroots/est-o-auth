@@ -15,6 +15,10 @@ server {
     ssl_session_timeout       1h;
     ssl_session_tickets       on;
 
+    location /auth/id-card {
+        return 302 https://${IDCARD_DOMAIN}$request_uri;
+    }
+
     location / {
         expires          -1;
 
