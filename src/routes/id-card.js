@@ -30,9 +30,10 @@ async function getCode (headers, params, res) {
     lastname: userInfo.SN
   })
 
-  const query = {
-    code,
-    state: params.state || null
+  const query = { code }
+
+  if (params.state) {
+    query.state = params.state
   }
 
   const queryString = Object.keys(query).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(query[key])}`).join('&')
