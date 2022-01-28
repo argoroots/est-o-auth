@@ -10,6 +10,7 @@ async function saveUser (user) {
 
   await client.connect()
   await client.set('user:' + code, JSON.stringify(user))
+  await client.disconnect()
 
   return code
 }
@@ -17,6 +18,8 @@ async function saveUser (user) {
 async function getToken (code, expiresIn) {
   await client.connect()
   const user = await client.get('user:' + code)
+  await client.disconnect()
+
   const token = jwt.sign(JSON.parse(user), process.env.JWT_SECRET, { expiresIn })
 
   return token
