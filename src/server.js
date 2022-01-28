@@ -61,13 +61,20 @@ function getParams (req) {
       })
 
       req.on('end', () => {
-        if (headers['content-type'] === 'application/x-www-form-urlencoded') {
-          const { searchParams } = new URL(`/?${body}`, `${req.protocol}://${headers.host}/`)
-          resolve(Object.fromEntries(searchParams))
-        }
-
-        if (method === 'POST' && headers['content-type'] === 'application/json') {
-          resolve(JSON.parse(body))
+        switch (headers['content-type']) {
+          case 'application/x-www-form-urlencoded': {
+            const { searchParams } = new URL(`/?${body}`, `${req.protocol}://${headers.host}/`)
+            resolve(Object.fromEntries(searchParams))
+            break
+          }
+          case 'application/json': {
+            resolve(JSON.parse(body))
+            break
+          }
+          default: {
+            resolve({})
+            break
+          }
         }
       })
     }
