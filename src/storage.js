@@ -3,6 +3,7 @@ const redis = require('redis')
 const jwt = require('jsonwebtoken')
 
 const client = redis.createClient({ url: process.env.REDIS })
+
 client.on('error', (err) => console.log('Redis Client Error', err))
 
 async function saveUser (user) {
