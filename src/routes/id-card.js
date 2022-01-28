@@ -1,6 +1,6 @@
 const storage = require('../storage.js')
 
-export async function getCode (headers, params, res) {
+async function getCode (headers, params, res) {
   console.log(headers)
   console.log(params)
 
@@ -14,4 +14,8 @@ export async function getCode (headers, params, res) {
   res.end(JSON.stringify({
     code: code
   }))
+}
+
+module.exports = {
+  getCode
 }
