@@ -12,7 +12,7 @@
   "author": "Argo Roots <argo@roots.ee>",
   "license": "MIT",
   "devDependencies": {
-    "entu-ssg": "5.3.0",
+    "entu-ssg": "5.3.1",
     "eslint": "7.32.0",
     "eslint-config-standard": "16.0.3",
     "eslint-plugin-import": "2.25.4",
@@ -21,7 +21,7 @@
     "nodemon": "2.0.15"
   },
   "dependencies": {
-    "jsonwebtoken": "^8.5.1",
-    "redis": "^4.0.2"
+    "jsonwebtoken": "8.5.1",
+    "redis": "4.0.2"
   }
 }
