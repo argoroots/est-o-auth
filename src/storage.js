@@ -14,6 +14,15 @@ async function saveUser (user) {
   return code
 }
 
+async function getToken (code, expiresIn) {
+  await client.connect()
+  const user = await client.get('user:' + code)
+  const token = jwt.sign(JSON.parse(user), process.env.JWT_SECRET, { expiresIn })
+
+  return token
+}
+
 module.exports = {
-  saveUser
+  saveUser,
+  getToken
 }
