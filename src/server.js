@@ -44,17 +44,28 @@ function getParams (req) {
   const { method, body } = req
   const headers = getHeaders(req)
 
+  console.log(headers)
+
   if (method === 'GET') {
+    console.log('get')
+    console.log(req.url)
+
     const { searchParams } = new URL(req.url, `${req.protocol}://${headers.host}/`)
     return Object.fromEntries(searchParams)
   }
 
   if (method === 'POST' && headers['content-type'] === 'application/x-www-form-urlencoded') {
+    console.log('urlencoded')
+    console.log(body)
+
     const { searchParams } = new URL(body, `${req.protocol}://${headers.host}/`)
     return Object.fromEntries(searchParams)
   }
 
   if (method === 'POST' && headers['content-type'] === 'application/json') {
+    console.log('json')
+    console.log(body)
+
     return JSON.parse(body)
   }
 
