@@ -19,16 +19,12 @@ async function getToken (code, expiresIn) {
   await client.connect()
   const user = await client.get('user:' + code)
 
-  if (!user) {
-    throw new Error('Invalid Code')
-  }
+  if (!user) { return }
 
   await client.del('user:' + code)
   await client.disconnect()
 
-  const token = jwt.sign(JSON.parse(user), process.env.JWT_SECRET, { expiresIn })
-
-  return token
+  return jwt.sign(JSON.parse(user), process.env.JWT_SECRET, { expiresIn })
 }
 
 module.exports = {

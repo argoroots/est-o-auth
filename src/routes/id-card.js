@@ -1,12 +1,10 @@
 const storage = require('../storage.js')
 
 async function getCode (headers, params, res) {
-  if (headers.ssl_client_verify !== 'SUCCESS') {
-    throw new Error('ID-Card reading error')
-  }
-
-  if (!headers.ssl_client_s_dn) {
-    throw new Error('ID-Card reading error')
+  if (headers.ssl_client_verify !== 'SUCCESS' || !headers.ssl_client_s_dn) {
+    res.writeHead(400, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'ID-Card error' }))
+    return
   }
 
   const userInfo = Object.fromEntries(headers.ssl_client_s_dn.split(',').map(x => {
