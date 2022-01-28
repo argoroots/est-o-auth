@@ -7,8 +7,8 @@ const port = process.env.PORT || 8080
 const server = http.createServer(async (req, res) => {
   try {
     const { method, socket } = req
-    const params = getParams(req)
     const headers = getHeaders(req)
+    const params = await getParams(req)
     const { pathname } = new URL(req.url, `${req.protocol}://${headers.host}/`)
 
     if (method === 'GET' && pathname === '/auth/id-card') {
@@ -41,26 +41,34 @@ function getHeaders (req) {
 }
 
 function getParams (req) {
-  const { method, body } = req
-  const headers = getHeaders(req)
+  return new Promise(resolve => {
+    const { method } = req
+    const headers = getHeaders(req)
 
-  console.log(headers)
+    if (method === 'GET') {
+      const { searchParams } = new URL(req.url, `${req.protocol}://${headers.host}/`)
+      resolve(Object.fromEntries(searchParams))
+    }
 
-  if (method === 'GET') {
-    const { searchParams } = new URL(req.url, `${req.protocol}://${headers.host}/`)
-    return Object.fromEntries(searchParams)
-  }
+    if (method === 'POST') {
+      let body = ''
 
-  if (method === 'POST' && headers['content-type'] === 'application/x-www-form-urlencoded') {
-    const { searchParams } = new URL(`/?${body}`, `${req.protocol}://${headers.host}/`)
-    return Object.fromEntries(searchParams)
-  }
+      req.on('data', chunk => {
+        body += chunk.toString()
+      })
 
-  if (method === 'POST' && headers['content-type'] === 'application/json') {
-    return JSON.parse(body)
-  }
+      req.on('end', () => {
+        if (headers['content-type'] === 'application/x-www-form-urlencoded') {
+          const { searchParams } = new URL(`/?${body}`, `${req.protocol}://${headers.host}/`)
+          resolve(Object.fromEntries(searchParams))
+        }
 
-  return {}
+        if (method === 'POST' && headers['content-type'] === 'application/json') {
+          resolve(JSON.parse(body))
+        }
+      })
+    }
+  })
 }
 
 server.listen(port, () => {
