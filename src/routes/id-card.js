@@ -30,11 +30,15 @@ async function getCode (headers, params, res) {
     lastname: userInfo.SN
   })
 
-  res.writeHead(200, { 'Content-Type': 'application/json' })
-  res.end(JSON.stringify({
-    code: code,
+  const query = {
+    code,
     state: params.state
-  }))
+  }
+
+  const queryString = Object.keys(query).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(query[key])}`).join('&')
+
+  res.writeHead(302, { Location: `${params.redirect_uri}?${queryString}` })
+  res.end()
 }
 
 module.exports = {
