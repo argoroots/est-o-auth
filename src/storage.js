@@ -19,7 +19,10 @@ async function getToken (code, expiresIn) {
   await client.connect()
   const user = await client.get('user:' + code)
 
-  if (!user) { return }
+  if (!user) {
+    await client.disconnect()
+    return
+  }
 
   await client.del('user:' + code)
   await client.disconnect()
