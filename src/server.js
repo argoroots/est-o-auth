@@ -1,17 +1,15 @@
 const http = require('http')
+const idCard = require('./routes/id-card.js')
 
 const port = process.env.PORT || 8080
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
   const { method, headers, socket } = req
   const { pathname, searchParams } = new URL(req.url, `${req.protocol}://${headers.host}/`)
   const params = Object.fromEntries(searchParams)
 
-  if (method === 'GET' && pathname === '/test') {
-    res.writeHead(200, { 'Content-Type': 'application/json' })
-    res.end(JSON.stringify({
-      test: true
-    }))
+  if (method === 'GET' && pathname === '/auth/id-card') {
+    idCard.getCode(headers, params, res)
   } else {
     res.writeHead(404, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify({

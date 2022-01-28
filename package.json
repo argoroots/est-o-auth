@@ -19,5 +19,9 @@
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "5.2.0",
     "nodemon": "2.0.15"
+  },
+  "dependencies": {
+    "jsonwebtoken": "^8.5.1",
+    "redis": "^4.0.2"
   }
 }
