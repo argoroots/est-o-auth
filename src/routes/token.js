@@ -21,7 +21,7 @@ async function getToken (headers, params, res) {
     expires_in: 3600,
     // id_token: '',
     token_type: 'Bearer',
-    scope: headers.scope
+    scope: params.scope
   }))
 }
 

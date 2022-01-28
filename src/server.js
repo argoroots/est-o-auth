@@ -6,14 +6,15 @@ const port = process.env.PORT || 8080
 
 const server = http.createServer(async (req, res) => {
   try {
-    const { method, headers, socket } = req
-    const { pathname, searchParams } = new URL(req.url, `${req.protocol}://${headers.host}/`)
-    const params = Object.fromEntries(searchParams)
+    const { method, socket, body } = req
+    const params = getParams(req)
+    const headers = getHeaders(req)
+    const { pathname } = new URL(req.url, `${req.protocol}://${headers.host}/`)
 
     if (method === 'GET' && pathname === '/auth/id-card') {
       idCard.getCode(headers, params, res)
-    } else if (method === 'GET' && pathname === '/token') {
-      token.getToken(headers, params, res)
+    } else if (method === 'POST' && pathname === '/token') {
+      token.getToken(headers, body, res)
     } else {
       res.writeHead(404, { 'Content-Type': 'application/json' })
       res.end(JSON.stringify({
@@ -32,6 +33,33 @@ const server = http.createServer(async (req, res) => {
     }))
   }
 })
+
+function getHeaders (req) {
+  return Object.fromEntries(
+    Object.entries(req.headers).map(([k, v]) => [k.toLowerCase(), v])
+  )
+}
+
+function getParams (req) {
+  const { method, body } = req
+  const headers = getHeaders(req)
+
+  if (method === 'GET') {
+    const { searchParams } = new URL(req.url, `${req.protocol}://${headers.host}/`)
+    return Object.fromEntries(searchParams)
+  }
+
+  if (method === 'POST' && headers['content-type'] === 'application/x-www-form-urlencoded') {
+    const { searchParams } = new URL(body, `${req.protocol}://${headers.host}/`)
+    return Object.fromEntries(searchParams)
+  }
+
+  if (method === 'POST' && headers['content-type'] === 'application/json') {
+    return JSON.parse(body)
+  }
+
+  return {}
+}
 
 server.listen(port, () => {
   console.log(`Server running on port ${port}`)
