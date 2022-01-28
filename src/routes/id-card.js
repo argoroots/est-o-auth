@@ -32,7 +32,7 @@ async function getCode (headers, params, res) {
 
   const query = {
     code,
-    state: params.state
+    state: params.state || null
   }
 
   const queryString = Object.keys(query).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(query[key])}`).join('&')
