@@ -14,8 +14,6 @@ async function getCode (headers, params, res) {
     return [info[0], info[1]]
   }))
 
-  console.log(userInfo)
-
   const code = await storage.saveUser({
     idcode: userInfo.serialNumber,
     firstname: userInfo.GN,

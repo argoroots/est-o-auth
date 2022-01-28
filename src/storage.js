@@ -2,15 +2,14 @@ const crypto = require('crypto')
 const redis = require('redis')
 const jwt = require('jsonwebtoken')
 
-async function saveUser (user) {
-  const client = redis.createClient({ url: process.env.REDIS })
-  const code = crypto.randomUUID()
-  const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '15m' })
+const client = redis.createClient({ url: process.env.REDIS })
+client.on('error', (err) => console.log('Redis Client Error', err))
 
-  client.on('error', (err) => console.log('Redis Client Error', err))
+async function saveUser (user) {
+  const code = crypto.randomUUID().replaceAll('-', '')
 
   await client.connect()
-  await client.set(code, token)
+  await client.set('user:' + code, JSON.stringify(user))
 
   return code
 }
