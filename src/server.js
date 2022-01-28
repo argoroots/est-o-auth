@@ -6,7 +6,7 @@ const port = process.env.PORT || 8080
 
 const server = http.createServer(async (req, res) => {
   try {
-    const { method, socket, body } = req
+    const { method, socket } = req
     const params = getParams(req)
     const headers = getHeaders(req)
     const { pathname } = new URL(req.url, `${req.protocol}://${headers.host}/`)
@@ -14,7 +14,7 @@ const server = http.createServer(async (req, res) => {
     if (method === 'GET' && pathname === '/auth/id-card') {
       idCard.getCode(headers, params, res)
     } else if (method === 'POST' && pathname === '/token') {
-      token.getToken(headers, body, res)
+      token.getToken(headers, params, res)
     } else {
       res.writeHead(404, { 'Content-Type': 'application/json' })
       res.end(JSON.stringify({
