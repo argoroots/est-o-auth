@@ -4,8 +4,8 @@
   "description": "Use Estonina eID auth with OAuth",
   "private": true,
   "scripts": {
-    "dev": "nodemon node ./src/server.js",
-    "start": "node ./src/server.js",
+    "dev": "nodemon node ./api/server.js",
+    "start": "node ./api/server.js",
     "lint": "eslint ./ --fix --ignore-path .gitignore --ext .js",
     "docs": "entu-ssg docs/source/config.yaml full"
   },

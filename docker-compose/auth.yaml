@@ -1,6 +1,8 @@
 services:
     auth:
-        build: .
+        build:
+            context: ./
+            dockerfile: ./api/Dockerfile
         restart: unless-stopped
         environment:
             NODE_ENV: production

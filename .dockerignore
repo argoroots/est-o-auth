@@ -1,7 +1,3 @@
-.vscode
-data
-docker-compose
-docs
-id-card
-nginx
-node_modules
+**
+!/api**
+!/package*.json
