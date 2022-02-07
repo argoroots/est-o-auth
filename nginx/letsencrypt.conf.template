@@ -3,6 +3,7 @@ server {
     listen      80;
     listen      [::]:80;
 
+    access_log    off;
     server_tokens off;
 
     location /.well-known/acme-challenge/ {
