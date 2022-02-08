@@ -24,6 +24,7 @@ services:
             DOMAIN: ${DOMAIN}
             IDCARD_DOMAIN: ${IDCARD_DOMAIN}
         volumes:
+            - ./nginx/logs:/etc/nginx/logs
             - ./nginx/auth.conf.template:/etc/nginx/templates/auth.conf.template:ro
             - ./nginx/id-card.conf.template:/etc/nginx/templates/id-card.conf.template:ro
             - ./data/id-card:/etc/id-card:ro
