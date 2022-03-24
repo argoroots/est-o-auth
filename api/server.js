@@ -13,6 +13,8 @@ const server = http.createServer(async (req, res) => {
     const params = await getParams(req)
     const { pathname } = new URL(req.url, `${req.protocol}://${headers.host}/`)
 
+    console.log(method, pathname)
+
     if (method === 'GET' && pathname === '/auth/id-card') {
       idCard.getCode(headers, params, res)
     } else if (method === 'POST' && pathname === '/token') {
