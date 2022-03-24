@@ -14,7 +14,7 @@ async function getSign (headers, params, res) {
   }
 
   res.writeHead(200, {
-    'Access-Control-Allow-Headers': '*',
+    'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json'
   })
   res.end(JSON.stringify(content))
