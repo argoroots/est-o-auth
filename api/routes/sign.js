@@ -13,7 +13,10 @@ async function getSign (headers, params, res) {
     content.key = crypto.randomUUID().replaceAll('-', '')
   }
 
-  res.writeHead(200, { 'Content-Type': 'application/json' })
+  res.writeHead(200, {
+    'Access-Control-Allow-Headers': '*',
+    'Content-Type': 'application/json'
+  })
   res.end(JSON.stringify(content))
 }
 
