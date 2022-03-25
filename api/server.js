@@ -67,7 +67,9 @@ function getParams (req) {
 
       req.on('end', () => {
         try {
-          if (headers['content-type'] === 'application/x-www-form-urlencoded') {
+          if (!body) {
+            resolve({})
+          } else if (headers['content-type'] === 'application/x-www-form-urlencoded') {
             const { searchParams } = new URL(`/?${body}`, `${req.protocol}://${headers.host}/`)
             resolve(Object.fromEntries(searchParams))
           } else {
