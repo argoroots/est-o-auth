@@ -49,7 +49,7 @@ function getHeaders (req) {
 }
 
 function getParams (req) {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     const { method } = req
     const headers = getHeaders(req)
 
@@ -66,20 +66,15 @@ function getParams (req) {
       })
 
       req.on('end', () => {
-        switch (headers['content-type']) {
-          case 'application/x-www-form-urlencoded': {
+        try {
+          if (headers['content-type'] === 'application/x-www-form-urlencoded') {
             const { searchParams } = new URL(`/?${body}`, `${req.protocol}://${headers.host}/`)
             resolve(Object.fromEntries(searchParams))
-            break
-          }
-          case 'application/json': {
+          } else {
             resolve(JSON.parse(body))
-            break
           }
-          default: {
-            resolve({})
-            break
-          }
+        } catch (error) {
+          reject(new Error('Invalid request body'))
         }
       })
     }
