@@ -53,9 +53,12 @@ function getParams (req) {
     const { method } = req
     const headers = getHeaders(req)
 
+    const { searchParams } = new URL(req.url, `${req.protocol}://${headers.host}/`)
+    const urlParams = Object.fromEntries(searchParams)
+
     if (method === 'GET') {
-      const { searchParams } = new URL(req.url, `${req.protocol}://${headers.host}/`)
-      resolve(Object.fromEntries(searchParams))
+      resolve(urlParams)
+      return
     }
 
     if (method === 'POST') {
@@ -68,12 +71,12 @@ function getParams (req) {
       req.on('end', () => {
         try {
           if (!body) {
-            resolve({})
+            resolve(urlParams)
           } else if (headers['content-type'] === 'application/x-www-form-urlencoded') {
             const { searchParams } = new URL(`/?${body}`, `${req.protocol}://${headers.host}/`)
-            resolve(Object.fromEntries(searchParams))
+            resolve({ ...urlParams, ...Object.fromEntries(searchParams) })
           } else {
-            resolve(JSON.parse(body))
+            resolve({ ...urlParams, ...JSON.parse(body) })
           }
         } catch (error) {
           reject(new Error('Invalid request body'))
