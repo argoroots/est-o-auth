@@ -15,6 +15,9 @@ Use Estonian ID-card, Mobile-ID and Smart-ID as OAuth authentication provider
     - redirect_uri
     - scope
     - state
+    - phone (only for */auth/mobile-id*)
+    - idc (only for */auth/mobile-id* and */auth/smart-id*)
+    - email (only for */auth/e-mail*)
 
     After authentication user is redirected back to url set in *redirect_uri* parameter. Query parameter *code* contains the authorization code which Your service will exchange for an access token.
 
