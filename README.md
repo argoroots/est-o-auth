@@ -10,20 +10,22 @@ Use E-mail or Estonian ID-card, Mobile-ID and Smart-ID as OAuth authentication p
     - [/auth/e-mail]()
 
     Required query parameters are:
-    - response_type - always equals to "code"
+    - response_type - *always equals to "code"*
     - client_id
     - redirect_uri
     - scope
     - state
-    - phone - only for [/auth/mobile-id]()
-    - idc - only for [/auth/mobile-id]() and [/auth/smart-id]()
-    - email - only for [/auth/e-mail]()
+
+    Optional parameters are (if not set, then user must input those on redirected page):
+    - phone - *only for [/auth/mobile-id]()*
+    - idc - *only for [/auth/mobile-id]() and [/auth/smart-id]()*
+    - email - *only for [/auth/e-mail]()*
 
     After authentication user is redirected back to url set in *redirect_uri* parameter. Query parameter *code* contains the authorization code which Your service will exchange for an access token.
 
     If the initial request contained a *state* parameter, the response also includes the exact value from the request. Your service must check if it matches one from initial request.
 
-3. Make POST request to [/token]() sending *grant_type* and *code* (got from previous step). Parameter grant_type must always be "authorization_code".
+3. Make POST request to [/token]() sending *client_id*, *client_secret*, *grant_type* and *code* (got from previous step). Parameter grant_type must always be "authorization_code".
 
     Response contains *access_token* what You need to get user information.
 
