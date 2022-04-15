@@ -4,7 +4,8 @@
   "description": "Use Estonina eID auth with OAuth",
   "private": true,
   "scripts": {
-    "docs": "entu-ssg build docs/source/config.yaml full"
+    "build": "entu-ssg build ./entu-ssg.yaml full",
+    "dev": "entu-ssg serve ./entu-ssg.yaml full"
   },
   "author": "Argo Roots <argo@roots.ee>",
   "license": "MIT",

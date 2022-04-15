@@ -31,7 +31,9 @@ Use E-mail or Estonian ID-card, Mobile-ID and Smart-ID as OAuth authentication p
 
     Response contains user information as JSON object.
 
-## Setup
+## Run service
+
+### Setup
 1. Clone this repository and go to it's folder:
     ```shell
     git clone https://github.com/argoroots/est-o-auth.git ./est-o-auth
@@ -57,13 +59,13 @@ Use E-mail or Estonian ID-card, Mobile-ID and Smart-ID as OAuth authentication p
     docker-compose --project-directory ./ -f ./docker-compose/id-card.yaml up
     ```
 
-## Run service
+### Run service
 To start oauth service run:
 ```shell
 docker-compose --project-directory ./api -f ./docker-compose/auth.yaml up -d --build --remove-orphans
 ```
 
-## Renew certificates
+### Renew certificates
 To renew certificates run:
 ```shell
 docker-compose --project-directory ./ -f ./docker-compose/certbot.yaml -f ./docker-compose/certbot-renew.yaml up --abort-on-container-exit
