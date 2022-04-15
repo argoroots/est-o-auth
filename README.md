@@ -31,7 +31,7 @@ Use Estonian ID-card, Mobile-ID and Smart-ID as OAuth authentication provider
 ## Run service
 To start oauth service run:
 ```shell
-docker-compose --project-directory ./ -f ./docker-compose/auth.yaml up -d --build --remove-orphans
+docker-compose --project-directory ./api -f ./docker-compose/auth.yaml up -d --build --remove-orphans
 ```
 
 ## Renew certificates

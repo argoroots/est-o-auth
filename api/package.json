@@ -1,0 +1,25 @@
+{
+  "name": "est-o-auth-api",
+  "version": "1.0.0",
+  "description": "Use Estonina eID auth with OAuth",
+  "private": true,
+  "scripts": {
+    "dev": "nodemon node ./server.js",
+    "start": "node ./server.js",
+    "lint": "eslint ./ --fix --ignore-path .gitignore --ext .js"
+  },
+  "author": "Argo Roots <argo@roots.ee>",
+  "license": "MIT",
+  "dependencies": {
+    "jsonwebtoken": "8.5.1",
+    "redis": "4.0.2"
+  },
+  "devDependencies": {
+    "eslint": "7.32.0",
+    "eslint-config-standard": "16.0.3",
+    "eslint-plugin-import": "2.25.4",
+    "eslint-plugin-node": "11.1.0",
+    "eslint-plugin-promise": "5.2.0",
+    "nodemon": "2.0.15"
+  }
+}
