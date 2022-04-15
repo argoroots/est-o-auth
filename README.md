@@ -2,6 +2,32 @@
 
 Use Estonian ID-card, Mobile-ID and Smart-ID as OAuth authentication provider
 
+## Usage
+1. Redirect user to one of the following url:
+    - /auth/id-card
+    - /auth/mobile-id
+    - /auth/smart-id
+    - /auth/e-mail
+
+    Required query parameters are:
+    - response_type (always equals to "code")
+    - client_id
+    - redirect_uri
+    - scope
+    - state
+
+    After authentication user is redirected back to url set in *redirect_uri* parameter. Query parameter *code* contains the authorization code which Your service will exchange for an access token.
+
+    If the initial request contained a *state* parameter, the response also includes the exact value from the request. Your service must check if it matches one from initial request.
+
+3. Make POST request to **/token** sending *grant_type* and *code*. Parameter grant_type must always be "authorization_code" and *code* is from previous step.
+
+    Response contains *access_token* what You need to get user information.
+
+4. To get user information make GET request to **/user** with *access_token* parameter or as Bearer authorization header.
+
+    Response contains user information as JSON object.
+
 ## Setup
 1. Clone this repository and go to it's folder:
     ```shell
