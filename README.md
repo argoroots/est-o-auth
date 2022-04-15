@@ -10,14 +10,14 @@ Use E-mail or Estonian ID-card, Mobile-ID and Smart-ID as OAuth authentication p
     - [/auth/e-mail]()
     - [/auth]() - *will ask user the preferred auth method*
 
-    Required query parameters are:
+    Required query parameters:
     - response_type - *always equals to "code"*
     - client_id
     - redirect_uri
     - scope
     - state
 
-    Optional parameters are (if not set, then user must input those on redirected page):
+    Optional parameters - if not set, user must input required ones (depends of auth method):
     - phone - *only for [/auth/mobile-id]()*
     - idc - *only for [/auth/mobile-id]() and [/auth/smart-id]()*
     - email - *only for [/auth/e-mail]()*
