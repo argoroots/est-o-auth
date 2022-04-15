@@ -8,6 +8,7 @@ Use E-mail or Estonian ID-card, Mobile-ID and Smart-ID as OAuth authentication p
     - [/auth/mobile-id]()
     - [/auth/smart-id]()
     - [/auth/e-mail]()
+    - [/auth]() - *will ask user the preferred auth method*
 
     Required query parameters are:
     - response_type - *always equals to "code"*
@@ -20,6 +21,7 @@ Use E-mail or Estonian ID-card, Mobile-ID and Smart-ID as OAuth authentication p
     - phone - *only for [/auth/mobile-id]()*
     - idc - *only for [/auth/mobile-id]() and [/auth/smart-id]()*
     - email - *only for [/auth/e-mail]()*
+    - methods - *only for [/auth]() - comma separated list of auth methods to show (id-card, mobile-id, smart-id, e-mail)*
 
     After authentication user is redirected back to url set in *redirect_uri* parameter. Query parameter *code* contains the authorization code which Your service will exchange for an access token.
 
