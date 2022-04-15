@@ -23,11 +23,11 @@ Use Estonian ID-card, Mobile-ID and Smart-ID as OAuth authentication provider
 
     If the initial request contained a *state* parameter, the response also includes the exact value from the request. Your service must check if it matches one from initial request.
 
-3. Make POST request to **/token** sending *grant_type* and *code*. Parameter grant_type must always be "authorization_code" and *code* is from previous step.
+3. Make POST request to **/token** sending *grant_type* and *code* (got from previous step). Parameter grant_type must always be "authorization_code".
 
     Response contains *access_token* what You need to get user information.
 
-4. To get user information make GET request to **/user** with *access_token* parameter or as Bearer authorization header.
+4. To get user information make GET request to **/user** with *access_token* (got from previous step) as query parameter or as Bearer authorization header (preferred!).
 
     Response contains user information as JSON object.
 
