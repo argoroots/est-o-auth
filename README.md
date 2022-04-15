@@ -1,6 +1,6 @@
 # OAuth.ee
 
-Use Estonian ID-card, Mobile-ID and Smart-ID as OAuth authentication provider
+Use E-mail or Estonian ID-card, Mobile-ID and Smart-ID as OAuth authentication provider
 
 ## Usage
 1. Redirect user to one of the following url:
