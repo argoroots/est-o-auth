@@ -1,4 +1,5 @@
 const http = require('http')
+const error = require('./routes/error.js')
 const idCard = require('./routes/id-card.js')
 const token = require('./routes/token.js')
 const user = require('./routes/user.js')
@@ -7,35 +8,28 @@ const port = process.env.PORT || 8080
 
 const server = http.createServer(async (req, res) => {
   try {
-    const { method, socket } = req
     const headers = getHeaders(req)
     const params = await getParams(req)
+    const { method } = req
     const { pathname } = new URL(req.url, `${req.protocol}://${headers.host}/`)
 
-    console.log(method, pathname)
-
-    if (method === 'GET' && pathname === '/auth/id-card') {
-      idCard.getCode(headers, params, res)
-    } else if (method === 'POST' && pathname === '/token') {
-      token.getToken(headers, params, res)
-    } else if (method === 'GET' && pathname === '/user') {
-      user.getUser(headers, params, res)
-    } else {
-      res.writeHead(404, { 'Content-Type': 'application/json' })
-      res.end(JSON.stringify({
-        clientIp: headers['x-forwarded-for'] || socket.remoteAddress,
-        method: method,
-        path: pathname,
-        params: params
-      }))
+    switch (`${method.toUpperCase()} ${pathname.toLowerCase()}`) {
+      case 'GET /auth/id-card':
+        idCard.getCode(headers, params, res)
+        break
+      case 'POST /token':
+        token.getToken(headers, params, res)
+        break
+      case 'GET /user':
+        user.getUser(headers, params, res)
+        break
+      default:
+        error.get404(method, pathname, params, res)
+        break
     }
   } catch (error) {
     console.error(error)
-
-    res.writeHead(500, { 'Content-Type': 'application/json' })
-    res.end(JSON.stringify({
-      error: true
-    }))
+    error.get500(res)
   }
 })
 

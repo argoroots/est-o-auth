@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon node ./server.js",
     "start": "node ./server.js",
-    "lint": "eslint ./ --fix --ignore-path .gitignore --ext .js"
+    "lint": "eslint ./ --fix --ignore-path ../.gitignore --ext .js"
   },
   "author": "Argo Roots <argo@roots.ee>",
   "license": "MIT",
