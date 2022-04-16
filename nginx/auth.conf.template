@@ -24,7 +24,7 @@ server {
         return 302 https://${IDCARD_DOMAIN}$request_uri;
     }
 
-    location ~ (/auth/mobile-id|/auth/smart-id|/token|/user|/sign)$ {
+    location ~ (/auth/mobile-id|/auth/smart-id|/token|/user)$ {
         expires          -1;
 
         proxy_pass       http://auth;
