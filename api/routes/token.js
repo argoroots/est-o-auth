@@ -1,4 +1,4 @@
-const storage = require('../storage.js')
+const storage = require('./_storage.js')
 
 async function getToken (headers, params, res) {
   if (params.grant_type !== 'authorization_code') {

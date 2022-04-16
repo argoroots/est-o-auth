@@ -1,4 +1,4 @@
-const storage = require('../storage.js')
+const storage = require('./_storage.js')
 
 async function getCode (headers, params, res) {
   if (params.response_type !== 'code') {
