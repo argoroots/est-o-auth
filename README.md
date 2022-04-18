@@ -23,17 +23,58 @@ Use E-mail or Estonian ID-card, Mobile-ID and Smart-ID as OAuth authentication p
     - email - *only for [/auth/e-mail]()*
     - methods - *only for [/auth]() - comma separated list of auth methods to show (id-card, mobile-id, smart-id, e-mail)*
 
+    ```bash
+    https://oauth.ee/auth/mobile-id?response_type=code&client_id=QVnPZGdcXQ8Ev4mx&redirect_uri=https://example.com/auth/callback&scope=&state=5600684163565994
+    ```
+
     After authentication user is redirected back to url set in *redirect_uri* parameter. Query parameter *code* contains the authorization code which Your service will exchange for an access token.
 
     If the initial request contained a *state* parameter, the response also includes the exact value from the request. Your service must check if it matches one from initial request.
 
 3. Make POST request to [/token]() sending *client_id*, *client_secret*, *grant_type* and *code* (got from previous step). Parameter grant_type must always be "authorization_code".
 
+    ```http
+    POST /token HTTP/1.1
+    Host: oauth.ee
+    Content-Type: application/json; charset=utf-8
+    Content-Length: 165
+
+    {
+      "client_id": "QVnPZGdcXQ8Ev4mx",
+      "client_secret": "aLs6BLQfhd3dX8rUDnvQzmhZcVMNPnwy",
+      "code": "CYD9MDm8gY2F8EhV",
+      "grant_type": "authorization_code"
+    }
+    ```
+
     Response contains *access_token* what You need to get user information.
+    ```json
+    {
+      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+      "expires_in": 3600,
+      "token_type": "Bearer",
+      "state": "5600684163565994"
+    }
+    ```
+
+
 
 4. To get user information make GET request to [/user]() with *access_token* (got from previous step) as query parameter or as Bearer authorization header (preferred!).
 
+    ```http
+    GET /user HTTP/1.1
+    Host: oauth.ee
+    Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+    ```
+
     Response contains user information as JSON object.
+    ```json
+    {
+      "idcode": "38001085718",
+      "firstname": "JAAK-KRISTJAN",
+      "lastname": "JÕEORG"
+    }
+    ```
 
 ## Run service
 
