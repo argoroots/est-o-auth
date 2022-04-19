@@ -1,25 +1,26 @@
 {
-  "name": "est-o-auth-api",
+  "name": "est-o-auth-web",
   "version": "1.0.0",
   "description": "Use E-mail or Estonian ID-card, Mobile-ID and Smart-ID as OAuth authentication provider",
   "author": "Argo Roots <argo@roots.ee>",
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev": "nodemon node ./server.js",
-    "start": "node ./server.js",
+    "dev": "vite",
+    "build": "vite build",
     "lint": "eslint ./ --fix --ignore-path ../.gitignore --ext .js"
   },
   "dependencies": {
-    "jsonwebtoken": "8.5.1",
-    "redis": "4.0.6"
+    "vue": "3.2.33"
   },
   "devDependencies": {
+    "@vitejs/plugin-vue": "2.3.1",
     "eslint": "8.13.0",
     "eslint-config-standard": "16.0.3",
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "6.0.0",
-    "nodemon": "2.0.15"
+    "eslint-plugin-vue": "8.6.0",
+    "vite": "2.9.5"
   }
 }
