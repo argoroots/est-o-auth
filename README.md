@@ -1,6 +1,6 @@
 # OAuth.ee
 
-Use E-mail or Estonian ID-card, Mobile-ID and Smart-ID as OAuth authentication provider
+Use Estonian ID-card, Mobile-ID, Smart-ID or E-mail as OAuth authentication provider.
 
 ## Usage
 1. Redirect user to one of the following url:
@@ -105,14 +105,17 @@ Use E-mail or Estonian ID-card, Mobile-ID and Smart-ID as OAuth authentication p
     ```
 
 ### Run service
-To start oauth service run:
-```shell
-docker-compose --project-directory ./ -f ./docker-compose/auth.yaml up -d --build --remove-orphans
-```
+- Start oauth service:
+    ```shell
+    docker-compose --project-directory ./ -f ./docker-compose/auth.yaml up -d --build --remove-orphans
+    ```
 
 ### Renew certificates
-To renew certificates run:
-```shell
-docker-compose --project-directory ./ -f ./docker-compose/certbot.yaml -f ./docker-compose/certbot-renew.yaml up --abort-on-container-exit
-docker-compose --project-directory ./ -f ./docker-compose/auth.yaml restart nginx
-```
+1. Renew certificates:
+    ```shell
+    docker-compose --project-directory ./ -f ./docker-compose/certbot.yaml -f ./docker-compose/certbot-renew.yaml up --abort-on-container-exit
+    ```
+1. Restart Nginx:
+    ```shell
+    docker-compose --project-directory ./ -f ./docker-compose/auth.yaml restart nginx
+    ```

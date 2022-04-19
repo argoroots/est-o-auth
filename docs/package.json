@@ -1,7 +1,7 @@
 {
   "name": "est-o-auth-docs",
   "version": "1.0.0",
-  "description": "Use E-mail or Estonian ID-card, Mobile-ID and Smart-ID as OAuth authentication provider",
+  "description": "Use Estonian ID-card, Mobile-ID, Smart-ID or E-mail as OAuth authentication provider",
   "author": "Argo Roots <argo@roots.ee>",
   "license": "MIT",
   "private": true,
