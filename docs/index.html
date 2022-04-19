@@ -24,16 +24,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
   &quot;firstname&quot;: &quot;JAAK-KRISTJAN&quot;,
   &quot;lastname&quot;: &quot;JÕEORG&quot;
 }
-</code></pre></li></ol><h2>Run service</h2><h3>Setup</h3><ol><li>Clone this repository and go to it's folder:<pre><code class="language-shell">git clone https://github.com/argoroots/est-o-auth.git ./est-o-auth
+</code></pre></li></ol><h2>Setup &amp; Run</h2><ol><li><p>Clone this repository and go to it's folder:</p><pre><code class="language-shell">git clone https://github.com/argoroots/est-o-auth.git ./est-o-auth
 cd est-o-auth
-</code></pre></li><li>Rename <em>env.example</em> to <em>.env</em>:<pre><code class="language-shell">cp .env.example .env
-</code></pre></li><li>In <em>.env</em> file, set correct domains for authentication and id-card services (Nginx needs separate domain for ID-Card authentication); e-mail address (to get Let's Encrypt cert expiration notifications) and some random string for JWT token signing.<pre><code>DOMAIN=auth.example.com
+</code></pre></li><li><p>Rename <em>env.example</em> to <em>.env</em>:</p><pre><code class="language-shell">cp .env.example .env
+</code></pre></li><li><p>In <em>.env</em> file, set correct domains for authentication and id-card services (Nginx needs separate domain for ID-Card authentication); e-mail address (to get Let's Encrypt cert expiration notifications) and some random string for JWT token signing.</p><pre><code>DOMAIN=auth.example.com
 IDCARD_DOMAIN=id.auth.example.com
 EMAIL=auth@example.com
 JWT_SECRET=Iel0jrC7fKFMjK2OBI4VYp2ygtrDQZBV
-</code></pre></li><li>Generate certs for HTTPS:<pre><code class="language-shell">docker-compose --project-directory ./ -f ./docker-compose/certbot.yaml up --abort-on-container-exit
-</code></pre></li><li>Get ID-Card certs:<pre><code class="language-shell">docker-compose --project-directory ./ -f ./docker-compose/id-card.yaml up
-</code></pre></li></ol><h3>Run service</h3><ul><li>Start oauth service:<pre><code class="language-shell">docker-compose --project-directory ./ -f ./docker-compose/auth.yaml up -d --build --remove-orphans
-</code></pre></li></ul><h3>Renew certificates</h3><ol><li>Renew certificates:<pre><code class="language-shell">docker-compose --project-directory ./ -f ./docker-compose/certbot.yaml -f ./docker-compose/certbot-renew.yaml up --abort-on-container-exit
-</code></pre></li><li>Restart Nginx:<pre><code class="language-shell">docker-compose --project-directory ./ -f ./docker-compose/auth.yaml restart nginx
+</code></pre></li><li><p>Generate HTTPS certificates:</p><pre><code class="language-shell">docker-compose --project-directory ./ -f ./docker-compose/certbot.yaml up --abort-on-container-exit
+</code></pre></li><li><p>Renew HTTPS certificates - NB! run only when certificates are expiring and not on 1st setup:</p><pre><code class="language-shell">docker-compose --project-directory ./ -f ./docker-compose/certbot.yaml -f ./docker-compose/certbot-renew.yaml up --abort-on-container-exit
+docker-compose --project-directory ./ -f ./docker-compose/auth.yaml restart nginx
+</code></pre></li><li><p>Get ID-Card certificates:</p><pre><code class="language-shell">docker-compose --project-directory ./ -f ./docker-compose/id-card.yaml up
+</code></pre></li><li><p>Start service:</p><pre><code class="language-shell">docker-compose --project-directory ./ -f ./docker-compose/auth.yaml up -d --build --remove-orphans
 </code></pre></li></ol></div></div></div><script src="https://cdn.jsdelivr.net/gh/jquery/jquery@2/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/gh/twbs/bootstrap@3/dist/js/bootstrap.min.js"></script><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v0/dist/bootstrap-toc.min.js"></script><script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9/build/highlight.min.js"></script><script>hljs.initHighlightingOnLoad()</script></body></html>

@@ -76,9 +76,7 @@ Use Estonian ID-card, Mobile-ID, Smart-ID or E-mail as OAuth authentication prov
     }
     ```
 
-## Run service
-
-### Setup
+## Setup & Run
 1. Clone this repository and go to it's folder:
     ```shell
     git clone https://github.com/argoroots/est-o-auth.git ./est-o-auth
@@ -95,27 +93,22 @@ Use Estonian ID-card, Mobile-ID, Smart-ID or E-mail as OAuth authentication prov
     EMAIL=auth@example.com
     JWT_SECRET=Iel0jrC7fKFMjK2OBI4VYp2ygtrDQZBV
     ```
-1. Generate certs for HTTPS:
+1. Generate HTTPS certificates:
     ```shell
     docker-compose --project-directory ./ -f ./docker-compose/certbot.yaml up --abort-on-container-exit
     ```
-1. Get ID-Card certs:
+1. Renew HTTPS certificates - NB! run only when certificates are expiring and not on 1st setup:
+    ```shell
+    docker-compose --project-directory ./ -f ./docker-compose/certbot.yaml -f ./docker-compose/certbot-renew.yaml up --abort-on-container-exit
+    docker-compose --project-directory ./ -f ./docker-compose/auth.yaml restart nginx
+    ```
+
+1. Get ID-Card certificates:
     ```shell
     docker-compose --project-directory ./ -f ./docker-compose/id-card.yaml up
     ```
 
-### Run service
-- Start oauth service:
+1. Start service:
     ```shell
     docker-compose --project-directory ./ -f ./docker-compose/auth.yaml up -d --build --remove-orphans
-    ```
-
-### Renew certificates
-1. Renew certificates:
-    ```shell
-    docker-compose --project-directory ./ -f ./docker-compose/certbot.yaml -f ./docker-compose/certbot-renew.yaml up --abort-on-container-exit
-    ```
-1. Restart Nginx:
-    ```shell
-    docker-compose --project-directory ./ -f ./docker-compose/auth.yaml restart nginx
     ```
