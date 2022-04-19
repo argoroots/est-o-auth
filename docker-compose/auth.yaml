@@ -24,11 +24,12 @@ services:
             DOMAIN: ${DOMAIN}
             IDCARD_DOMAIN: ${IDCARD_DOMAIN}
         volumes:
-            - ./api/data/logs:/etc/nginx/logs
             - ./api/nginx/auth.conf.template:/etc/nginx/templates/auth.conf.template:ro
             - ./api/nginx/id-card.conf.template:/etc/nginx/templates/id-card.conf.template:ro
             - ./api/data/id-card:/etc/id-card:ro
             - ./api/data/id-card/dhparam.pem:/etc/nginx/dhparam.pem:ro
             - ./api/data/certbot/conf:/etc/letsencrypt:ro
+            - ./api/data/logs:/etc/nginx/logs
+            - ./api/data/public:/usr/share/nginx/html:ro
         depends_on:
             - auth
