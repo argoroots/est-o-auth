@@ -118,5 +118,5 @@ docker-compose --project-directory ./api -f ./docker-compose/auth.yaml up -d --b
 To renew certificates run:
 ```shell
 docker-compose --project-directory ./ -f ./docker-compose/certbot.yaml -f ./docker-compose/certbot-renew.yaml up --abort-on-container-exit
-docker-compose restart nginx
+docker-compose --project-directory ./api -f ./docker-compose/auth.yaml restart nginx
 ```
