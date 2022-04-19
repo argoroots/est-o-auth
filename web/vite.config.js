@@ -6,10 +6,6 @@ export default defineConfig({
   plugins: [
     vue()
   ],
-  build: {
-    outDir: '../data/public',
-    emptyOutDir: true
-  },
   server: {
     port: 8080
   },

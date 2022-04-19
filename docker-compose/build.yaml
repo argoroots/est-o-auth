@@ -1,0 +1,9 @@
+services:
+    web_builder:
+        build:
+            context: ./
+            dockerfile: ./Dockerfile
+        environment:
+            NODE_ENV: production
+        volumes:
+            - ../data/public:/usr/src/est-o-auth/dist
