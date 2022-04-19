@@ -103,20 +103,16 @@ Use E-mail or Estonian ID-card, Mobile-ID and Smart-ID as OAuth authentication p
     ```shell
     docker-compose --project-directory ./ -f ./docker-compose/id-card.yaml up
     ```
-1. Build front-end:
-    ```shell
-    docker-compose --project-directory ./web -f ./docker-compose/build.yaml up --build --abort-on-container-exit
-    ```
 
 ### Run service
 To start oauth service run:
 ```shell
-docker-compose --project-directory ./api -f ./docker-compose/auth.yaml up -d --build --remove-orphans
+docker-compose --project-directory ./ -f ./docker-compose/auth.yaml up -d --build --remove-orphans
 ```
 
 ### Renew certificates
 To renew certificates run:
 ```shell
 docker-compose --project-directory ./ -f ./docker-compose/certbot.yaml -f ./docker-compose/certbot-renew.yaml up --abort-on-container-exit
-docker-compose --project-directory ./api -f ./docker-compose/auth.yaml restart nginx
+docker-compose --project-directory ./ -f ./docker-compose/auth.yaml restart nginx
 ```

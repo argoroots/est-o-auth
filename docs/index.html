@@ -33,8 +33,7 @@ EMAIL=auth@example.com
 JWT_SECRET=Iel0jrC7fKFMjK2OBI4VYp2ygtrDQZBV
 </code></pre></li><li>Generate certs for HTTPS:<pre><code class="language-shell">docker-compose --project-directory ./ -f ./docker-compose/certbot.yaml up --abort-on-container-exit
 </code></pre></li><li>Get ID-Card certs:<pre><code class="language-shell">docker-compose --project-directory ./ -f ./docker-compose/id-card.yaml up
-</code></pre></li><li>Build front-end:<pre><code class="language-shell">docker-compose --project-directory ./web -f ./docker-compose/build.yaml up --build --abort-on-container-exit
-</code></pre></li></ol><h3>Run service</h3><p>To start oauth service run:</p><pre><code class="language-shell">docker-compose --project-directory ./api -f ./docker-compose/auth.yaml up -d --build --remove-orphans
+</code></pre></li></ol><h3>Run service</h3><p>To start oauth service run:</p><pre><code class="language-shell">docker-compose --project-directory ./ -f ./docker-compose/auth.yaml up -d --build --remove-orphans
 </code></pre><h3>Renew certificates</h3><p>To renew certificates run:</p><pre><code class="language-shell">docker-compose --project-directory ./ -f ./docker-compose/certbot.yaml -f ./docker-compose/certbot-renew.yaml up --abort-on-container-exit
-docker-compose --project-directory ./api -f ./docker-compose/auth.yaml restart nginx
+docker-compose --project-directory ./ -f ./docker-compose/auth.yaml restart nginx
 </code></pre></div></div></div><script src="https://cdn.jsdelivr.net/gh/jquery/jquery@2/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/gh/twbs/bootstrap@3/dist/js/bootstrap.min.js"></script><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v0/dist/bootstrap-toc.min.js"></script><script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9/build/highlight.min.js"></script><script>hljs.initHighlightingOnLoad()</script></body></html>
