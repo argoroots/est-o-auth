@@ -30,6 +30,6 @@ services:
             - ../data/id-card/dhparam.pem:/etc/nginx/dhparam.pem:ro
             - ../data/certbot/conf:/etc/letsencrypt:ro
             - ../data/logs:/etc/nginx/logs
-            - ../data/public:/usr/share/nginx/html:ro
+            - ../data/public:/etc/nginx/html:ro
         depends_on:
             - auth
