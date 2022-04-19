@@ -20,6 +20,9 @@ server {
     ssl_session_timeout       1h;
     ssl_session_tickets       on;
 
+    gzip on;
+    gzip_types text/html application/javascript application/json text/css;
+
     location /auth/id-card {
         return 302 https://${IDCARD_DOMAIN}$request_uri;
     }
@@ -38,6 +41,13 @@ server {
     }
 
     location ~ (/auth|/auth/mobile-id|/auth/smart-id|/auth/e-mail)$ {
-        root /usr/share/nginx/html;
+        root      /usr/share/nginx/html;
+        index     index.html;
+        try_files $uri $uri/ $uri.html /index.html;
+    }
+
+    location ~* \.(?:css|js|jpg|png|svg)$ {
+        expires    30d;
+        add_header Cache-Control "public";
     }
 }
