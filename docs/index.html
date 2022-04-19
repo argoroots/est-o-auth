@@ -31,9 +31,9 @@ cd est-o-auth
 IDCARD_DOMAIN=id.auth.example.com
 EMAIL=auth@example.com
 JWT_SECRET=Iel0jrC7fKFMjK2OBI4VYp2ygtrDQZBV
-</code></pre></li><li><p>Generate HTTPS certificates:</p><pre><code class="language-shell">docker-compose --project-directory ./ -f ./docker-compose/certbot.yaml up --abort-on-container-exit
-</code></pre></li><li><p>Renew HTTPS certificates - NB! run only when certificates are expiring and not on 1st setup:</p><pre><code class="language-shell">docker-compose --project-directory ./ -f ./docker-compose/certbot.yaml -f ./docker-compose/certbot-renew.yaml up --abort-on-container-exit
-docker-compose --project-directory ./ -f ./docker-compose/auth.yaml restart nginx
-</code></pre></li><li><p>Get ID-Card certificates:</p><pre><code class="language-shell">docker-compose --project-directory ./ -f ./docker-compose/id-card.yaml up
-</code></pre></li><li><p>Start service:</p><pre><code class="language-shell">docker-compose --project-directory ./ -f ./docker-compose/auth.yaml up -d --build --remove-orphans
+</code></pre></li><li><p>Generate HTTPS certificates:</p><pre><code class="language-shell">docker-compose -f ./docker-compose/certbot.yaml up --abort-on-container-exit
+</code></pre></li><li><p>Renew HTTPS certificates - NB! run only when certificates are expiring and not on 1st setup:</p><pre><code class="language-shell">docker-compose -f ./docker-compose/certbot.yaml -f ./docker-compose/certbot-renew.yaml up --abort-on-container-exit
+docker-compose -f ./docker-compose/auth.yaml restart nginx
+</code></pre></li><li><p>Get ID-Card certificates:</p><pre><code class="language-shell">docker-compose -f ./docker-compose/id-card.yaml up
+</code></pre></li><li><p>Start service:</p><pre><code class="language-shell">docker-compose -f ./docker-compose/auth.yaml up -d --build --remove-orphans
 </code></pre></li></ol></div></div></div><script src="https://cdn.jsdelivr.net/gh/jquery/jquery@2/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/gh/twbs/bootstrap@3/dist/js/bootstrap.min.js"></script><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v0/dist/bootstrap-toc.min.js"></script><script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9/build/highlight.min.js"></script><script>hljs.initHighlightingOnLoad()</script></body></html>
