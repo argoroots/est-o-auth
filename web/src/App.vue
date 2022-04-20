@@ -19,7 +19,11 @@
 </template>
 
 <style>
-html, body {
+html {
+  @apply bg-slate-100;
+}
+
+body {
   @apply bg-slate-100;
   @apply text-slate-600;
 }
