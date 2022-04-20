@@ -24,21 +24,19 @@ function onAuthenticate () {
 </script>
 
 <template>
-  <div class="p-4">
-    <div class="relative">
-      <form-input
-        id="email"
-        v-model="email"
-        label="Email address"
-        type="email"
-        placeholder="jaak-kristjan@jõeorg.ee"
-        autofocus
-        @submit="onAuthenticate"
-      />
-      <form-button
-        label="Authenticate"
-        @click="onAuthenticate"
-      />
-    </div>
+  <div class="px-4">
+    <form-input
+      id="email"
+      v-model="email"
+      label="Email address"
+      type="email"
+      placeholder="jaak-kristjan@jõeorg.ee"
+      autofocus
+      @submit="onAuthenticate"
+    />
+    <form-button
+      label="Authenticate"
+      @click="onAuthenticate"
+    />
   </div>
 </template>
