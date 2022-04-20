@@ -5,7 +5,7 @@
 
 <template>
   <div class="h-screen w-screen flex justify-center">
-    <div class="flex flex-col justify-start bg-white">
+    <div class="w-full md:w-80 mx-6 flex flex-col justify-start bg-white">
       <h1 class="my-16 mx-8 font-thin text-4xl text-center">
         Auth-O-Matic
       </h1>
