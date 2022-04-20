@@ -4,9 +4,9 @@
 </script>
 
 <template>
-  <div class="h-screen w-screen flex justify-center">
-    <div class="w-full md:w-80 mx-6 flex flex-col justify-start bg-white">
-      <h1 class="my-16 mx-8 font-thin text-4xl text-center">
+  <div class="min-h-screen w-screen flex justify-center">
+    <div class="w-full md:w-80 mx-6 py-16 flex flex-col space-y-16 justify-start bg-white">
+      <h1 class="mx-8 font-thin text-4xl text-center">
         Auth-O-Matic
       </h1>
       <router-view />
