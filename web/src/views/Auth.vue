@@ -42,6 +42,6 @@ const methods = (route.query?.methods || 'e-mail,smart-id,mobile-id,id-card').sp
 
 <style scoped>
 a {
-  @apply flex items-center gap-x-3 py-4 px-6 border-b border-slate-100 hover:text-slate-900
+  @apply flex items-center gap-x-3 py-4 px-8 border-b border-slate-100 hover:text-slate-900
 }
 </style>
