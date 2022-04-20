@@ -34,7 +34,7 @@ const text = computed({
       :type="type"
       :placeholder="placeholder"
       :autofocus="autofocus"
-      class="peer h-10 px-2 w-full border border-slate-300 text-slate-900 placeholder-transparent focus:outline-none focus:border-slate-500"
+      class="peer h-10 px-2 w-full border border-slate-300 text-slate-900 placeholder-transparent rounded-none focus:outline-none focus:border-slate-500"
       @keypress.enter="emit('submit')"
     >
     <label
