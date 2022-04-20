@@ -1,8 +1,19 @@
 <script setup>
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
+import formInput from '@/components/FormInput.vue'
+import formButton from '@/components/FormButton.vue'
 </script>
 
 <template>
-  <h2>Smart-ID</h2>
+  <div class="flex flex-col space-y-6 px-6">
+    <form-input
+      id="idc"
+      type="tel"
+      label="ID code"
+      placeholder="idc"
+      autofocus
+    />
+    <form-button
+      label="Authenticate"
+    />
+  </div>
 </template>
