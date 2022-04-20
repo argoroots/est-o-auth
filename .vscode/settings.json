@@ -3,5 +3,13 @@
     "source.fixAll.eslint": true
   },
   "eslint.validate": ["javascript"],
-  "eslint.workingDirectories": ["./api", "./web"]
+  "eslint.workingDirectories": ["./api", "./web"],
+  "css.validate": false,
+  "tailwindCSS.includeLanguages": {
+    "vue": "html",
+    "vue-html": "html"
+  },
+  "editor.quickSuggestions": {
+    "strings": true
+  }
 }
