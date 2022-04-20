@@ -23,11 +23,11 @@
     >
       Mobile-ID
     </router-link>
-    <router-link
+    <a
       class="block py-4 px-6 border-b border-slate-100"
-      to="/auth/id-card"
+      href="/auth/id-card"
     >
       ID-Card
-    </router-link>
+    </a>
   </div>
 </template>
