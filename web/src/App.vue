@@ -6,11 +6,9 @@
 <template>
   <div class="h-screen w-screen flex justify-center">
     <div class="flex flex-col justify-start bg-white">
-      <img
-        class="w-32 h-32 my-16 mx-8"
-        src="@/assets/oauth-logo.svg"
-        alt="Oauth logo"
-      >
+      <h1 class="my-16 mx-8 font-thin text-4xl text-center">
+        Auth-O-Matic
+      </h1>
       <router-view />
     </div>
   </div>
