@@ -108,12 +108,7 @@ Use Estonian ID-card, Mobile-ID, Smart-ID or E-mail as OAuth authentication prov
     docker-compose --project-directory ./ -f ./docker-compose/id-card.yaml up
     ```
 
-1. Build front-end:
-    ```shell
-    docker-compose --project-directory ./ -f ./docker-compose/build.yaml up
-    ```
-
-1. Start service (API, Redis, Nginx):
+1. Start service:
     ```shell
     docker-compose --project-directory ./ -f ./docker-compose/auth.yaml up -d --build --remove-orphans
     ```
