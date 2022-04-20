@@ -8,7 +8,7 @@ services:
             REDIS: redis://redis:6379
             JWT_SECRET: ${JWT_SECRET}
         volumes:
-            - public:/usr/src/est-o-auth/api/public
+            - ../data/public:/usr/src/est-o-auth/api/public
         depends_on:
             - redis
 
@@ -30,9 +30,6 @@ services:
             - ../data/id-card/dhparam.pem:/etc/nginx/dhparam.pem:ro
             - ../data/certbot/conf:/etc/letsencrypt:ro
             - ../data/logs:/etc/nginx/logs
-            - public:/etc/nginx/html:ro
+            - ../data/public:/etc/nginx/html:ro
         depends_on:
             - auth
-
-volumes:
-    public:
