@@ -25,6 +25,6 @@ html {
 
 body {
   @apply bg-slate-100;
-  @apply text-slate-600;
+  @apply text-slate-500;
 }
 </style>
