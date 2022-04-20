@@ -10,7 +10,7 @@
       <div class="animation-delay-2000 absolute top-20 left-10 h-96 w-96 animate-blob rounded-full bg-purple-200 opacity-70 mix-blend-multiply blur-2xl filter" />
       <div class="animation-delay-4000 absolute top-0 -left-10 h-96 w-96 animate-blob rounded-full bg-blue-200 opacity-70 mix-blend-multiply blur-2xl filter" />
     </div>
-    <div class="relative w-full md:w-80 mx-6 py-16 flex flex-col space-y-16 justify-start bg-white">
+    <div class="relative w-full md:w-80 mx-6 pt-16 md:py-16 flex flex-col space-y-16 justify-start bg-white">
       <h1 class="mx-8 font-thin text-4xl text-center">
         Auth-O-Matic
       </h1>
@@ -25,7 +25,6 @@ html {
 }
 
 body {
-  @apply bg-slate-100;
-  @apply text-slate-500;
+  @apply overflow-x-hidden overflow-y-auto bg-slate-100 text-slate-500;
 }
 </style>
