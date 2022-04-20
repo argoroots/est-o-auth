@@ -11,7 +11,7 @@
         src="@/assets/oauth-logo.svg"
         alt="Oauth logo"
       >
-      <div class="grow flex items-center">
+      <div class="grow flex items-center w-full">
         <router-view />
       </div>
     </div>
@@ -21,6 +21,6 @@
 <style>
 html, body {
   @apply bg-slate-100;
-  @apply text-slate-700;
+  @apply text-slate-600;
 }
 </style>

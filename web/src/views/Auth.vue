@@ -4,7 +4,30 @@
 </script>
 
 <template>
-  <h2>
-    Auth
-  </h2>
+  <div class="flex flex-col w-full">
+    <router-link
+      class="block py-4 px-6 border-y border-slate-100"
+      to="/auth/e-mail"
+    >
+      E-mail
+    </router-link>
+    <router-link
+      class="block py-4 px-6 border-b border-slate-100"
+      to="/auth/smart-id"
+    >
+      Smart-ID
+    </router-link>
+    <router-link
+      class="block py-4 px-6 border-b border-slate-100"
+      to="/auth/mobile-id"
+    >
+      Mobile-ID
+    </router-link>
+    <router-link
+      class="block py-4 px-6 border-b border-slate-100"
+      to="/auth/id-card"
+    >
+      ID-Card
+    </router-link>
+  </div>
 </template>
