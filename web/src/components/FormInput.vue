@@ -39,7 +39,7 @@ const text = computed({
     >
     <label
       :for="id"
-      class="absolute left-1 px-1 -top-2.5 text-slate-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-500 peer-placeholder-shown:top-2 peer-focus:-top-2.5 peer-focus:text-slate-500 peer-focus:text-sm bg-white"
+      class="absolute left-1 px-1 -top-2.5 text-slate-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-500 peer-placeholder-shown:top-2 peer-placeholder-shown:cursor-text peer-focus:-top-2.5 peer-focus:text-slate-500 peer-focus:text-sm bg-white"
     >{{ label }}</label>
   </div>
 </template>
