@@ -4,5 +4,5 @@
 </script>
 
 <template>
-  <router-view />
+  <h1>Auth Email</h1>
 </template>

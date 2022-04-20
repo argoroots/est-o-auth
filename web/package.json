@@ -11,7 +11,8 @@
     "lint": "eslint ./ --fix --ignore-path ../.gitignore --ext .js"
   },
   "dependencies": {
-    "vue": "3.2.33"
+    "vue": "3.2.33",
+    "vue-router": "4.0.14"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "2.3.1",

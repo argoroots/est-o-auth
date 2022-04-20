@@ -4,5 +4,5 @@
 </script>
 
 <template>
-  <router-view />
+  <h1>Auth Mobile-ID</h1>
 </template>
