@@ -5,13 +5,13 @@
 
 <template>
   <div class="h-screen w-screen flex justify-center">
-    <div class="py-16 flex flex-col items-center justify-center bg-white">
+    <div class="flex flex-col items-center justify-center bg-white">
       <img
-        class="w-32 h-32 mx-8"
+        class="w-32 h-32 my-16 mx-8"
         src="@/assets/oauth-logo.svg"
         alt="Oauth logo"
       >
-      <div class="grow flex items-center w-full">
+      <div class="grow w-full">
         <router-view />
       </div>
     </div>
