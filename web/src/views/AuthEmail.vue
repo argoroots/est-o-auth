@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 import formInput from '@/components/FormInput.vue'
+import formButton from '@/components/FormButton.vue'
 
 const route = useRoute()
 const email = ref(route.query?.email)
@@ -34,12 +35,10 @@ function onAuthenticate () {
         autofocus
         @submit="onAuthenticate"
       />
-      <button
-        class="w-full mt-4 h-10 px-2 border border-slate-300 hover:bg-slate-100 active:bg-slate-200"
+      <form-button
+        label="Authenticate"
         @click="onAuthenticate"
-      >
-        Authenticate
-      </button>
+      />
     </div>
   </div>
 </template>
