@@ -6,10 +6,10 @@ const methods = (route.query?.methods || 'e-mail,smart-id,mobile-id,id-card').sp
 </script>
 
 <template>
-  <div class="flex flex-col w-full">
+  <div class="flex flex-col w-full border-t border-slate-100">
     <router-link
       v-if="methods.includes('e-mail')"
-      class="block py-4 px-6 border-y border-slate-100"
+      class="block py-4 px-6 border-b border-slate-100"
       to="/auth/e-mail"
     >
       E-mail
