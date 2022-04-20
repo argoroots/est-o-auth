@@ -2,6 +2,10 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
+    path: '/',
+    redirect: '/auth'
+  },
+  {
     path: '/auth',
     name: 'Auth',
     component: () => import('@/views/Auth.vue')
