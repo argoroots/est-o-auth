@@ -4,5 +4,5 @@
 </script>
 
 <template>
-  <h1>Auth Email</h1>
+  <h2>E-mail</h2>
 </template>

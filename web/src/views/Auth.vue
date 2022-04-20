@@ -4,5 +4,7 @@
 </script>
 
 <template>
-  <h1>Auth</h1>
+  <h2>
+    Auth
+  </h2>
 </template>

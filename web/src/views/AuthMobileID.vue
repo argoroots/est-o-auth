@@ -4,5 +4,5 @@
 </script>
 
 <template>
-  <h1>Auth Mobile-ID</h1>
+  <h2>Mobile-ID</h2>
 </template>

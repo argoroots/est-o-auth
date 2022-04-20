@@ -4,5 +4,5 @@
 </script>
 
 <template>
-  <h1>Auth Smart-ID</h1>
+  <h2>Smart-ID</h2>
 </template>
