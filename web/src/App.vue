@@ -5,15 +5,13 @@
 
 <template>
   <div class="h-screen w-screen flex justify-center">
-    <div class="flex flex-col items-center justify-center bg-white">
+    <div class="flex flex-col justify-start bg-white">
       <img
         class="w-32 h-32 my-16 mx-8"
         src="@/assets/oauth-logo.svg"
         alt="Oauth logo"
       >
-      <div class="grow w-full">
-        <router-view />
-      </div>
+      <router-view />
     </div>
   </div>
 </template>
