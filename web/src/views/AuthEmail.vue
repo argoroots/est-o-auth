@@ -7,7 +7,6 @@ import formButton from '@/components/FormButton.vue'
 
 const route = useRoute()
 const email = ref(route.query?.email)
-const emailSent = ref(false)
 
 if (email.value) {
   onAuthenticate()
@@ -18,7 +17,6 @@ function onAuthenticate () {
     return
   }
 
-  emailSent.value = true
   console.log(email.value)
 }
 </script>

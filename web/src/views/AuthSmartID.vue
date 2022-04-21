@@ -1,12 +1,31 @@
 <script setup>
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+
 import formInput from '@/components/FormInput.vue'
 import formButton from '@/components/FormButton.vue'
+
+const route = useRoute()
+const idc = ref(route.query?.idc)
+
+if (idc.value) {
+  onAuthenticate()
+}
+
+function onAuthenticate () {
+  if (!idc.value?.trim()) {
+    return
+  }
+
+  console.log(idc.value)
+}
 </script>
 
 <template>
   <form>
     <form-input
       id="idc"
+      v-model="idc"
       type="tel"
       label="ID code"
       placeholder="idc"
