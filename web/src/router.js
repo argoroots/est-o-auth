@@ -70,6 +70,11 @@ router.beforeEach((to, from, next) => {
     return
   }
 
+  if (query.scope !== 'openid') {
+    next({ path: '/auth/error', query: { ...query, error: 'scope' } })
+    return
+  }
+
   next()
 })
 

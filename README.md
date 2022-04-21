@@ -14,7 +14,7 @@ Use Estonian ID-card, Mobile-ID, Smart-ID or E-mail as OAuth authentication prov
     - response_type - *always equals to "code"*
     - client_id
     - redirect_uri
-    - scope
+    - scope - *always equals to "openid"*
     - state
 
     Optional parameters - if not set, user must input required ones (depends of auth method):

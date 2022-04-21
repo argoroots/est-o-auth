@@ -9,11 +9,13 @@ const error = computed(() => {
     case 'missing_parameter':
       return 'Required parameter (response_type, client_id, redirect_uri, scope or state) is missing!'
     case 'response_type':
-      return 'The response type (response_type) in the request do not match  required value "code"!'
+      return 'The response type (response_type) in the request do not match required value "code"!'
     case 'client_id':
       return 'The client ID (client_id) in the request do not match a registered client ID!'
     case 'redirect_uri':
       return 'The redirect URI (redirect_uri) in the request do not match a registered redirect URI!'
+    case 'scope':
+      return 'The scope in the request do not match required value "openid"!'
     default:
       return null
   }
