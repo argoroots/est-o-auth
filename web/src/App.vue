@@ -27,6 +27,7 @@ import blobs from '@/components/Blobs.vue'
 #content {
   @apply relative;
   @apply md:w-80;
+  @apply mx-6;
   @apply flex;
   @apply flex-col;
   @apply justify-start;
