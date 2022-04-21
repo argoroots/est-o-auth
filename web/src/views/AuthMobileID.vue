@@ -4,7 +4,7 @@ import formButton from '@/components/FormButton.vue'
 </script>
 
 <template>
-  <div class="flex flex-col space-y-6 px-6">
+  <form>
     <form-input
       id="idc"
       type="tel"
@@ -21,5 +21,16 @@ import formButton from '@/components/FormButton.vue'
     <form-button
       label="Authenticate"
     />
-  </div>
+  </form>
 </template>
+
+<style scoped>
+form {
+  @apply py-8;
+  @apply px-6;
+  @apply flex;
+  @apply flex-col;
+  @apply space-y-6;
+  @apply bg-white;
+}
+</style>

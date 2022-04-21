@@ -24,7 +24,7 @@ function onAuthenticate () {
 </script>
 
 <template>
-  <div class="px-4">
+  <form>
     <form-input
       id="email"
       v-model="email"
@@ -38,5 +38,16 @@ function onAuthenticate () {
       label="Authenticate"
       @click="onAuthenticate"
     />
-  </div>
+  </form>
 </template>
+
+<style scoped>
+form {
+  @apply py-8;
+  @apply px-6;
+  @apply flex;
+  @apply flex-col;
+  @apply space-y-6;
+  @apply bg-white;
+}
+</style>

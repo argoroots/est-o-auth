@@ -34,12 +34,42 @@ const text = computed({
       :type="type"
       :placeholder="placeholder"
       :autofocus="autofocus"
-      class="peer h-10 px-2 w-full border border-slate-300 text-slate-900 placeholder-transparent rounded-none focus:outline-none focus:border-slate-500"
+      class="peer"
       @keypress.enter="emit('submit')"
     >
-    <label
-      :for="id"
-      class="absolute left-1 px-1 -top-2.5 text-slate-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-500 peer-placeholder-shown:top-2 peer-placeholder-shown:cursor-text peer-focus:-top-2.5 peer-focus:text-slate-500 peer-focus:text-sm bg-white"
-    >{{ label }}</label>
+    <label :for="id">{{ label }}</label>
   </div>
 </template>
+
+<style scoped>
+  input {
+    @apply h-10;
+    @apply w-full;
+    @apply px-2;
+    @apply rounded-none;
+    @apply placeholder-transparent;
+    @apply border;
+    @apply border-slate-300;
+    @apply text-slate-900;
+    @apply focus:outline-none;
+    @apply focus:border-slate-500;
+  }
+
+  label {
+    @apply absolute;
+    @apply -top-2.5;
+    @apply left-1;
+    @apply px-1;
+    @apply text-sm;
+    @apply text-slate-500;
+    @apply bg-white;
+    @apply transition-all;
+    @apply peer-placeholder-shown:top-2;
+    @apply peer-placeholder-shown:text-base;
+    @apply peer-placeholder-shown:text-slate-500;
+    @apply peer-placeholder-shown:cursor-text;
+    @apply peer-focus:-top-2.5;
+    @apply peer-focus:text-sm;
+    @apply peer-focus:text-slate-500;
+  }
+</style>

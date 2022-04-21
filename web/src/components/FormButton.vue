@@ -8,14 +8,24 @@ const props = defineProps({
 const emit = defineEmits([
   'click'
 ])
-
 </script>
 
 <template>
-  <button
-    class="w-full mt-4 h-10 px-2 border border-slate-300 hover:bg-slate-100 active:bg-slate-200"
-    @click="emit('click')"
-  >
+  <button @click="emit('click')">
     {{ label }}
   </button>
 </template>
+
+<style scoped>
+button {
+  @apply h-10;
+  @apply w-full;
+  @apply mt-4;
+  @apply px-2;
+  @apply border;
+  @apply border-slate-300;
+  @apply hover:bg-slate-100;
+  @apply hover:text-slate-600;
+  @apply active:bg-slate-200;;
+}
+</style>

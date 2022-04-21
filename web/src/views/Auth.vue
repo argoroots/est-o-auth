@@ -1,14 +1,14 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import { ApplicationMobile, Email, SimCard } from '@vicons/carbon'
-import SmartId from '@/components/SmartId.vue'
+import SmartIdIcon from '@/components/SmartIdIcon.vue'
 
 const route = useRoute()
 const methods = (route.query?.methods || 'e-mail,smart-id,mobile-id,id-card').split(',')
 </script>
 
 <template>
-  <div class="flex flex-col w-full border-t border-slate-100">
+  <nav>
     <router-link
       v-if="methods.includes('e-mail')"
       to="/auth/e-mail"
@@ -20,7 +20,7 @@ const methods = (route.query?.methods || 'e-mail,smart-id,mobile-id,id-card').sp
       v-if="methods.includes('smart-id')"
       to="/auth/smart-id"
     >
-      <smart-id class="h-5 w-5" />
+      <smart-id-icon class="h-5 w-5" />
       Smart-ID
     </router-link>
     <router-link
@@ -37,11 +37,24 @@ const methods = (route.query?.methods || 'e-mail,smart-id,mobile-id,id-card').sp
       <sim-card class="h-5 w-5" />
       ID-Card
     </a>
-  </div>
+  </nav>
 </template>
 
 <style scoped>
+nav {
+  @apply flex;
+  @apply flex-col;
+  @apply w-full;
+}
+
 a {
-  @apply flex items-center gap-x-3 py-4 px-8 border-b border-slate-100 hover:text-slate-900
+  @apply mb-0.5;
+  @apply py-4;
+  @apply px-8;
+  @apply flex;
+  @apply gap-x-3;
+  @apply items-center;
+  @apply bg-white;
+  @apply hover:text-slate-900;
 }
 </style>
