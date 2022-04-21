@@ -5,8 +5,8 @@ import { useRoute } from 'vue-router'
 import formInput from '@/components/FormInput.vue'
 import formButton from '@/components/FormButton.vue'
 
-const route = useRoute()
-const idc = ref(route.query?.idc)
+const { query } = useRoute()
+const idc = ref(query.idc)
 
 if (idc.value) {
   onAuthenticate()

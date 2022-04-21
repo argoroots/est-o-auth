@@ -5,8 +5,8 @@ import { useRoute } from 'vue-router'
 import formInput from '@/components/FormInput.vue'
 import formButton from '@/components/FormButton.vue'
 
-const route = useRoute()
-const email = ref(route.query?.email)
+const { query } = useRoute()
+const email = ref(query.email)
 
 if (email.value) {
   onAuthenticate()

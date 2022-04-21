@@ -1,41 +1,51 @@
 <script setup>
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { ApplicationMobile, Email, SimCard } from '@vicons/carbon'
 import SmartIdIcon from '@/components/SmartIdIcon.vue'
 
-const route = useRoute()
-const methods = (route.query?.methods || 'e-mail,smart-id,mobile-id,id-card').split(',')
+const { query } = useRoute()
+const queryMethods = (query.methods || 'e-mail,smart-id,mobile-id,id-card').split(',')
+
+const methods = [
+  {
+    id: 'e-mail',
+    label: 'E-mail',
+    icon: Email,
+    to: { path: '/auth/e-mail', query }
+  },
+  {
+    id: 'smart-id',
+    label: 'Smart-ID',
+    icon: SmartIdIcon,
+    to: { path: '/auth/smart-id', query }
+  },
+  {
+    id: 'mobile-id',
+    label: 'Mobile-ID',
+    icon: ApplicationMobile,
+    to: { path: '/auth/mobile-id', query }
+  },
+  {
+    id: 'id-card',
+    label: 'ID-Card',
+    icon: SimCard,
+    to: { path: '/auth/id-card', query }
+  }
+]
+
+const allowedMethods = computed(() => methods.filter(m => queryMethods.includes(m.id)))
 </script>
 
 <template>
   <nav>
     <router-link
-      v-if="methods.includes('e-mail')"
-      to="/auth/e-mail"
+      v-for="(method, idx) in allowedMethods"
+      :key="idx"
+      :to="method.to"
     >
-      <email class="h-5 w-5" />
-      E-mail
-    </router-link>
-    <router-link
-      v-if="methods.includes('smart-id')"
-      to="/auth/smart-id"
-    >
-      <smart-id-icon class="h-5 w-5" />
-      Smart-ID
-    </router-link>
-    <router-link
-      v-if="methods.includes('mobile-id')"
-      to="/auth/mobile-id"
-    >
-      <application-mobile class="h-5 w-5" />
-      Mobile-ID
-    </router-link>
-    <router-link
-      v-if="methods.includes('id-card')"
-      to="/auth/id-card"
-    >
-      <sim-card class="h-5 w-5" />
-      ID-Card
+      <component :is="method.icon" />
+      {{ method.label }}
     </router-link>
   </nav>
 </template>
@@ -56,5 +66,9 @@ a {
   @apply items-center;
   @apply bg-white;
   @apply hover:text-slate-900;
+}
+
+svg {
+  @apply h-5 w-5;
 }
 </style>
