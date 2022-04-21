@@ -1,12 +1,32 @@
 <script setup>
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+
 import formInput from '@/components/FormInput.vue'
 import formButton from '@/components/FormButton.vue'
+
+const route = useRoute()
+const idc = ref(route.query?.idc)
+const phone = ref(route.query?.phone)
+
+if (idc.value && phone.value) {
+  onAuthenticate()
+}
+
+function onAuthenticate () {
+  if (!idc.value?.trim() || !phone.value?.trim()) {
+    return
+  }
+
+  console.log(idc.value, phone.value)
+}
 </script>
 
 <template>
   <form>
     <form-input
       id="idc"
+      v-model="idc"
       type="tel"
       label="ID code"
       placeholder="idc"
@@ -14,6 +34,7 @@ import formButton from '@/components/FormButton.vue'
     />
     <form-input
       id="phone"
+      v-model="phone"
       type="tel"
       label="Phone"
       placeholder="phone"
