@@ -24,6 +24,11 @@ const routes = [
     path: '/auth/smart-id',
     name: 'AuthSmartID',
     component: () => import('@/views/AuthSmartID.vue')
+  },
+  {
+    path: '/auth/id-card',
+    name: 'AuthIDCard',
+    component: () => import('@/views/AuthIDCard.vue')
   }
 ]
 

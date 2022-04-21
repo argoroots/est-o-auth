@@ -30,13 +30,13 @@ const methods = (route.query?.methods || 'e-mail,smart-id,mobile-id,id-card').sp
       <application-mobile class="h-5 w-5" />
       Mobile-ID
     </router-link>
-    <a
+    <router-link
       v-if="methods.includes('id-card')"
-      href="/auth/id-card"
+      to="/auth/id-card"
     >
       <sim-card class="h-5 w-5" />
       ID-Card
-    </a>
+    </router-link>
   </nav>
 </template>
 
