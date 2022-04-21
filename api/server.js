@@ -14,7 +14,7 @@ const server = http.createServer(async (req, res) => {
     const { pathname } = new URL(req.url, `${req.protocol}://${headers.host}/`)
 
     switch (`${method.toUpperCase()} ${pathname.toLowerCase()}`) {
-      case 'GET /auth/id-card':
+      case 'GET /id-card':
         idCard.getCode(headers, params, res)
         break
       case 'POST /token':

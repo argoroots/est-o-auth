@@ -41,7 +41,7 @@ server {
         return 403;
     }
 
-    location /auth/id-card {
+    location /id-card {
         expires          -1;
 
         proxy_pass       http://auth;
