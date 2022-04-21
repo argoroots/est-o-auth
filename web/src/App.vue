@@ -3,9 +3,9 @@ import blobs from '@/components/Blobs.vue'
 </script>
 
 <template>
-  <div class="container">
+  <div id="main">
     <blobs />
-    <div class="container-content">
+    <div id="content">
       <h1>
         Auth-O-Matic
       </h1>
@@ -16,7 +16,7 @@ import blobs from '@/components/Blobs.vue'
 </template>
 
 <style scoped>
-.container {
+#main {
   @apply min-h-screen;
   @apply w-screen;
   @apply flex;
@@ -24,7 +24,7 @@ import blobs from '@/components/Blobs.vue'
   @apply overflow-hidden;
 }
 
-.container-content {
+#content {
   @apply relative;
   @apply md:w-80;
   @apply flex;
