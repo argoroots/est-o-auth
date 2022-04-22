@@ -36,7 +36,7 @@ server {
         proxy_set_header X-Real-IP         $remote_addr;
     }
 
-    location ~ (/auth|/auth/e-mail|/auth/mobile-id|/auth/smart-id|/auth/id-card)$ {
+    location ~ (/auth|/auth/e-mail|/auth/mobile-id|/auth/smart-id|/auth/id-card|/auth/error)$ {
         root      /etc/nginx/html;
         index     index.html;
         try_files $uri $uri/ $uri.html /index.html;
