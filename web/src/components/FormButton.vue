@@ -23,9 +23,9 @@ button {
   @apply mt-4;
   @apply px-2;
   @apply border;
-  @apply border-slate-300;
-  @apply hover:bg-slate-100;
-  @apply hover:text-slate-600;
-  @apply active:bg-slate-200;;
+  @apply border-stone-300;
+  @apply hover:bg-stone-100;
+  @apply hover:text-stone-600;
+  @apply active:bg-stone-200;;
 }
 </style>

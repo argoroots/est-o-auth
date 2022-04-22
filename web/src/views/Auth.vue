@@ -43,6 +43,7 @@ const allowedMethods = computed(() => methods.filter(m => queryMethods.includes(
       v-for="(method, idx) in allowedMethods"
       :key="idx"
       :to="method.to"
+      replace
     >
       <component :is="method.icon" />
       {{ method.label }}
@@ -65,7 +66,7 @@ a {
   @apply gap-x-3;
   @apply items-center;
   @apply bg-white;
-  @apply hover:text-slate-900;
+  @apply hover:text-stone-900;
 }
 
 svg {

@@ -9,7 +9,6 @@
 <style scoped>
 #blobs {
   @apply relative;
-  @apply mt-24;
 }
 
 .blob {
@@ -27,20 +26,20 @@
 .pink {
   @apply top-20;
   @apply -left-20;
-  @apply bg-pink-200;
+  @apply bg-yellow-100;
 }
 
 .purple {
   @apply top-20;
   @apply left-10;
-  @apply bg-purple-200;
+  @apply bg-red-100;
   @apply animation-delay-2000;
 }
 
 .blue {
   @apply top-0;
   @apply -left-10;
-  @apply bg-blue-200;
+  @apply bg-orange-100;
   @apply animation-delay-4000;
 }
 </style>

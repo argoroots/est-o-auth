@@ -53,10 +53,10 @@ const text = computed({
     @apply rounded-none;
     @apply placeholder-transparent;
     @apply border;
-    @apply border-slate-300;
-    @apply text-slate-900;
+    @apply border-stone-300;
+    @apply text-stone-900;
     @apply focus:outline-none;
-    @apply focus:border-slate-500;
+    @apply focus:border-stone-500;
   }
 
   label {
@@ -65,15 +65,15 @@ const text = computed({
     @apply left-1;
     @apply px-1;
     @apply text-sm;
-    @apply text-slate-500;
+    @apply text-stone-500;
     @apply bg-white;
     @apply transition-all;
     @apply peer-placeholder-shown:top-2;
     @apply peer-placeholder-shown:text-base;
-    @apply peer-placeholder-shown:text-slate-500;
+    @apply peer-placeholder-shown:text-stone-500;
     @apply peer-placeholder-shown:cursor-text;
     @apply peer-focus:-top-2.5;
     @apply peer-focus:text-sm;
-    @apply peer-focus:text-slate-500;
+    @apply peer-focus:text-stone-500;
   }
 </style>
