@@ -29,7 +29,7 @@ function onAuthenticate () {
       v-model="idc"
       type="tel"
       label="ID code"
-      placeholder="idc"
+      placeholder="38001085718"
       autofocus
     />
     <form-input
@@ -37,7 +37,7 @@ function onAuthenticate () {
       v-model="phone"
       type="tel"
       label="Phone"
-      placeholder="phone"
+      placeholder="+37200000000"
     />
     <form-button
       label="Authenticate"

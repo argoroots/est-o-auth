@@ -28,7 +28,7 @@ function onAuthenticate () {
       v-model="idc"
       type="tel"
       label="ID code"
-      placeholder="idc"
+      placeholder="38001085718"
       autofocus
     />
     <form-button

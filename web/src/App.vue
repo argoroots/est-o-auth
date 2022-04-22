@@ -6,9 +6,7 @@ import blobs from '@/components/Blobs.vue'
   <div id="main">
     <blobs />
     <div id="content">
-      <h1>
-        Auth-O-Matic
-      </h1>
+      <h1>Auth-O-Matic</h1>
       <router-view />
       <footer />
     </div>

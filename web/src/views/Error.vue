@@ -25,9 +25,7 @@ console.log(query)
 
 <template>
   <div>
-    <h2>
-      Error
-    </h2>
+    <h2>Error</h2>
     <p v-if="error">
       {{ error }}
     </p>

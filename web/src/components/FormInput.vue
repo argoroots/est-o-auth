@@ -27,7 +27,7 @@ const text = computed({
 </script>
 
 <template>
-  <div class="relative">
+  <div class="form-input">
     <input
       :id="id"
       v-model="text"
@@ -42,6 +42,10 @@ const text = computed({
 </template>
 
 <style scoped>
+  .form-input {
+    @apply relative;
+  }
+
   input {
     @apply h-10;
     @apply w-full;
