@@ -43,7 +43,6 @@ const allowedMethods = computed(() => methods.filter(m => queryMethods.includes(
       v-for="(method, idx) in allowedMethods"
       :key="idx"
       :to="method.to"
-      replace
     >
       <component :is="method.icon" />
       {{ method.label }}
