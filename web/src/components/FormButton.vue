@@ -1,7 +1,7 @@
 <script setup>
 import { defineEmits, defineProps } from 'vue'
 
-const props = defineProps({
+defineProps({
   label: { type: String, required: true }
 })
 
@@ -26,6 +26,6 @@ button {
   @apply border-stone-300;
   @apply hover:bg-stone-100;
   @apply hover:text-stone-600;
-  @apply active:bg-stone-200;;
+  @apply active:bg-stone-200;
 }
 </style>

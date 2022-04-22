@@ -14,7 +14,5 @@ module.exports = {
   plugins: [
     'vue'
   ],
-  rules: {
-    'no-unused-vars': ['error', { varsIgnorePattern: 'props' }]
-  }
+  rules: {}
 }

@@ -2,14 +2,13 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "eslint.validate": ["javascript"],
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "eslint.validate": ["javascript", "vue"],
   "eslint.workingDirectories": ["./api", "./web"],
-  "css.validate": false,
   "tailwindCSS.includeLanguages": {
     "vue": "html",
     "vue-html": "html"
-  },
-  "editor.quickSuggestions": {
-    "strings": true
   }
 }
