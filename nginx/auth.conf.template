@@ -23,17 +23,9 @@ server {
     gzip on;
     gzip_types text/html application/javascript application/json text/css;
 
-    location ~ (/token|/user|/api/e-mail|/api/mobile-id|/api/smart-id)$ {
-        if ($request_method = "OPTIONS") {
-            add_header Access-Control-Allow-Headers "*";
-            add_header Access-Control-Allow-Methods "GET, POST, OPTIONS";
-            add_header Access-Control-Allow-Origin "*";
-            add_header Access-Control-Max-Age 1728000;
-            add_header Content-Type "text/plain charset=UTF-8";
-            add_header Content-Length 0;
-            return 204;
-        }
+    add_header Access-Control-Allow-Origin "*" always;
 
+    location ~ (/token|/user|/api/e-mail|/api/mobile-id|/api/smart-id)$ {
         expires          -1;
 
         proxy_pass       http://auth;
@@ -44,8 +36,6 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header X-NginX-Proxy     true;
         proxy_set_header X-Real-IP         $remote_addr;
-
-        add_header Access-Control-Allow-Origin "*" always;
     }
 
     location ~ (/auth|/auth/e-mail|/auth/mobile-id|/auth/smart-id|/auth/id-card|/auth/error)$ {
