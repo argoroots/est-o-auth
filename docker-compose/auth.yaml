@@ -16,6 +16,11 @@ services:
             PORT: 80
             REDIS: redis://redis:6379
             JWT_SECRET: ${JWT_SECRET}
+            EMAIL_FROM: ${EMAIL_FROM}
+            EMAIL_URL: https://${DOMAIN}/auth/e-mail
+            AWS_SES_ID: ${AWS_SES_ID}
+            AWS_SES_KEY: ${AWS_SES_KEY}
+            AWS_SES_REGION: ${AWS_SES_REGION}
         depends_on:
             - redis
 

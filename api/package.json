@@ -11,14 +11,15 @@
     "lint": "eslint ./ --fix --ignore-path ../.gitignore --ext .js"
   },
   "dependencies": {
+    "aws-sdk": "2.1120.0",
     "jsonwebtoken": "8.5.1",
     "redis": "4.0.6"
   },
   "devDependencies": {
-    "eslint": "8.13.0",
-    "eslint-config-standard": "16.0.3",
+    "eslint": "8.14.0",
+    "eslint-config-standard": "17.0.0",
     "eslint-plugin-import": "2.26.0",
-    "eslint-plugin-node": "11.1.0",
+    "eslint-plugin-n": "15.2.0",
     "eslint-plugin-promise": "6.0.0",
     "nodemon": "2.0.15"
   }

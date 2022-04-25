@@ -1,5 +1,6 @@
 const http = require('http')
 const error = require('./routes/error.js')
+const email = require('./routes/e-mail.js')
 const idCard = require('./routes/id-card.js')
 const token = require('./routes/token.js')
 const user = require('./routes/user.js')
@@ -14,6 +15,9 @@ const server = http.createServer(async (req, res) => {
     const { pathname } = new URL(req.url, `${req.protocol}://${headers.host}/`)
 
     switch (`${method.toUpperCase()} ${pathname.toLowerCase()}`) {
+      case 'POST /e-mail':
+        email.postEmail(headers, params, res)
+        break
       case 'GET /id-card':
         idCard.getCode(headers, params, res)
         break
