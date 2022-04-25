@@ -23,7 +23,6 @@ const text = computed({
     emit('update:modelValue', val)
   }
 })
-
 </script>
 
 <template>
