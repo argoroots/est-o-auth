@@ -31,7 +31,7 @@ async function postEmail (headers, params, res) {
   await ses.sendEmail({
     Source: process.env.EMAIL_FROM,
     Destination: {
-      ToAddresses: params.email
+      ToAddresses: [params.email]
     },
     Message: {
       Subject: {
