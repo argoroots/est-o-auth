@@ -7,17 +7,26 @@ import formWrapper from '@/components/FormWrapper.vue'
 import formInput from '@/components/FormInput.vue'
 import formButton from '@/components/FormButton.vue'
 
-const { query } = useRoute()
+const { params, query } = useRoute()
 const email = ref(query.email)
+const code = ref(params.code[0])
+const isSending = ref(false)
+const isEmailSent = ref(false)
 
 if (email.value) {
+  onSendEmail()
+}
+
+if (code.value) {
   onAuthenticate()
 }
 
-async function onAuthenticate () {
+async function onSendEmail () {
   if (!email.value?.trim()) {
     return
   }
+
+  isSending.value = true
 
   const response = await post('e-mail', {
     response_type: query.response_type,
@@ -28,19 +37,51 @@ async function onAuthenticate () {
     email: email.value
   })
 
+  isSending.value = false
+  isEmailSent.value = true
+
   console.log(response)
 }
 
+async function onAuthenticate () {
+  if (!code.value?.trim()) {
+    return
+  }
+
+  isSending.value = true
+
+  const response = await post('e-mail', {
+    code: code.value
+  })
+
+  console.log(response)
+}
 </script>
 
 <template>
-  <form-wrapper>
+  <form-wrapper v-if="!isSending && !isEmailSent">
     <form-input
       id="email"
       v-model="email"
       label="Email address"
       type="email"
       placeholder="jaak-kristjan@jõeorg.ee"
+      autofocus
+      @submit="onSendEmail"
+    />
+    <form-button @click="onSendEmail">
+      Authenticate
+    </form-button>
+  </form-wrapper>
+
+  <form-wrapper v-if="!isSending && isEmailSent">
+    <h2>Check Your inbox!</h2>
+    <p>We sent a verification code to e-mail address {{ email }}. Please enter it below or click a link in e-mail.</p>
+    <form-input
+      id="code"
+      v-model="code"
+      label="Verification Code"
+      placeholder="123ABC"
       autofocus
       @submit="onAuthenticate"
     />
