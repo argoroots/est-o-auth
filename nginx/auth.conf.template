@@ -35,7 +35,7 @@ server {
         proxy_set_header X-NginX-Proxy     true;
         proxy_set_header X-Real-IP         $remote_addr;
 
-        add_header Access-Control-Allow-Origin "http://localhost:8080";
+        add_header Access-Control-Allow-Origin "http://localhost:8080" always;
     }
 
     location ~ (/auth|/auth/e-mail|/auth/mobile-id|/auth/smart-id|/auth/id-card|/auth/error)$ {
