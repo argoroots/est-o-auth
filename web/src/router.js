@@ -7,8 +7,8 @@ const routes = [
   },
   {
     path: '/auth',
-    name: 'Auth',
-    component: () => import('@/views/Auth.vue')
+    name: 'AuthNav',
+    component: () => import('@/views/AuthNav.vue')
   },
   {
     path: '/auth/e-mail',
@@ -32,8 +32,8 @@ const routes = [
   },
   {
     path: '/auth/error',
-    name: 'Error',
-    component: () => import('@/views/Error.vue')
+    name: 'AuthError',
+    component: () => import('@/views/AuthError.vue')
   }
 ]
 

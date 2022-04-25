@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
-import authForm from './AuthForm.vue'
+import formWrapper from '@/components/FormWrapper.vue'
 
 const { query } = useRoute()
 
@@ -25,12 +25,12 @@ const error = computed(() => {
 </script>
 
 <template>
-  <auth-form>
+  <form-wrapper>
     <h2>
       Error
     </h2>
     <p>
       {{ error }}
     </p>
-  </auth-form>
+  </form-wrapper>
 </template>
