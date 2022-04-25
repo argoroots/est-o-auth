@@ -45,6 +45,9 @@ async function postEmail (headers, params, res) {
       }
     }
   }).promise()
+
+  res.writeHead(200, { 'Content-Type': 'application/json' })
+  res.end(JSON.stringify({ sent: true }))
 }
 
 module.exports = {
