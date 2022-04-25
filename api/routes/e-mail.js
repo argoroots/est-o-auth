@@ -20,7 +20,7 @@ async function postEmail (headers, params, res) {
   }
 
   const code = '12345678'
-  const url = `${process.env.EMAIL_URL}/${code}`
+  const url = `${process.env.EMAIL_URL}?code=${code}`
 
   const ses = new aws.SES({
     accessKeyId: process.env.AWS_SES_ID,
@@ -38,8 +38,8 @@ async function postEmail (headers, params, res) {
         Data: 'Verification Code'
       },
       Body: {
-        Text: {
-          Data: `Your verification code is ${code}, or open url ${url}.`
+        Html: {
+          Data: `Your verification code is <strong>${code}</strong>.<br><br>... or just open url <a href="${url}">${url}</a>.`
         }
       }
     }

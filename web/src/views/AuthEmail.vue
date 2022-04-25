@@ -7,9 +7,9 @@ import formWrapper from '@/components/FormWrapper.vue'
 import formInput from '@/components/FormInput.vue'
 import formButton from '@/components/FormButton.vue'
 
-const { params, query } = useRoute()
+const { query } = useRoute()
 const email = ref(query.email)
-const code = ref(params.code[0])
+const code = ref(query.code)
 const isSending = ref(false)
 const isEmailSent = ref(false)
 

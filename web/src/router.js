@@ -11,7 +11,7 @@ const routes = [
     component: () => import('@/views/AuthNav.vue')
   },
   {
-    path: '/auth/e-mail/:code*',
+    path: '/auth/e-mail',
     name: 'AuthEmail',
     component: () => import('@/views/AuthEmail.vue')
   },
@@ -46,11 +46,6 @@ router.beforeEach((to, from, next) => {
   const { path, query } = to
 
   if (['/', '/auth/error'].includes(path)) {
-    next()
-    return
-  }
-
-  if (path.startsWith('/auth/e-mail/') && to.params?.code) {
     next()
     return
   }
