@@ -15,7 +15,7 @@ const server = http.createServer(async (req, res) => {
     const { pathname } = new URL(req.url, `${req.protocol}://${headers.host}/`)
 
     switch (`${method.toUpperCase()} ${pathname.toLowerCase()}`) {
-      case 'POST /e-mail':
+      case 'POST /api/e-mail':
         email.postEmail(headers, params, res)
         break
       case 'GET /id-card':
