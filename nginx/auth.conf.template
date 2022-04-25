@@ -34,8 +34,8 @@ server {
             return 204;
         }
 
-        add_header Access-Control-Allow-Headers "*";
-        add_header Access-Control-Allow-Methods "GET, POST, OPTIONS";
+        add_header Access-Control-Allow-Headers "*" always;
+        add_header Access-Control-Allow-Methods "GET, POST, OPTIONS" always;
         add_header Access-Control-Allow-Origin "http://localhost:8080" always;
 
         expires          -1;
