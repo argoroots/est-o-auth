@@ -1,8 +1,8 @@
 <template>
   <div id="blobs">
-    <div class="blob pink" />
-    <div class="blob purple" />
-    <div class="blob blue" />
+    <div class="blob yellow" />
+    <div class="blob red" />
+    <div class="blob orange" />
   </div>
 </template>
 
@@ -23,20 +23,20 @@
   @apply opacity-70;
 }
 
-.pink {
+.yellow {
   @apply top-20;
   @apply -left-20;
   @apply bg-yellow-100;
 }
 
-.purple {
+.red {
   @apply top-20;
   @apply left-10;
   @apply bg-red-100;
   @apply animation-delay-2000;
 }
 
-.blue {
+.orange {
   @apply top-0;
   @apply -left-10;
   @apply bg-orange-100;
