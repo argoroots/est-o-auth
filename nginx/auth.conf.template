@@ -23,9 +23,21 @@ server {
     gzip on;
     gzip_types text/html application/javascript application/json text/css;
 
-    add_header Access-Control-Allow-Origin "*" always;
+    if ($request_method = "OPTIONS") {
+        add_header Access-Control-Allow-Headers "*";
+        add_header Access-Control-Allow-Methods "GET, POST, OPTIONS";
+        add_header Access-Control-Allow-Origin "http://localhost:8080";
+        add_header Access-Control-Max-Age 1728000;
+        add_header Content-Type "text/plain charset=UTF-8";
+        add_header Content-Length 0;
+        return 204;
+    }
 
     location ~ (/token|/user|/api/e-mail|/api/mobile-id|/api/smart-id)$ {
+        add_header Access-Control-Allow-Headers "*";
+        add_header Access-Control-Allow-Methods "GET, POST, OPTIONS";
+        add_header Access-Control-Allow-Origin "http://localhost:8080" always;
+
         expires          -1;
 
         proxy_pass       http://auth;
