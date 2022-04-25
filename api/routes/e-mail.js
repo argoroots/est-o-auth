@@ -1,4 +1,5 @@
 const aws = require('aws-sdk')
+const storage = require('./_storage.js')
 
 async function postEmail (headers, params, res) {
   if (params.response_type !== 'code') {
@@ -19,8 +20,8 @@ async function postEmail (headers, params, res) {
     return
   }
 
-  const code = '12345678'
-  const url = `${process.env.EMAIL_URL}?code=${code}`
+  const code = await storage.saveEmail({ email: params.email })
+  const url = `${process.env.EMAIL_URL}?email=${params.email}&code=${code}`
 
   const ses = new aws.SES({
     accessKeyId: process.env.AWS_SES_ID,
@@ -39,7 +40,7 @@ async function postEmail (headers, params, res) {
       },
       Body: {
         Html: {
-          Data: `Your verification code is <strong>${code}</strong>.<br><br>... or just open url <a href="${url}">${url}</a>.`
+          Data: `Your verification code is <strong>${code}</strong><br><br>... or just open url <a href="${url}">${url}</a>.`
         }
       }
     }

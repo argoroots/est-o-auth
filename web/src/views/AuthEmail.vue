@@ -13,11 +13,11 @@ const code = ref(query.code)
 const isSending = ref(false)
 const isEmailSent = ref(false)
 
-if (email.value) {
+if (email.value && !code.value) {
   onSendEmail()
 }
 
-if (code.value) {
+if (email.value && code.value) {
   onAuthenticate()
 }
 

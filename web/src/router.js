@@ -50,6 +50,11 @@ router.beforeEach((to, from, next) => {
     return
   }
 
+  if (path === '/auth/e-mail' && query.code && query.email) {
+    next()
+    return
+  }
+
   if (!query.response_type || !query.client_id || !query.redirect_uri || !query.scope || !query.state) {
     next({ path: '/auth/error', query: { ...query, error: 'missing_parameter' } })
     return
