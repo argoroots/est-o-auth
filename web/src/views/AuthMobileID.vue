@@ -2,24 +2,35 @@
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 
+import { post } from '@/api.js'
 import formWrapper from '@/components/FormWrapper.vue'
 import formInput from '@/components/FormInput.vue'
 import formButton from '@/components/FormButton.vue'
 
 const { query } = useRoute()
-const phone = ref(query.phone)
 const idc = ref(query.idc)
+const phone = ref(query.phone)
 
 if (idc.value && phone.value) {
   onAuthenticate()
 }
 
-function onAuthenticate () {
+async function onAuthenticate () {
   if (!idc.value?.trim() || !phone.value?.trim()) {
     return
   }
 
-  console.log(idc.value, phone.value)
+  const response = await post('mobile-id', {
+    response_type: query.response_type,
+    client_id: query.client_id,
+    redirect_uri: query.redirect_uri,
+    scope: query.scope,
+    state: query.state,
+    idc: idc.value,
+    phone: phone.value
+  })
+
+  console.log(response)
 }
 </script>
 

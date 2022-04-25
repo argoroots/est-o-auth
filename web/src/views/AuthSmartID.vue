@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 
+import { post } from '@/api.js'
 import formWrapper from '@/components/FormWrapper.vue'
 import formInput from '@/components/FormInput.vue'
 import formButton from '@/components/FormButton.vue'
@@ -13,12 +14,21 @@ if (idc.value) {
   onAuthenticate()
 }
 
-function onAuthenticate () {
+async function onAuthenticate () {
   if (!idc.value?.trim()) {
     return
   }
 
-  console.log(idc.value)
+  const response = await post('smart-id', {
+    response_type: query.response_type,
+    client_id: query.client_id,
+    redirect_uri: query.redirect_uri,
+    scope: query.scope,
+    state: query.state,
+    idc: idc.value
+  })
+
+  console.log(response)
 }
 </script>
 

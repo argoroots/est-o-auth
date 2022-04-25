@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 
+import { post } from '@/api.js'
 import formWrapper from '@/components/FormWrapper.vue'
 import formInput from '@/components/FormInput.vue'
 import formButton from '@/components/FormButton.vue'
@@ -13,13 +14,23 @@ if (email.value) {
   onAuthenticate()
 }
 
-function onAuthenticate () {
+async function onAuthenticate () {
   if (!email.value?.trim()) {
     return
   }
 
-  console.log(email.value)
+  const response = await post('e-mail', {
+    response_type: query.response_type,
+    client_id: query.client_id,
+    redirect_uri: query.redirect_uri,
+    scope: query.scope,
+    state: query.state,
+    email: email.value
+  })
+
+  console.log(response)
 }
+
 </script>
 
 <template>
