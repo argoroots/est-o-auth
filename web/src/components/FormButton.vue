@@ -1,18 +1,12 @@
 <script setup>
-import { defineEmits, defineProps } from 'vue'
+import { defineEmits } from 'vue'
 
-defineProps({
-  label: { type: String, required: true }
-})
-
-const emit = defineEmits([
-  'click'
-])
+const emit = defineEmits(['click'])
 </script>
 
 <template>
   <button @click.prevent="emit('click')">
-    {{ label }}
+    <slot />
   </button>
 </template>
 

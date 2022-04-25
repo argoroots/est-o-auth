@@ -32,9 +32,8 @@ function onAuthenticate () {
       placeholder="38001085718"
       autofocus
     />
-    <form-button
-      label="Authenticate"
-      @click="onAuthenticate"
-    />
+    <form-button @click="onAuthenticate">
+      Authenticate
+    </form-button>
   </form-wrapper>
 </template>

@@ -33,9 +33,8 @@ function onAuthenticate () {
       autofocus
       @submit="onAuthenticate"
     />
-    <form-button
-      label="Authenticate"
-      @click="onAuthenticate"
-    />
+    <form-button @click="onAuthenticate">
+      Authenticate
+    </form-button>
   </form-wrapper>
 </template>

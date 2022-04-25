@@ -40,9 +40,8 @@ function onAuthenticate () {
       label="Phone"
       placeholder="+37200000000"
     />
-    <form-button
-      label="Authenticate"
-      @click="onAuthenticate"
-    />
+    <form-button @click="onAuthenticate">
+      Authenticate
+    </form-button>
   </form-wrapper>
 </template>

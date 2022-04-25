@@ -54,6 +54,7 @@ input {
   @apply placeholder-transparent;
   @apply border;
   @apply border-stone-300;
+  @apply font-extralight;
   @apply text-stone-900;
   @apply focus:outline-none;
   @apply focus:border-stone-500;
