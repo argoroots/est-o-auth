@@ -1,10 +1,10 @@
 <script setup>
-import blobs from '@/components/Blobs.vue'
+import backgroundBlobs from '@/components/BackgroundBlobs.vue'
 </script>
 
 <template>
   <div id="main">
-    <blobs />
+    <background-blobs />
     <div id="content">
       <h1>Auth-O-Matic</h1>
       <router-view />
