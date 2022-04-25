@@ -23,6 +23,7 @@ button {
   @apply mt-4;
   @apply px-2;
   @apply border;
+  @apply font-extralight;
   @apply border-stone-300;
   @apply hover:bg-stone-100;
   @apply hover:text-stone-600;

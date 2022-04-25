@@ -15,6 +15,7 @@ html {
 }
 
 body {
+  @apply font-extralight;
   @apply text-stone-500;
   @apply bg-white;
   @apply overflow-x-hidden;
@@ -29,6 +30,12 @@ h1 {
   @apply text-4xl;
   @apply text-center;
   @apply bg-white;
+}
+
+h2 {
+  @apply text-center;
+  @apply text-red-700;
+  @apply text-xl;
 }
 
 footer {

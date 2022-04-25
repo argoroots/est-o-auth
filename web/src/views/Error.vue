@@ -2,6 +2,8 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
+import authForm from './AuthForm.vue'
+
 const { query } = useRoute()
 
 const error = computed(() => {
@@ -20,36 +22,15 @@ const error = computed(() => {
       return null
   }
 })
-console.log(query)
 </script>
 
 <template>
-  <div>
-    <h2>Error</h2>
-    <p v-if="error">
+  <auth-form>
+    <h2>
+      Error
+    </h2>
+    <p>
       {{ error }}
     </p>
-  </div>
+  </auth-form>
 </template>
-
-<style scoped>
-div {
-  @apply py-8;
-  @apply px-6;
-  @apply flex;
-  @apply flex-col;
-  @apply space-y-6;
-  @apply bg-white;
-}
-
-h2 {
-  @apply font-thin;
-  @apply text-center;
-  @apply text-red-700;
-  @apply text-xl;
-}
-
-p {
-  @apply font-thin;
-}
-</style>

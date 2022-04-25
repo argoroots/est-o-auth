@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 
+import authForm from './AuthForm.vue'
 import formInput from '@/components/FormInput.vue'
 import formButton from '@/components/FormButton.vue'
 
@@ -23,7 +24,7 @@ function onAuthenticate () {
 </script>
 
 <template>
-  <form>
+  <auth-form>
     <form-input
       id="idc"
       v-model="idc"
@@ -41,17 +42,7 @@ function onAuthenticate () {
     />
     <form-button
       label="Authenticate"
+      @click="onAuthenticate"
     />
-  </form>
+  </auth-form>
 </template>
-
-<style scoped>
-form {
-  @apply py-8;
-  @apply px-6;
-  @apply flex;
-  @apply flex-col;
-  @apply space-y-6;
-  @apply bg-white;
-}
-</style>

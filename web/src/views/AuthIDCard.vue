@@ -1,7 +1,3 @@
 <script setup>
 window.location.href = `https://${import.meta.env.VITE_APP_IDCARD_DOMAIN}/auth/id-card${window.location.search}`
 </script>
-
-<template>
-  <form />
-</template>
