@@ -45,7 +45,7 @@ async function postEmail (headers, params, res) {
       },
       Body: {
         Html: {
-          Data: `Your verification code is <strong>${code}</strong><br><br>... or just open url <a href="${url}">${url}</a>.`
+          Data: `Your verification code is <strong>${code}</strong><br><br>... or just <a href="${url}">open this link</a>.`
         }
       }
     }
