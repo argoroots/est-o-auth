@@ -68,10 +68,7 @@ async function postCode (headers, params, res) {
     return
   }
 
-  const emailSession = await storage.getEmail({
-    email: params.email,
-    code: params.code
-  })
+  const emailSession = await storage.getEmail(params.email, params.code)
 
   if (!emailSession) {
     res.writeHead(403, { 'Content-Type': 'application/json' })
