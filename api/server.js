@@ -21,7 +21,7 @@ const server = http.createServer(async (req, res) => {
       case 'POST /api/e-mail/code':
         email.postCode(headers, params, res)
         break
-      case 'GET /id-card':
+      case 'GET /api/id-card':
         idCard.getCode(headers, params, res)
         break
       case 'POST /token':
