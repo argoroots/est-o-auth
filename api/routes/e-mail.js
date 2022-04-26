@@ -73,6 +73,12 @@ async function postCode (headers, params, res) {
     code: params.code
   })
 
+  if (!emailSession) {
+    res.writeHead(403, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Invalid e-mail or code' }))
+    return
+  }
+
   const code = await storage.saveUser({
     email: emailSession.email
   })
