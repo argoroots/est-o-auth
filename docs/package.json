@@ -5,6 +5,9 @@
   "author": "Argo Roots <argo@roots.ee>",
   "license": "MIT",
   "private": true,
+  "engines": {
+    "node": "14"
+  },
   "scripts": {
     "dev": "entu-ssg serve ./entu-ssg.yaml full",
     "build": "entu-ssg build ./entu-ssg.yaml full"
