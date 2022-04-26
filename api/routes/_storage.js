@@ -6,7 +6,7 @@ const redis = createClient({ url: process.env.REDIS })
 
 redis.on('error', (err) => console.log('Redis Client Error', err))
 
-export async function saveEmail (email) {
+async function saveEmail (email) {
   const numbers = '000000' + Math.round(Math.random() * 1000000)
   const code = numbers.slice(numbers.length - 6)
 
@@ -17,7 +17,7 @@ export async function saveEmail (email) {
   return code
 }
 
-export async function getEmail (email, code) {
+async function getEmail (email, code) {
   await redis.connect()
 
   const key = `email:${email}:${code}`
@@ -34,7 +34,7 @@ export async function getEmail (email, code) {
   return emailSession
 }
 
-export async function saveUser (user) {
+async function saveUser (user) {
   const code = crypto.randomUUID().replaceAll('-', '')
 
   await redis.connect()
@@ -44,7 +44,7 @@ export async function saveUser (user) {
   return code
 }
 
-export async function getToken (code, expiresIn) {
+async function getToken (code, expiresIn) {
   await redis.connect()
 
   const key = `user:${code}`
@@ -59,4 +59,11 @@ export async function getToken (code, expiresIn) {
   await redis.disconnect()
 
   return jwt.sign(JSON.parse(user), process.env.JWT_SECRET, { expiresIn })
+}
+
+module.exports = {
+  saveEmail,
+  getEmail,
+  saveUser,
+  getToken
 }
