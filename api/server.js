@@ -18,6 +18,9 @@ const server = http.createServer(async (req, res) => {
       case 'POST /api/e-mail':
         email.postEmail(headers, params, res)
         break
+      case 'POST /api/e-mail/code':
+        email.postCode(headers, params, res)
+        break
       case 'GET /id-card':
         idCard.getCode(headers, params, res)
         break

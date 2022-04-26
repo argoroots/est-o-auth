@@ -17,6 +17,23 @@ export async function saveEmail (email) {
   return code
 }
 
+export async function getEmail (email, code) {
+  await redis.connect()
+
+  const key = `email:${email}:${code}`
+  const emailSession = await redis.get(key)
+
+  if (!emailSession) {
+    await redis.disconnect()
+    return
+  }
+
+  await redis.del(key)
+  await redis.disconnect()
+
+  return emailSession
+}
+
 export async function saveUser (user) {
   const code = crypto.randomUUID().replaceAll('-', '')
 
