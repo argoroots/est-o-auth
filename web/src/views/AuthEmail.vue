@@ -12,6 +12,7 @@ const email = ref(query.email)
 const code = ref(query.code)
 const isSending = ref(false)
 const isEmailSent = ref(false)
+const isError = ref(false)
 
 if (email.value && !code.value) {
   onSendEmail()
@@ -50,6 +51,7 @@ async function onAuthenticate () {
   }
 
   isSending.value = true
+  isError.value = false
 
   const response = await post('e-mail/code', {
     email: email.value,
@@ -60,6 +62,8 @@ async function onAuthenticate () {
 
   if (response.redirect) {
     window.location.href = response.redirect
+  } else {
+    isError.value = true
   }
 }
 </script>
@@ -91,6 +95,12 @@ async function onAuthenticate () {
       autofocus
       @submit="onAuthenticate"
     />
+    <p
+      v-if="isError"
+      class="text-red-700"
+    >
+      Invalid verification code!
+    </p>
     <form-button @click="onAuthenticate">
       Authenticate
     </form-button>
