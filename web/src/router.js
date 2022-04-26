@@ -3,37 +3,50 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
   {
     path: '/',
-    redirect: '/auth'
+    name: 'HomePage',
+    component: () => import('@/views/HomePage.vue')
+  },
+  {
+    path: '/docs',
+    name: 'DocsPage',
+    component: () => import('@/views/DocsPage.vue')
   },
   {
     path: '/auth',
-    name: 'AuthNav',
-    component: () => import('@/views/AuthNav.vue')
-  },
-  {
-    path: '/auth/e-mail',
-    name: 'AuthEmail',
-    component: () => import('@/views/AuthEmail.vue')
-  },
-  {
-    path: '/auth/mobile-id',
-    name: 'AuthMobileID',
-    component: () => import('@/views/AuthMobileID.vue')
-  },
-  {
-    path: '/auth/smart-id',
-    name: 'AuthSmartID',
-    component: () => import('@/views/AuthSmartID.vue')
-  },
-  {
-    path: '/auth/id-card',
-    name: 'AuthIDCard',
-    component: () => import('@/views/AuthIDCard.vue')
-  },
-  {
-    path: '/auth/error',
-    name: 'AuthError',
-    component: () => import('@/views/AuthError.vue')
+    name: 'AuthPage',
+    component: () => import('@/views/AuthPage.vue'),
+    children: [
+      {
+        path: '',
+        name: 'AuthNav',
+        component: () => import('@/views/auth/AuthNav.vue')
+      },
+      {
+        path: 'e-mail',
+        name: 'AuthEmail',
+        component: () => import('@/views/auth/AuthEmail.vue')
+      },
+      {
+        path: 'mobile-id',
+        name: 'AuthMobileID',
+        component: () => import('@/views/auth/AuthMobileID.vue')
+      },
+      {
+        path: 'smart-id',
+        name: 'AuthSmartID',
+        component: () => import('@/views/auth/AuthSmartID.vue')
+      },
+      {
+        path: 'id-card',
+        name: 'AuthIDCard',
+        component: () => import('@/views/auth/AuthIDCard.vue')
+      },
+      {
+        path: 'error',
+        name: 'AuthError',
+        component: () => import('@/views/auth/AuthError.vue')
+      }
+    ]
   }
 ]
 
@@ -45,7 +58,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const { path, query } = to
 
-  if (['/', '/auth/error'].includes(path)) {
+  if (['/', '/docs', '/auth/error'].includes(path)) {
     next()
     return
   }

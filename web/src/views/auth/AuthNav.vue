@@ -48,6 +48,7 @@ const allowedMethods = computed(() => methods.filter(m => queryMethods.includes(
       {{ method.label }}
     </router-link>
   </nav>
+  <router-view />
 </template>
 
 <style scoped>
@@ -65,7 +66,10 @@ a {
   @apply gap-x-3;
   @apply items-center;
   @apply bg-white;
+  @apply text-stone-600;
   @apply hover:text-stone-900;
+  @apply hover:no-underline;
+
 }
 
 svg {
