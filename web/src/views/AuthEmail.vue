@@ -38,9 +38,10 @@ async function onSendEmail () {
   })
 
   isSending.value = false
-  isEmailSent.value = true
 
-  console.log(response)
+  if (response.emailSent) {
+    isEmailSent.value = true
+  }
 }
 
 async function onAuthenticate () {
