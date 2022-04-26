@@ -20,7 +20,12 @@ async function postEmail (headers, params, res) {
     return
   }
 
-  const code = await storage.saveEmail({ email: params.email })
+  const code = await storage.saveEmail({
+    redirect_uri: params.redirect_uri,
+    state: params.state,
+    email: params.email
+  })
+
   const url = `${process.env.EMAIL_URL}?email=${params.email}&code=${code}`
 
   const ses = new aws.SES({
