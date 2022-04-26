@@ -51,11 +51,16 @@ async function onAuthenticate () {
 
   isSending.value = true
 
-  const response = await post('e-mail', {
+  const response = await post('e-mail/code', {
+    email: email.value,
     code: code.value
   })
 
   console.log(response)
+
+  if (response.redirect) {
+    window.location.href = response.redirect
+  }
 }
 </script>
 
