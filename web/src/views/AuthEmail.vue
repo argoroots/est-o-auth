@@ -61,7 +61,6 @@ async function onAuthenticate () {
   if (response.redirect) {
     window.location.href = response.redirect
   } else {
-    console.log(response)
     isSending.value = false
     isError.value = true
   }

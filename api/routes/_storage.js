@@ -10,10 +10,8 @@ async function saveEmail (data) {
   const numbers = '000000' + Math.round(Math.random() * 1000000)
   const code = numbers.slice(numbers.length - 6)
 
-  console.log(`email:${data.email}:${code}`)
   await redis.connect()
-  const r = await redis.set(`email:${data.email}:${code}`, JSON.stringify(data))
-  console.log(r)
+  await redis.set(`email:${data.email}:${code}`, JSON.stringify(data))
   await redis.disconnect()
 
   return code
@@ -24,9 +22,6 @@ async function getEmail (email, code) {
 
   const key = `email:${email}:${code}`
   const emailSession = await redis.get(key)
-
-  console.log('key', key)
-  console.log('emailSession', emailSession)
 
   if (!emailSession) {
     await redis.disconnect()

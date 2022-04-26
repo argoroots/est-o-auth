@@ -68,8 +68,6 @@ async function postCode (headers, params, res) {
     return
   }
 
-  console.log(params.email, params.code)
-
   const emailSession = await storage.getEmail(params.email, params.code)
 
   if (!emailSession) {
