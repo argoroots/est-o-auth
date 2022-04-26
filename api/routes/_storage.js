@@ -23,6 +23,9 @@ async function getEmail (email, code) {
   const key = `email:${email}:${code}`
   const emailSession = await redis.get(key)
 
+  console.log('key', key)
+  console.log('emailSession', emailSession)
+
   if (!emailSession) {
     await redis.disconnect()
     return
@@ -31,7 +34,7 @@ async function getEmail (email, code) {
   await redis.del(key)
   await redis.disconnect()
 
-  return emailSession
+  return JSON.parse(emailSession)
 }
 
 async function saveUser (user) {
