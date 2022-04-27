@@ -7,8 +7,7 @@ const redis = createClient({ url: process.env.REDIS })
 redis.on('error', (err) => console.log('Redis Client Error', err))
 
 async function saveEmail (data) {
-  const numbers = '000000' + Math.round(Math.random() * 1000000)
-  const code = numbers.slice(numbers.length - 6)
+  const code = String(Math.round(Math.random() * 1000000)).padStart(6, '0')
 
   await redis.connect()
   await redis.set(`email:${data.email}:${code}`, JSON.stringify(data))

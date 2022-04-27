@@ -10,6 +10,7 @@ import formButton from '@/components/FormButton.vue'
 const { query } = useRoute()
 const idc = ref(query.idc)
 const phone = ref(query.phone)
+const pin = ref(null)
 
 if (idc.value && phone.value) {
   onAuthenticate()
@@ -30,12 +31,18 @@ async function onAuthenticate () {
     phone: phone.value
   })
 
+  isSending.value = false
+
+  if (response.pin) {
+    pin.value = true
+  }
+
   console.log(response)
 }
 </script>
 
 <template>
-  <form-wrapper>
+  <form-wrapper v-if="!isSending && !pin">
     <form-input
       id="idc"
       v-model="idc"
@@ -54,5 +61,8 @@ async function onAuthenticate () {
     <form-button @click="onAuthenticate">
       Authenticate
     </form-button>
+  </form-wrapper>
+  <form-wrapper v-if="!isSending && pin">
+    <h2>{{ pin }}</h2>
   </form-wrapper>
 </template>
