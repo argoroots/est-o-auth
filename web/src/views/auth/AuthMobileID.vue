@@ -8,17 +8,17 @@ import formInput from '@/components/FormInput.vue'
 import formButton from '@/components/FormButton.vue'
 
 const { query } = useRoute()
-const idc = ref(query.idc)
+const idcode = ref(query.idcode)
 const phone = ref(query.phone)
 const isSending = ref(false)
-const pin = ref(null)
+const consent = ref(null)
 
-if (idc.value && phone.value) {
-  onAuthenticate()
+if (idcode.value && phone.value) {
+  onStartSession()
 }
 
-async function onAuthenticate () {
-  if (!idc.value?.trim() || !phone.value?.trim()) {
+async function onStartSession () {
+  if (!idcode.value?.trim() || !phone.value?.trim()) {
     return
   }
 
@@ -28,14 +28,14 @@ async function onAuthenticate () {
     redirect_uri: query.redirect_uri,
     scope: query.scope,
     state: query.state,
-    idc: idc.value,
+    idcode: idcode.value,
     phone: phone.value
   })
 
   isSending.value = false
 
-  if (response.pin) {
-    pin.value = true
+  if (response.consent) {
+    consent.value = response.consent
   }
 
   console.log(response)
@@ -43,10 +43,10 @@ async function onAuthenticate () {
 </script>
 
 <template>
-  <form-wrapper v-if="!isSending && !pin">
+  <form-wrapper v-if="!isSending && !consent">
     <form-input
-      id="idc"
-      v-model="idc"
+      id="idcode"
+      v-model="idcode"
       type="tel"
       label="ID code"
       placeholder="38001085718"

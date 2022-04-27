@@ -11,18 +11,18 @@ const { query } = useRoute()
 const email = ref(query.email)
 const code = ref(query.code)
 const isSending = ref(false)
-const isEmailSent = ref(false)
 const isError = ref(false)
+const isEmailSent = ref(false)
 
 if (email.value && !code.value) {
-  onSendEmail()
+  onStartSession()
 }
 
 if (email.value && code.value) {
   onAuthenticate()
 }
 
-async function onSendEmail () {
+async function onStartSession () {
   if (!email.value?.trim()) {
     return
   }
@@ -76,9 +76,9 @@ async function onAuthenticate () {
       type="email"
       placeholder="jaak-kristjan@jõeorg.ee"
       autofocus
-      @submit="onSendEmail"
+      @submit="onStartSession"
     />
-    <form-button @click="onSendEmail">
+    <form-button @click="onStartSession">
       Authenticate
     </form-button>
   </form-wrapper>

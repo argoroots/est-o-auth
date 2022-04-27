@@ -8,14 +8,14 @@ import formInput from '@/components/FormInput.vue'
 import formButton from '@/components/FormButton.vue'
 
 const { query } = useRoute()
-const idc = ref(query.idc)
+const idcode = ref(query.idcode)
 
-if (idc.value) {
+if (idcode.value) {
   onAuthenticate()
 }
 
 async function onAuthenticate () {
-  if (!idc.value?.trim()) {
+  if (!idcode.value?.trim()) {
     return
   }
 
@@ -25,7 +25,7 @@ async function onAuthenticate () {
     redirect_uri: query.redirect_uri,
     scope: query.scope,
     state: query.state,
-    idc: idc.value
+    idcode: idcode.value
   })
 
   console.log(response)
@@ -35,8 +35,8 @@ async function onAuthenticate () {
 <template>
   <form-wrapper>
     <form-input
-      id="idc"
-      v-model="idc"
+      id="idcode"
+      v-model="idcode"
       type="tel"
       label="ID code"
       placeholder="38001085718"

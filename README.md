@@ -18,7 +18,7 @@ Use Estonian ID-card, Mobile-ID, Smart-ID or E-mail as OAuth authentication prov
     - state
 
     Optional parameters - if not set, user must input required ones (depends of auth method):
-    - idc - *only for [/auth/mobile-id]() and [/auth/smart-id]()*
+    - idcode - *only for [/auth/mobile-id]() and [/auth/smart-id]()*
     - phone - *only for [/auth/mobile-id]()*
     - email - *only for [/auth/e-mail]()*
     - methods - *only for [/auth]() - comma separated list of auth methods to show (id-card, mobile-id, smart-id, e-mail)*

@@ -14,9 +14,9 @@ async function postSession (headers, params, res) {
     return
   }
 
-  if (!params.idc) {
+  if (!params.idcode) {
     res.writeHead(400, { 'Content-Type': 'application/json' })
-    res.end(JSON.stringify({ error: 'Parameter idc is required' }))
+    res.end(JSON.stringify({ error: 'Parameter idcode is required' }))
     return
   }
 
@@ -26,12 +26,12 @@ async function postSession (headers, params, res) {
     return
   }
 
-  const { skSession, consent } = await startMidSession(params.idc, params.phone)
+  const { skSession, consent } = await startMidSession(params.idcode, params.phone)
 
   const session = await storage.setMidSession({
     redirect_uri: params.redirect_uri,
     state: params.state,
-    idcode: params.idc,
+    idcode: params.idcode,
     phone: params.phone,
     skSession
   })
@@ -50,17 +50,17 @@ async function postCode (headers, params, res) {
     return
   }
 
-  if (!params.idc) {
+  if (!params.idcode) {
     res.writeHead(400, { 'Content-Type': 'application/json' })
-    res.end(JSON.stringify({ error: 'Parameter idc is required' }))
+    res.end(JSON.stringify({ error: 'Parameter idcode is required' }))
     return
   }
 
-  const midSession = await storage.getMidSession(params.idc, params.session)
+  const midSession = await storage.getMidSession(params.idcode, params.session)
 
   if (!midSession) {
     res.writeHead(403, { 'Content-Type': 'application/json' })
-    res.end(JSON.stringify({ error: 'Invalid session, idc or phone' }))
+    res.end(JSON.stringify({ error: 'Invalid session, idcode or phone' }))
     return
   }
 
@@ -88,7 +88,7 @@ async function postCode (headers, params, res) {
   res.end(JSON.stringify({ redirect: `${midSession.redirect_uri}?${queryString}` }))
 }
 
-async function startMidSession (idc, phone) {
+async function startMidSession (idcode, phone) {
   const hash = crypto.randomBytes(32).toString('hex')
   const hashBuffer = Buffer.from(hash, 'hex')
   const binArray = []
@@ -110,7 +110,7 @@ async function startMidSession (idc, phone) {
       // relyingPartyUUID: process.env.MOBILEID_UUID,
       relyingPartyName: 'DEMO',
       relyingPartyUUID: '00000000-0000-0000-0000-000000000000',
-      nationalIdentityNumber: idc,
+      nationalIdentityNumber: idcode,
       phoneNumber: phone,
       hash: hashBuffer.toString('base64'),
       hashType: 'SHA256',

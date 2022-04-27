@@ -21,7 +21,7 @@
         </ul>
         <p>Optional parameters - if not set, user must input required ones (depends of auth method):</p>
         <ul>
-          <li>idc - <em>only for <a href="/auth/mobile-id">/auth/mobile-id</a> and <a href="/auth/smart-id">/auth/smart-id</a></em></li>
+          <li>idcode - <em>only for <a href="/auth/mobile-id">/auth/mobile-id</a> and <a href="/auth/smart-id">/auth/smart-id</a></em></li>
           <li>phone - <em>only for <a href="/auth/mobile-id">/auth/mobile-id</a></em></li>
           <li>email - <em>only for <a href="/auth/e-mail">/auth/e-mail</a></em></li>
           <li>
