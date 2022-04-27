@@ -1,8 +1,8 @@
 const http = require('http')
 const error = require('./routes/error.js')
-const email = require('./routes/e-mail.js')
-const mobileId = require('./routes/mobile-id.js')
-const idCard = require('./routes/id-card.js')
+const email = require('./routes/email.js')
+const mobileId = require('./routes/mobileId.js')
+const idCard = require('./routes/idCard.js')
 const token = require('./routes/token.js')
 const user = require('./routes/user.js')
 
@@ -17,29 +17,32 @@ const server = http.createServer(async (req, res) => {
 
     switch (`${method.toUpperCase()} ${pathname.toLowerCase()}`) {
       case 'POST /api/e-mail':
-        email.postEmail(headers, params, res)
+        await email.postEmail(headers, params, res)
         break
       case 'POST /api/e-mail/code':
-        email.postCode(headers, params, res)
+        await email.postCode(headers, params, res)
         break
       case 'POST /api/mobile-id':
-        mobileId.postCode(headers, params, res)
+        await mobileId.postSession(headers, params, res)
+        break
+      case 'POST /api/mobile-id/code':
+        await mobileId.postCode(headers, params, res)
         break
       case 'GET /api/id-card':
-        idCard.getCode(headers, params, res)
+        await idCard.getCode(headers, params, res)
         break
       case 'POST /token':
-        token.getToken(headers, params, res)
+        await token.getToken(headers, params, res)
         break
       case 'GET /user':
-        user.getUser(headers, params, res)
+        await user.getUser(headers, params, res)
         break
       default:
         error.get404(method, pathname, params, res)
         break
     }
-  } catch (error) {
-    console.error(error)
+  } catch (e) {
+    console.error(e)
     error.get500(res)
   }
 })
@@ -80,7 +83,8 @@ function getParams (req) {
           } else {
             resolve({ ...urlParams, ...JSON.parse(body) })
           }
-        } catch (error) {
+        } catch (e) {
+          console.error(e)
           reject(new Error('Invalid request body'))
         }
       })

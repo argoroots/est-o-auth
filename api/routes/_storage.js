@@ -33,6 +33,33 @@ async function getEmail (email, code) {
   return JSON.parse(emailSession)
 }
 
+async function setMidSession (data) {
+  const code = crypto.randomUUID().replaceAll('-', '')
+
+  await redis.connect()
+  await redis.set(`mobileid:${data.idcode}:${code}`, JSON.stringify(data))
+  await redis.disconnect()
+
+  return code
+}
+
+async function getMidSession (idcode, code) {
+  await redis.connect()
+
+  const key = `mobileid:${idcode}:${code}`
+  const midSession = await redis.get(key)
+
+  if (!midSession) {
+    await redis.disconnect()
+    return
+  }
+
+  await redis.del(key)
+  await redis.disconnect()
+
+  return JSON.parse(midSession)
+}
+
 async function saveUser (user) {
   const code = crypto.randomUUID().replaceAll('-', '')
 
@@ -63,6 +90,8 @@ async function getToken (code, expiresIn) {
 module.exports = {
   saveEmail,
   getEmail,
+  setMidSession,
+  getMidSession,
   saveUser,
   getToken
 }

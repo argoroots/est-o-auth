@@ -21,6 +21,8 @@ services:
             AWS_SES_ID: ${AWS_SES_ID}
             AWS_SES_KEY: ${AWS_SES_KEY}
             AWS_SES_REGION: ${AWS_SES_REGION}
+            MOBILEID_NAME: ${MOBILEID_NAME}
+            MOBILEID_UUID: ${MOBILEID_UUID}
         depends_on:
             - redis
 
