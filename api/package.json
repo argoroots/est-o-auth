@@ -11,7 +11,7 @@
     "lint": "eslint ./ --fix --ignore-path ../.gitignore --ext .js"
   },
   "dependencies": {
-    "aws-sdk": "2.1120.0",
+    "aws-sdk": "2.1121.0",
     "jsonwebtoken": "8.5.1",
     "redis": "4.0.6"
   },
