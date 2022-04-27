@@ -10,6 +10,7 @@ import formButton from '@/components/FormButton.vue'
 const { query } = useRoute()
 const idc = ref(query.idc)
 const phone = ref(query.phone)
+const isSending = ref(false)
 const pin = ref(null)
 
 if (idc.value && phone.value) {
