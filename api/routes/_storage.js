@@ -6,7 +6,7 @@ const redis = createClient({ url: process.env.REDIS })
 
 redis.on('error', (err) => console.log('Redis Client Error', err))
 
-async function saveEmail (data) {
+async function setEmailSession (data) {
   const code = String(Math.round(Math.random() * 1000000)).padStart(6, '0')
 
   await redis.connect()
@@ -16,7 +16,7 @@ async function saveEmail (data) {
   return code
 }
 
-async function getEmail (email, code) {
+async function getEmailSession (email, code) {
   await redis.connect()
 
   const key = `email:${email}:${code}`
@@ -88,8 +88,8 @@ async function getToken (code, expiresIn) {
 }
 
 module.exports = {
-  saveEmail,
-  getEmail,
+  setEmailSession,
+  getEmailSession,
   setMidSession,
   getMidSession,
   saveUser,

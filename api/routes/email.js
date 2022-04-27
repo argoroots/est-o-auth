@@ -20,7 +20,7 @@ async function postEmail (headers, params, res) {
     return
   }
 
-  const code = await storage.saveEmail({
+  const code = await storage.setEmailSession({
     redirect_uri: params.redirect_uri,
     state: params.state,
     email: params.email
@@ -68,7 +68,7 @@ async function postCode (headers, params, res) {
     return
   }
 
-  const emailSession = await storage.getEmail(params.email, params.code)
+  const emailSession = await storage.getEmailSession(params.email, params.code)
 
   if (!emailSession) {
     res.writeHead(403, { 'Content-Type': 'application/json' })
