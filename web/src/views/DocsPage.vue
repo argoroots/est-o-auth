@@ -39,6 +39,7 @@
           If the initial request contained a <em>state</em> parameter, the response also includes the exact value
           from the request. Your service must check if it matches one from initial request.
         </p>
+        <pre>https://example.com/auth/callback?code=CYD9MDm8gY2F8EhV&state=5600684163565994</pre>
       </li>
       <li>
         <p>

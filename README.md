@@ -31,6 +31,10 @@ Use Estonian ID-card, Mobile-ID, Smart-ID or E-mail as OAuth authentication prov
 
     If the initial request contained a *state* parameter, the response also includes the exact value from the request. Your service must check if it matches one from initial request.
 
+    ```bash
+    https://example.com/auth/callback?code=CYD9MDm8gY2F8EhV&state=5600684163565994
+    ```
+
 3. Make POST request to [/token]() sending *client_id*, *client_secret*, *grant_type* and *code* (got from previous step). Parameter grant_type must always be "authorization_code".
 
     ```http
