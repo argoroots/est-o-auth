@@ -49,3 +49,7 @@ function generatePin () {
     hashBuffer
   }
 }
+
+module.exports = {
+  postCode
+}

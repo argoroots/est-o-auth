@@ -23,7 +23,7 @@ const server = http.createServer(async (req, res) => {
         email.postCode(headers, params, res)
         break
       case 'POST /api/mobile-id':
-        mobileId.postEmail(headers, params, res)
+        mobileId.postCode(headers, params, res)
         break
       case 'GET /api/id-card':
         idCard.getCode(headers, params, res)
