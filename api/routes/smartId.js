@@ -20,19 +20,12 @@ async function postSession (headers, params, res) {
     return
   }
 
-  if (!params.phone) {
-    res.writeHead(400, { 'Content-Type': 'application/json' })
-    res.end(JSON.stringify({ error: 'Parameter phone is required' }))
-    return
-  }
+  const { skSession, consent } = await startSidSession(params.idcode)
 
-  const { skSession, consent } = await startMidSession(params.idcode, params.phone)
-
-  const session = await storage.setMidSession({
+  const session = await storage.setSidSession({
     redirect_uri: params.redirect_uri,
     state: params.state,
     idcode: params.idcode,
-    phone: params.phone,
     skSession
   })
 
@@ -56,15 +49,15 @@ async function postCode (headers, params, res) {
     return
   }
 
-  const midSession = await storage.getMidSession(params.idcode, params.session, false)
+  const sidSession = await storage.getSidSession(params.idcode, params.session, false)
 
-  if (!midSession) {
+  if (!sidSession) {
     res.writeHead(403, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify({ error: 'Invalid session or idcode' }))
     return
   }
 
-  const skResponse = await checkMidSession(midSession.skSession)
+  const skResponse = await checkSidSession(sidSession.skSession)
 
   if (skResponse !== 'OK') {
     res.writeHead(200, { 'Content-Type': 'application/json' })
@@ -72,25 +65,25 @@ async function postCode (headers, params, res) {
     return
   }
 
-  await storage.getMidSession(params.idcode, params.session, true)
+  await storage.getSidSession(params.idcode, params.session, true)
 
   const code = await storage.saveUser({
-    idcode: midSession.idcode
+    idcode: sidSession.idcode
   })
 
   const query = { code }
 
-  if (midSession.state) {
-    query.state = midSession.state
+  if (sidSession.state) {
+    query.state = sidSession.state
   }
 
   const queryString = Object.keys(query).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(query[key])}`).join('&')
 
   res.writeHead(200, { 'Content-Type': 'application/json' })
-  res.end(JSON.stringify({ redirect: `${midSession.redirect_uri}?${queryString}` }))
+  res.end(JSON.stringify({ redirect: `${sidSession.redirect_uri}?${queryString}` }))
 }
 
-async function startMidSession (idcode, phone) {
+async function startSidSession (idcode, phone) {
   const hash = crypto.randomBytes(32).toString('hex')
   const hashBuffer = Buffer.from(hash, 'hex')
   const binArray = []
@@ -103,24 +96,30 @@ async function startMidSession (idcode, phone) {
   const newBinary = bin.substring(0, 6) + bin.slice(-7)
   const consent = String(parseInt(newBinary, 2)).padStart(4, '0')
 
-  // const skResponse = await fetch('https://mid.sk.ee/mid-api/authentication', {
-  const skResponse = await fetch('https://tsp.demo.sk.ee/mid-api/authentication', {
+  // const skResponse = await fetch(`https://sid.demo.sk.ee/smart-id-rp/v2/authentication/etsi/PNOEE-${idcode}`, {
+  const skResponse = await fetch(`https://sid.demo.sk.ee/smart-id-rp/v2/authentication/etsi/PNOEE-${idcode}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      relyingPartyName: process.env.MOBILEID_NAME,
-      relyingPartyUUID: process.env.MOBILEID_UUID,
-      nationalIdentityNumber: idcode,
-      phoneNumber: phone,
+      relyingPartyName: process.env.SMARTID_NAME,
+      relyingPartyUUID: process.env.SMARTID_UUID,
       hash: hashBuffer.toString('base64'),
       hashType: 'SHA256',
-      language: 'EST'
-      // displayText: 'This is display text.'
+      allowedInteractionsOrder: [
+        {
+          type: 'verificationCodeChoice'
+          // displayText60: 'Up to 60 characters of text here..'
+        },
+        {
+          type: 'displayTextAndPIN'
+          // displayText60: 'Up to 60 characters of text here..'
+        }
+      ]
     })
   }).then(response => response.json())
 
   if (!skResponse.sessionID) {
-    throw new Error(skResponse.error || 'Mobile-ID session start failed')
+    throw new Error(skResponse.error || 'Smart-ID session start failed')
   }
 
   return {
@@ -129,19 +128,19 @@ async function startMidSession (idcode, phone) {
   }
 }
 
-async function checkMidSession (sessionId) {
-  // const skResponse = await fetch(`https://mid.sk.ee/mid-api/authentication/session/${sessionId}?timeoutMs=2000`).then(response => response.json())
-  const skResponse = await fetch(`https://tsp.demo.sk.ee/mid-api/authentication/session/${sessionId}?timeoutMs=2000`).then(response => response.json())
+async function checkSidSession (sessionId) {
+  // const skResponse = await fetch(`https://rp-api.smart-id.com/v2/session/${sessionId}?timeoutMs=2000`).then(response => response.json())
+  const skResponse = await fetch(`https://sid.demo.sk.ee/smart-id-rp/v2/session/${sessionId}?timeoutMs=2000`).then(response => response.json())
 
   if (skResponse.state === 'RUNNING') {
     return 'RUNNING'
   }
 
   if (skResponse.state === 'COMPLETE') {
-    return skResponse.result
+    return skResponse.result?.endResult
   }
 
-  throw new Error(skResponse.error || 'Mobile-ID session check failed')
+  throw new Error(skResponse.error || 'Smart-ID session check failed')
 }
 
 module.exports = {

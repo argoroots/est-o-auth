@@ -62,6 +62,35 @@ async function getMidSession (idcode, code, doRemove) {
   return JSON.parse(midSession)
 }
 
+async function setSidSession (data) {
+  const code = crypto.randomUUID().replaceAll('-', '')
+
+  await redis.connect()
+  await redis.set(`smartid:${data.idcode}:${code}`, JSON.stringify(data))
+  await redis.disconnect()
+
+  return code
+}
+
+async function getSidSession (idcode, code, doRemove) {
+  await redis.connect()
+
+  const key = `smartid:${idcode}:${code}`
+  const midSession = await redis.get(key)
+
+  if (!midSession) {
+    await redis.disconnect()
+    return
+  }
+
+  if (doRemove) {
+    await redis.del(key)
+  }
+  await redis.disconnect()
+
+  return JSON.parse(midSession)
+}
+
 async function saveUser (user) {
   const code = crypto.randomUUID().replaceAll('-', '')
 
@@ -94,6 +123,8 @@ module.exports = {
   getEmailSession,
   setMidSession,
   getMidSession,
+  setSidSession,
+  getSidSession,
   saveUser,
   getToken
 }
