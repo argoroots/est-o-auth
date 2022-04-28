@@ -108,10 +108,8 @@ async function startMidSession (idcode, phone) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      // relyingPartyName: process.env.MOBILEID_NAME,
-      // relyingPartyUUID: process.env.MOBILEID_UUID,
-      relyingPartyName: 'DEMO',
-      relyingPartyUUID: '00000000-0000-0000-0000-000000000000',
+      relyingPartyName: process.env.MOBILEID_NAME,
+      relyingPartyUUID: process.env.MOBILEID_UUID,
       nationalIdentityNumber: idcode,
       phoneNumber: phone,
       hash: hashBuffer.toString('base64'),
