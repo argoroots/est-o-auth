@@ -29,7 +29,7 @@
               mobile-id, smart-id, e-mail)</em>
           </li>
         </ul>
-        <pre>https://oauth.ee/auth/mobile-id?response_type=code&client_id=QVnPZGdcXQ8Ev4mx&redirect_uri=https://example.com/auth/callback&scope=&state=5600684163565994</pre>
+        <pre>https://oauth.ee/auth?response_type=code&client_id=QVnPZGdcXQ8Ev4mx&redirect_uri=https://example.com/auth/callback&scope=openid&state=5600684163565994</pre>
         <p>
           After authentication user is redirected back to url set in <em>redirect_uri</em> parameter. Query
           parameter <em>code</em> contains the authorization code which Your service will exchange for an access
