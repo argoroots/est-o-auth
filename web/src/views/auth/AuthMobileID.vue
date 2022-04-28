@@ -20,8 +20,33 @@ if (idcode.value && phone.value) {
   onStartSession()
 }
 
+function validateIdcode () {
+  if (!idcode.value) {
+    return
+  }
+
+  idcode.value = idcode.value.replace(/\D/g, '')
+}
+
+function validatePhone () {
+  if (!phone.value) {
+    return
+  }
+
+  phone.value = phone.value.replace(/\D/g, '')
+
+  if (phone.value.length <= 8) {
+    phone.value = '372' + phone.value
+  }
+
+  phone.value = '+' + phone.value
+}
+
 async function onStartSession () {
-  if (!idcode.value?.trim() || !phone.value?.trim()) {
+  validateIdcode()
+  validatePhone()
+
+  if (!idcode.value || !phone.value) {
     return
   }
 
@@ -85,6 +110,7 @@ async function onAuthenticate () {
       label="ID code"
       placeholder="38001085718"
       autofocus
+      @blur="validateIdcode"
     />
     <form-input
       id="phone"
@@ -92,6 +118,7 @@ async function onAuthenticate () {
       type="tel"
       label="Phone"
       placeholder="+37200000000"
+      @blur="validatePhone"
     />
     <p
       v-if="isError"

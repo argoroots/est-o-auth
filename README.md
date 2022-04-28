@@ -1,4 +1,4 @@
-# OAuth.ee
+# Oauth.ee
 
 Use Estonian ID-card, Mobile-ID, Smart-ID or E-mail as OAuth authentication provider.
 

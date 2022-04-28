@@ -12,7 +12,8 @@ const props = defineProps({
 
 const emit = defineEmits([
   'update:modelValue',
-  'submit'
+  'submit',
+  'blur'
 ])
 
 const text = computed({
@@ -35,6 +36,7 @@ const text = computed({
       :autofocus="autofocus"
       class="peer"
       @keypress.enter="emit('submit')"
+      @blur="emit('blur')"
     >
     <label :for="id">{{ label }}</label>
   </div>
