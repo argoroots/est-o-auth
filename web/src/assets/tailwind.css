@@ -32,6 +32,13 @@ h1 {
   @apply bg-white;
 }
 
+h1 span {
+  @apply block;
+  @apply ml-28;
+  @apply italic;
+  @apply text-sm;
+}
+
 h2 {
   @apply text-center;
   @apply text-red-700;

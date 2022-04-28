@@ -6,7 +6,7 @@ import backgroundBlobs from '@/components/BackgroundBlobs.vue'
   <main>
     <background-blobs />
     <section>
-      <h1>Auth-O-Matic</h1>
+      <h1>OAuth.ee <span>by Argo Roots</span></h1>
       <router-view />
       <footer />
     </section>

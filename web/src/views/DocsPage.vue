@@ -1,6 +1,6 @@
 <template>
   <section>
-    <h1>Auth-O-Matic</h1>
+    <h1>OAuth.ee <span>by Argo Roots</span></h1>
     <ol>
       <li>
         <p>Redirect user to one of the following url:</p>

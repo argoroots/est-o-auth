@@ -7,7 +7,7 @@ import formWrapper from '@/components/FormWrapper.vue'
   <main>
     <background-blobs />
     <section>
-      <h1>Auth-O-Matic</h1>
+      <h1>OAuth.ee <span>by Argo Roots</span></h1>
       <form-wrapper>
         <p class="text-center">
           Use Estonian ID-card, Mobile-ID, Smart-ID or E-mail as OAuth authentication provider.
