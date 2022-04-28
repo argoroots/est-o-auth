@@ -46,6 +46,10 @@ async function onStartSession () {
 }
 
 async function onAuthenticate () {
+  if (!email.value?.trim()) {
+    return
+  }
+
   if (!code.value?.trim()) {
     return
   }
@@ -62,6 +66,7 @@ async function onAuthenticate () {
     window.location.href = response.redirect
   } else {
     isSending.value = false
+    isEmailSent.value = true
     isError.value = true
   }
 }
