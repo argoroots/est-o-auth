@@ -56,7 +56,7 @@ async function postCode (headers, params, res) {
     return
   }
 
-  const midSession = await storage.getMidSession(params.idcode, params.session)
+  const midSession = await storage.getMidSession(params.idcode, params.session, false)
 
   if (!midSession) {
     res.writeHead(403, { 'Content-Type': 'application/json' })
@@ -71,6 +71,8 @@ async function postCode (headers, params, res) {
     res.end(JSON.stringify({ status: skResponse }))
     return
   }
+
+  await storage.getMidSession(params.idcode, params.session, true)
 
   const code = await storage.saveUser({
     idcode: midSession.idcode

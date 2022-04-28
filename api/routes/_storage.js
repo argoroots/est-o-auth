@@ -43,7 +43,7 @@ async function setMidSession (data) {
   return code
 }
 
-async function getMidSession (idcode, code) {
+async function getMidSession (idcode, code, doRemove) {
   await redis.connect()
 
   const key = `mobileid:${idcode}:${code}`
@@ -54,7 +54,9 @@ async function getMidSession (idcode, code) {
     return
   }
 
-  await redis.del(key)
+  if (doRemove) {
+    await redis.del(key)
+  }
   await redis.disconnect()
 
   return JSON.parse(midSession)
