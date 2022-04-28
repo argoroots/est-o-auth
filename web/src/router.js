@@ -83,7 +83,7 @@ router.beforeEach((to, from, next) => {
     return
   }
 
-  if (query.redirect_uri !== 'localhost') {
+  if (query.redirect_uri !== 'http://localhost:8080') {
     next({ path: '/auth/error', query: { ...query, error: 'redirect_uri' } })
     return
   }
