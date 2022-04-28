@@ -11,8 +11,7 @@ const port = process.env.PORT || 8080
 const server = http.createServer(async (req, res) => {
   try {
     const headers = getHeaders(req)
-    const params = getParams(req)
-
+    const params = await getParams(req)
     const { method } = req
     const { pathname } = new URL(req.url, `${req.protocol}://${headers.host}/`)
 
@@ -39,12 +38,12 @@ const server = http.createServer(async (req, res) => {
         await user.getUser(headers, params, res)
         break
       default:
-        await error.get404(method, pathname, params, res)
+        error.get404(method, pathname, params, res)
         break
     }
   } catch (e) {
     console.error(e)
-    await error.get500(res)
+    error.get500(res)
   }
 })
 
@@ -55,39 +54,42 @@ function getHeaders (req) {
 }
 
 function getParams (req) {
-  const { method } = req
-  const headers = getHeaders(req)
+  return new Promise((resolve, reject) => {
+    const { method } = req
+    const headers = getHeaders(req)
 
-  const { searchParams } = new URL(req.url, `${req.protocol}://${headers.host}/`)
-  const urlParams = Object.fromEntries(searchParams)
+    const { searchParams } = new URL(req.url, `${req.protocol}://${headers.host}/`)
+    const urlParams = Object.fromEntries(searchParams)
 
-  if (method === 'GET') {
-    return urlParams
-  }
+    if (method === 'GET') {
+      resolve(urlParams)
+      return
+    }
 
-  if (method === 'POST') {
-    let body = ''
+    if (method === 'POST') {
+      let body = ''
 
-    req.on('data', chunk => {
-      body += chunk.toString()
-    })
+      req.on('data', chunk => {
+        body += chunk.toString()
+      })
 
-    req.on('end', () => {
-      try {
-        if (!body) {
-          return urlParams
-        } else if (headers['content-type'] === 'application/x-www-form-urlencoded') {
-          const { searchParams } = new URL(`/?${body}`, `${req.protocol}://${headers.host}/`)
-          return { ...urlParams, ...Object.fromEntries(searchParams) }
-        } else {
-          return { ...urlParams, ...JSON.parse(body) }
+      req.on('end', () => {
+        try {
+          if (!body) {
+            resolve(urlParams)
+          } else if (headers['content-type'] === 'application/x-www-form-urlencoded') {
+            const { searchParams } = new URL(`/?${body}`, `${req.protocol}://${headers.host}/`)
+            resolve({ ...urlParams, ...Object.fromEntries(searchParams) })
+          } else {
+            resolve({ ...urlParams, ...JSON.parse(body) })
+          }
+        } catch (e) {
+          console.error(e)
+          reject(new Error('Invalid request body'))
         }
-      } catch (e) {
-        console.error(e)
-        throw new Error('Invalid request body')
-      }
-    })
-  }
+      })
+    }
+  })
 }
 
 server.listen(port, () => {
