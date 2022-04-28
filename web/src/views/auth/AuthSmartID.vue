@@ -9,13 +9,28 @@ import formButton from '@/components/FormButton.vue'
 
 const { query } = useRoute()
 const idcode = ref(query.idcode)
+const isSending = ref(false)
+const isError = ref(false)
+const interval = ref()
+const consent = ref(null)
+const session = ref(null)
 
 if (idcode.value) {
-  onAuthenticate()
+  onStartSession()
 }
 
-async function onAuthenticate () {
-  if (!idcode.value?.trim()) {
+function validateIdcode () {
+  if (!idcode.value) {
+    return
+  }
+
+  idcode.value = idcode.value.replace(/\D/g, '')
+}
+
+async function onStartSession () {
+  validateIdcode()
+
+  if (!idcode.value) {
     return
   }
 
@@ -28,12 +43,49 @@ async function onAuthenticate () {
     idcode: idcode.value
   })
 
-  console.log(response)
+  isSending.value = false
+
+  if (!response.consent || !response.session) {
+    isError.value = true
+    return
+  }
+
+  consent.value = response.consent
+  session.value = response.session
+
+  interval.value = setInterval(async () => {
+    await onAuthenticate()
+  }, 5000)
+}
+
+async function onAuthenticate () {
+  const response = await post('smart-id/code', {
+    idcode: idcode.value,
+    session: session.value
+  })
+
+  if (response.status === 'RUNNING') {
+    return
+  }
+
+  clearInterval(interval.value)
+
+  if (response.redirect) {
+    window.location.href = response.redirect
+  } else {
+    consent.value = null
+    session.value = null
+
+    isSending.value = false
+    isError.value = true
+
+    console.log(response)
+  }
 }
 </script>
 
 <template>
-  <form-wrapper>
+  <form-wrapper v-if="!isSending && !consent">
     <form-input
       id="idcode"
       v-model="idcode"
@@ -41,9 +93,32 @@ async function onAuthenticate () {
       label="ID code"
       placeholder="38001085718"
       autofocus
+      @blur="validateIdcode"
     />
-    <form-button @click="onAuthenticate">
+    <p
+      v-if="isError"
+      class="text-red-700"
+    >
+      Something is not right! Check ID code.
+    </p>
+    <form-button @click="onStartSession">
       Authenticate
     </form-button>
   </form-wrapper>
+  <form-wrapper v-if="!isSending && consent">
+    <p>
+      Enter your Smart-ID PIN1 on your device, if you are convinced the control code shown on your device matches the one shown here.
+    </p>
+    <p class="consent">
+      {{ consent }}
+    </p>
+  </form-wrapper>
 </template>
+
+<style scoped>
+.consent {
+  @apply text-3xl;
+  @apply text-red-700;
+  @apply text-center;
+}
+</style>
