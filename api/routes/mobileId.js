@@ -67,6 +67,7 @@ async function postCode (headers, params, res) {
   const skResponse = await checkMidSession(midSession.skSession)
 
   if (skResponse !== 'OK') {
+    console.log('NOK', skResponse)
     res.writeHead(200, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify({ status: skResponse }))
     return

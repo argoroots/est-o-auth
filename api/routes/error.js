@@ -1,9 +1,9 @@
-function get404 (method, pathname, params, res) {
+async function get404 (method, pathname, params, res) {
   res.writeHead(404, { 'Content-Type': 'application/json' })
   res.end(JSON.stringify({ method, pathname, params }))
 }
 
-function get500 (res) {
+async function get500 (res) {
   res.writeHead(500, { 'Content-Type': 'application/json' })
   res.end(JSON.stringify({ error: true }))
 }
