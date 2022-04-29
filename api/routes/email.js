@@ -29,13 +29,14 @@ async function postEmail (headers, params, res) {
   const url = `${process.env.EMAIL_URL}?email=${params.email}&code=${code}`
 
   const ses = new SESClient({
-    accessKeyId: process.env.AWS_SES_ID,
-    secretAccessKey: process.env.AWS_SES_KEY,
-    region: process.env.AWS_SES_REGION
+    region: process.env.AWS_SES_REGION,
+    credentials: {
+      accessKeyId: process.env.AWS_SES_ID,
+      secretAccessKey: process.env.AWS_SES_KEY
+    }
   })
-  console.log('SESClient')
 
-  const sesResponse = await ses.send(new SendEmailCommand({
+  await ses.send(new SendEmailCommand({
     Source: process.env.EMAIL_FROM,
     Destination: {
       ToAddresses: [params.email]
@@ -53,7 +54,6 @@ async function postEmail (headers, params, res) {
       }
     }
   }))
-  console.log(sesResponse)
 
   res.writeHead(200, { 'Content-Type': 'application/json' })
   res.end(JSON.stringify({ emailSent: true }))
