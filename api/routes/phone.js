@@ -38,7 +38,7 @@ async function postPhone (headers, params, res) {
 
   await sns.send(new PublishCommand({
     PhoneNumber: params.phone,
-    Message: `Your verification code is ${code}, or just open ${url}`
+    Message: `Your verification code is ${code}`
   }))
 
   res.writeHead(200, { 'Content-Type': 'application/json' })
