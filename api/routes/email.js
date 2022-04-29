@@ -1,4 +1,4 @@
-const aws = require('aws-sdk')
+const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses')
 const storage = require('./_storage.js')
 
 async function postEmail (headers, params, res) {
@@ -28,13 +28,13 @@ async function postEmail (headers, params, res) {
 
   const url = `${process.env.EMAIL_URL}?email=${params.email}&code=${code}`
 
-  const ses = new aws.SES({
+  const ses = new SESClient({
     accessKeyId: process.env.AWS_SES_ID,
     secretAccessKey: process.env.AWS_SES_KEY,
     region: process.env.AWS_SES_REGION
   })
 
-  await ses.sendEmail({
+  await ses.send(new SendEmailCommand({
     Source: process.env.EMAIL_FROM,
     Destination: {
       ToAddresses: [params.email]
@@ -49,7 +49,7 @@ async function postEmail (headers, params, res) {
         }
       }
     }
-  }).promise()
+  }))
 
   res.writeHead(200, { 'Content-Type': 'application/json' })
   res.end(JSON.stringify({ emailSent: true }))
