@@ -1,6 +1,7 @@
 const http = require('http')
 const error = require('./routes/error.js')
 const email = require('./routes/email.js')
+const phone = require('./routes/phone.js')
 const mobileId = require('./routes/mobileId.js')
 const smartId = require('./routes/smartId.js')
 const idCard = require('./routes/idCard.js')
@@ -22,6 +23,12 @@ const server = http.createServer(async (req, res) => {
         break
       case 'POST /api/e-mail/code':
         await email.postCode(headers, params, res)
+        break
+      case 'POST /api/phone':
+        await phone.postPhone(headers, params, res)
+        break
+      case 'POST /api/phone/code':
+        await phone.postCode(headers, params, res)
         break
       case 'POST /api/mobile-id':
         await mobileId.postSession(headers, params, res)

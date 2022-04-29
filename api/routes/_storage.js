@@ -33,6 +33,33 @@ async function getEmailSession (email, code) {
   return JSON.parse(emailSession)
 }
 
+async function setPhoneSession (data) {
+  const code = String(Math.round(Math.random() * 1000000)).padStart(6, '0')
+
+  await redis.connect()
+  await redis.set(`phone:${data.phone}:${code}`, JSON.stringify(data))
+  await redis.disconnect()
+
+  return code
+}
+
+async function getPhoneSession (phone, code) {
+  await redis.connect()
+
+  const key = `phone:${phone}:${code}`
+  const phoneSession = await redis.get(key)
+
+  if (!phoneSession) {
+    await redis.disconnect()
+    return
+  }
+
+  await redis.del(key)
+  await redis.disconnect()
+
+  return JSON.parse(phoneSession)
+}
+
 async function setMidSession (data) {
   const code = crypto.randomUUID().replaceAll('-', '')
 
@@ -121,6 +148,8 @@ async function getToken (code, expiresIn) {
 module.exports = {
   setEmailSession,
   getEmailSession,
+  setPhoneSession,
+  getPhoneSession,
   setMidSession,
   getMidSession,
   setSidSession,
