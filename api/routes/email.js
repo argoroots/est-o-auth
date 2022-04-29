@@ -33,23 +33,27 @@ async function postEmail (headers, params, res) {
     secretAccessKey: process.env.AWS_SES_KEY,
     region: process.env.AWS_SES_REGION
   })
+  console.log('SESClient')
 
-  await ses.send(new SendEmailCommand({
+  const sesResponse = await ses.send(new SendEmailCommand({
     Source: process.env.EMAIL_FROM,
     Destination: {
       ToAddresses: [params.email]
     },
     Message: {
       Subject: {
+        Charset: 'UTF-8',
         Data: 'Verification Code'
       },
       Body: {
+        Charset: 'UTF-8',
         Html: {
           Data: `Your verification code is <strong>${code}</strong><br><br>... or just <a href="${url}">open this link</a>.`
         }
       }
     }
   }))
+  console.log(sesResponse)
 
   res.writeHead(200, { 'Content-Type': 'application/json' })
   res.end(JSON.stringify({ emailSent: true }))
