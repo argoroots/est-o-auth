@@ -3,6 +3,9 @@
     <h1>OAuth.ee <span>by Argo Roots</span></h1>
     <ol>
       <li>
+        <a href="mailto:argo@roots.ee?subject=How to start with OAuth.ee?">Make request</a> to get <em>client_id</em> and <em>client_secret</em>. You need those on later steps.
+      </li>
+      <li>
         <p>Redirect user to one of the following url:</p>
         <ul>
           <li><a href="/auth/id-card">/auth/id-card</a></li>
