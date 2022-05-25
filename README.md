@@ -21,7 +21,6 @@ Use Estonian ID-card, Mobile-ID, Smart-ID or E-mail as OAuth authentication prov
     - idcode - *only for [/auth/mobile-id]() and [/auth/smart-id]()*
     - phone - *only for [/auth/mobile-id]()*
     - email - *only for [/auth/e-mail]()*
-    - methods - *only for [/auth]() - comma separated list of auth methods to show (id-card, mobile-id, smart-id, e-mail)*
 
     ```bash
     https://oauth.ee/auth?response_type=code&client_id=QVnPZGdcXQ8Ev4mx&redirect_uri=https://example.com/auth/callback&scope=openid&state=5600684163565994
