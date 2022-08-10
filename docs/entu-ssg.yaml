@@ -1,16 +1,9 @@
 source: ./src
 build: ./dist
-assets: ./assets
-
-protectedFromCleanup:
-    - .git
-    - assets
-    - index.html
 
 server:
     port: 4000
-    assets: /assets/
+    public: ./public
 
 dev:
     aliases: true
-    paths:

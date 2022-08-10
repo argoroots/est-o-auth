@@ -11,17 +11,17 @@
     "lint": "eslint ./ --fix --ignore-path ../.gitignore --ext .js"
   },
   "dependencies": {
-    "@aws-sdk/client-ses": "3.98.0",
-    "@aws-sdk/client-sns": "3.95.0",
+    "@aws-sdk/client-ses": "3.145.0",
+    "@aws-sdk/client-sns": "3.145.0",
     "jsonwebtoken": "8.5.1",
-    "redis": "4.1.0"
+    "redis": "4.2.0"
   },
   "devDependencies": {
-    "eslint": "8.16.0",
+    "eslint": "8.21.0",
     "eslint-config-standard": "17.0.0",
     "eslint-plugin-import": "2.26.0",
-    "eslint-plugin-n": "15.2.0",
+    "eslint-plugin-n": "15.2.4",
     "eslint-plugin-promise": "6.0.0",
-    "nodemon": "2.0.16"
+    "nodemon": "2.0.19"
   }
 }
