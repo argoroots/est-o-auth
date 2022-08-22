@@ -58,6 +58,8 @@ services:
         volumes:
             - ./nginx/auth.conf.template:/etc/nginx/templates/auth.conf.template:ro
             - ./nginx/id-card.conf.template:/etc/nginx/templates/id-card.conf.template:ro
+            - ./nginx/entu-auth.conf.template:/etc/nginx/templates/entu-auth.conf.template:ro
+            - ./nginx/entu-auth.id-card.conf.template:/etc/nginx/templates/entu-auth.id-card.conf.template:ro
             - ./data/id-card:/etc/id-card:ro
             - ./data/id-card/dhparam.pem:/etc/nginx/dhparam.pem:ro
             - ./data/certbot/conf:/etc/letsencrypt:ro
