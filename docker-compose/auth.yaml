@@ -28,6 +28,22 @@ services:
         depends_on:
             - redis
 
+    entu-auth:
+        build:
+            context: https://github.com/entu/auth.git
+        restart: unless-stopped
+        environment:
+            NODE_ENV: production
+            PORT: 80
+            COOKIE_DOMAIN: ${ENTU_AUTH_COOKIE_DOMAIN}
+            MONGODB: ${MONGODB}
+            MID_NAME: ${MOBILEID_NAME}
+            MID_UUID: ${MOBILEID_UUID}
+            GOOGLE_ID: ${GOOGLE_ID}
+            GOOGLE_SECRET: ${GOOGLE_SECRET}
+            FACEBOOK_ID: ${FACEBOOK_ID}
+            FACEBOOK_SECRET: ${FACEBOOK_SECRET}
+
     redis:
         image: redis:7.0-alpine
 
