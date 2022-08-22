@@ -55,6 +55,8 @@ services:
         environment:
             DOMAIN: ${DOMAIN}
             IDCARD_DOMAIN: ${IDCARD_DOMAIN}
+            ENTU_AUTH_DOMAIN: ${ENTU_AUTH_DOMAIN}
+            ENTU_AUTH_IDCARD_DOMAIN: ${ENTU_AUTH_IDCARD_DOMAIN}
         volumes:
             - ./nginx/auth.conf.template:/etc/nginx/templates/auth.conf.template:ro
             - ./nginx/id-card.conf.template:/etc/nginx/templates/id-card.conf.template:ro
