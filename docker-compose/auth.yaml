@@ -36,7 +36,7 @@ services:
             NODE_ENV: production
             PORT: 80
             COOKIE_DOMAIN: ${ENTU_AUTH_COOKIE_DOMAIN}
-            MONGODB: ${MONGODB}
+            MONGODB: ${ENTU_AUTH_MONGODB}
             MID_NAME: ${MOBILEID_NAME}
             MID_UUID: ${MOBILEID_UUID}
             GOOGLE_ID: ${GOOGLE_ID}
