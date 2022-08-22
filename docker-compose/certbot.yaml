@@ -7,8 +7,6 @@ services:
         environment:
             DOMAIN: ${DOMAIN}
             IDCARD_DOMAIN: ${IDCARD_DOMAIN}
-            DOMAIN: ${DOMAIN}
-            IDCARD_DOMAIN: ${IDCARD_DOMAIN}
         volumes:
             - ./nginx/letsencrypt.conf.template:/etc/nginx/templates/letsencrypt.conf.template:ro
             - ./data/certbot/www:/var/www/certbot:ro
