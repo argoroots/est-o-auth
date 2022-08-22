@@ -8,7 +8,7 @@ services:
             DOMAIN: ${ENTU_AUTH_DOMAIN}
             IDCARD_DOMAIN: ${ENTU_AUTH_IDCARD_DOMAIN}
         volumes:
-            - ./nginx/letsencrypt.conf.template:/etc/nginx/templates/letsencrypt.conf.template:ro
+            - ./nginx/certbot.conf.template:/etc/nginx/templates/certbot.conf.template:ro
             - ./data/certbot/www:/var/www/certbot:ro
 
     certbot:
