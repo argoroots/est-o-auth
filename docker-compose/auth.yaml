@@ -43,6 +43,8 @@ services:
             GOOGLE_SECRET: ${GOOGLE_SECRET}
             FACEBOOK_ID: ${FACEBOOK_ID}
             FACEBOOK_SECRET: ${FACEBOOK_SECRET}
+        volumes:
+            - ./data/do-mongodb-ca-certificate.crt:/usr/src/entu-auth/ca/certificate.crt:ro
 
     redis:
         image: redis:7.0-alpine
