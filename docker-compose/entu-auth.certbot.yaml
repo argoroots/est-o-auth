@@ -1,6 +1,6 @@
 services:
     nginx_certbot:
-        image: nginx:1.20-alpine
+        image: nginx:1.22-alpine
         restart: unless-stopped
         ports:
             - 80:80

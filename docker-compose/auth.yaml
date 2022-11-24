@@ -30,7 +30,7 @@ services:
 
     entu-auth:
         build:
-            context: https://github.com/entu/auth.git
+            context: https://github.com/entu/auth.git#main
         restart: unless-stopped
         environment:
             NODE_ENV: production
@@ -50,7 +50,7 @@ services:
         image: redis:7.0-alpine
 
     nginx:
-        image: nginx:1.20-alpine
+        image: nginx:1.22-alpine
         restart: unless-stopped
         ports:
             - 443:443
