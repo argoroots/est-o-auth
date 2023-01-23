@@ -53,7 +53,6 @@ services:
         image: nginx:1.22-alpine
         restart: unless-stopped
         ports:
-            - 80:80
             - 443:443
         environment:
             DOMAIN: ${DOMAIN}
