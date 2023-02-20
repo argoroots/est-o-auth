@@ -25,7 +25,9 @@ services:
             MOBILEID_UUID: ${MOBILEID_UUID}
             SMARTID_NAME: ${SMARTID_NAME}
             SMARTID_UUID: ${SMARTID_UUID}
-            CLIENTS_YAML: ${CLIENTS_YAML}
+            CLIENTS_YAML: /usr/src/entu-auth/clients.yaml
+        volumes:
+            - ./data/clients.yaml:/usr/src/entu-auth/clients.yaml:ro
         depends_on:
             - redis
 
