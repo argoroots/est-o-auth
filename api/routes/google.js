@@ -46,7 +46,7 @@ async function getGoogle (headers, params, res) {
   url.pathname = '/o/oauth2/v2/auth'
   url.search = new URLSearchParams({
     client_id: process.env.GOOGLE_ID,
-    redirect_uri: `https://${process.env.DOMAIN}/auth/google`,
+    redirect_uri: `https://${process.env.DOMAIN}/api/google`,
     response_type: 'code',
     response_mode: 'form_post',
     scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
@@ -106,7 +106,7 @@ async function getToken (code) {
       client_id: process.env.GOOGLE_ID,
       client_secret: process.env.GOOGLE_SECRET,
       code,
-      redirect_uri: `https://${process.env.DOMAIN}/auth/google`,
+      redirect_uri: `https://${process.env.DOMAIN}/api/google`,
       grant_type: 'authorization_code'
     }).toString()
 
