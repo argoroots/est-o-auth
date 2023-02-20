@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt')
 const storage = require('./_storage.js')
 
 async function getToken (headers, params, res) {
@@ -33,7 +34,7 @@ async function getToken (headers, params, res) {
     return
   }
 
-  if (client.secret !== params.client_secret) {
+  if (!bcrypt.compare(params.client_secret, client.secret)) {
     res.writeHead(403, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify({ error: 'Invalid client_secret' }))
     return
