@@ -43,6 +43,11 @@ const routes = [
         component: () => import('@/views/auth/AuthEmail.vue')
       },
       {
+        path: 'google',
+        name: 'AuthGoogle',
+        component: () => import('@/views/auth/AuthGoogle.vue')
+      },
+      {
         path: 'phone',
         name: 'AuthPhone',
         component: () => import('@/views/auth/AuthPhone.vue')
