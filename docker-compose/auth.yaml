@@ -25,6 +25,8 @@ services:
             MOBILEID_UUID: ${MOBILEID_UUID}
             SMARTID_NAME: ${SMARTID_NAME}
             SMARTID_UUID: ${SMARTID_UUID}
+            GOOGLE_ID: ${GOOGLE_ID}
+            GOOGLE_SECRET: ${GOOGLE_SECRET}
             CLIENTS_YAML: /usr/src/entu-auth/clients.yaml
         volumes:
             - ./data/clients.yaml:/usr/src/entu-auth/clients.yaml:ro
