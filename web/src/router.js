@@ -89,12 +89,25 @@ router.beforeEach(async (to, from, next) => {
     return
   }
 
-  const response = await get('client', {
+  const client = await get('client', {
     client_id: query.client_id,
     redirect_uri: query.redirect_uri
   })
 
-  console.log(response)
+  if (!client.client) {
+    next({ path: '/auth/error', query: { ...query, error: 'client_id' } })
+    return
+  }
+
+  if (!client.redirect_uri) {
+    next({ path: '/auth/error', query: { ...query, error: 'redirect_uri' } })
+    return
+  }
+
+  if (!client.providers.some(x => path === `/auth/${x}`)) {
+    next({ path: '/auth/error', query: { ...query, error: 'provider' } })
+    return
+  }
 
   next()
 })

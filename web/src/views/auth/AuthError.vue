@@ -16,6 +16,8 @@ const error = computed(() => {
       return 'The client ID (client_id) in the request do not match a registered client ID!'
     case 'redirect_uri':
       return 'The redirect URI (redirect_uri) in the request do not match a registered redirect URI!'
+    case 'provider':
+      return 'The authentication provider in the request do not match a registered authentication provider!'
     case 'scope':
       return 'The scope in the request do not match required value "openid"!'
     default:
