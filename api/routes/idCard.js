@@ -7,6 +7,12 @@ async function getCode (headers, params, res) {
     return
   }
 
+  if (params.scope !== 'openid') {
+    res.writeHead(400, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Parameter scope must be "openid"' }))
+    return
+  }
+
   if (!params.client_id) {
     res.writeHead(400, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify({ error: 'Parameter client_id is required' }))
