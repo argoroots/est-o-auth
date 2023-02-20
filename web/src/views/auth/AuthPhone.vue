@@ -23,9 +23,17 @@ if (phone.value && code.value) {
 }
 
 async function onStartSession () {
-  if (!phone.value?.trim()) {
+  if (!phone.value) {
     return
   }
+
+  phone.value = phone.value.replace(/\D/g, '')
+
+  if (phone.value.length <= 8) {
+    phone.value = '372' + phone.value
+  }
+
+  phone.value = '+' + phone.value
 
   isSending.value = true
 
