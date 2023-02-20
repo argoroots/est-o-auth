@@ -22,11 +22,6 @@ const routes = [
         component: () => import('@/views/auth/AuthNav.vue')
       },
       {
-        path: 'e-mail',
-        name: 'AuthEmail',
-        component: () => import('@/views/auth/AuthEmail.vue')
-      },
-      {
         path: 'mobile-id',
         name: 'AuthMobileID',
         component: () => import('@/views/auth/AuthMobileID.vue')
@@ -40,6 +35,16 @@ const routes = [
         path: 'id-card',
         name: 'AuthIDCard',
         component: () => import('@/views/auth/AuthIDCard.vue')
+      },
+      {
+        path: 'e-mail',
+        name: 'AuthEmail',
+        component: () => import('@/views/auth/AuthEmail.vue')
+      },
+      {
+        path: 'phone',
+        name: 'AuthPhone',
+        component: () => import('@/views/auth/AuthPhone.vue')
       },
       {
         path: 'error',

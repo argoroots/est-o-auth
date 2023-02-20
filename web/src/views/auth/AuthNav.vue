@@ -1,19 +1,13 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { ApplicationMobile, Email, SimCard } from '@vicons/carbon'
+import { ApplicationMobile, Chat, Email, SimCard } from '@vicons/carbon'
 import SmartIdIcon from '@/components/SmartIdIcon.vue'
 
 const { query } = useRoute()
 const queryMethods = (query.methods || 'e-mail,smart-id,mobile-id,id-card').split(',')
 
 const methods = [
-  {
-    id: 'e-mail',
-    label: 'E-mail',
-    icon: Email,
-    to: { path: '/auth/e-mail', query }
-  },
   {
     id: 'smart-id',
     label: 'Smart-ID',
@@ -31,6 +25,18 @@ const methods = [
     label: 'ID-Card',
     icon: SimCard,
     to: { path: '/auth/id-card', query }
+  },
+  {
+    id: 'e-mail',
+    label: 'E-mail',
+    icon: Email,
+    to: { path: '/auth/e-mail', query }
+  },
+  {
+    id: 'phone',
+    label: 'Phone',
+    icon: Chat,
+    to: { path: '/auth/phone', query }
   }
 ]
 
