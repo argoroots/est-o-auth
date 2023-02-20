@@ -5,7 +5,7 @@ import { ApplicationMobile, Chat, Email, SimCard } from '@vicons/carbon'
 import SmartIdIcon from '@/components/SmartIdIcon.vue'
 
 const { query } = useRoute()
-const queryMethods = (query.methods || 'e-mail,smart-id,mobile-id,id-card').split(',')
+const queryMethods = (query.methods || 'smart-id,mobile-id,id-card,e-mail,phone').split(',')
 
 const methods = [
   {
