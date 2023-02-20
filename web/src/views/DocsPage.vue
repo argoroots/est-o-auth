@@ -76,6 +76,7 @@ Host: oauth.ee
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9</pre>
         <p>Response contains user information as JSON object.</p>
         <pre>{
+  "email": "38001085718@eesti.ee",
   "idcode": "38001085718",
   "firstname": "JAAK-KRISTJAN",
   "lastname": "JÕEORG"

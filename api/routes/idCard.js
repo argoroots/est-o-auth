@@ -51,6 +51,7 @@ async function getCode (headers, params, res) {
   }))
 
   const code = await storage.saveUser({
+    email: `${userInfo.serialNumber}@eesti.ee`,
     idcode: userInfo.serialNumber,
     firstname: userInfo.GN,
     lastname: userInfo.SN
