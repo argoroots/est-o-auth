@@ -60,5 +60,4 @@ a {
 a svg {
   @apply h-5 w-5;
 }
-
 </style>
