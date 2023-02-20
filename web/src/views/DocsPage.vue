@@ -12,6 +12,7 @@
           <li><a href="/auth/mobile-id">/auth/mobile-id</a></li>
           <li><a href="/auth/smart-id">/auth/smart-id</a></li>
           <li><a href="/auth/e-mail">/auth/e-mail</a></li>
+          <li><a href="/auth/phone">/auth/phone</a></li>
           <li><a href="/auth">/auth</a> - <em>will ask user the preferred auth method</em></li>
         </ul>
         <p>Required query parameters:</p>
@@ -25,7 +26,7 @@
         <p>Optional parameters - if not set, user must input required ones (depends of auth method):</p>
         <ul>
           <li>idcode - <em>only for <a href="/auth/mobile-id">/auth/mobile-id</a> and <a href="/auth/smart-id">/auth/smart-id</a></em></li>
-          <li>phone - <em>only for <a href="/auth/mobile-id">/auth/mobile-id</a></em></li>
+          <li>phone - <em>only for <a href="/auth/mobile-id">/auth/mobile-id</a> and <a href="/auth/phone">/auth/phone</a></em></li>
           <li>email - <em>only for <a href="/auth/e-mail">/auth/e-mail</a></em></li>
         </ul>
         <pre>https://oauth.ee/auth?response_type=code&client_id=QVnPZGdcXQ8Ev4mx&redirect_uri=https://example.com/auth/callback&scope=openid&state=5600684163565994</pre>

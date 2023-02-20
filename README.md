@@ -8,6 +8,7 @@ Use Estonian ID-card, Mobile-ID, Smart-ID or E-mail as OAuth authentication prov
     - [/auth/mobile-id]()
     - [/auth/smart-id]()
     - [/auth/e-mail]()
+    - [/auth/phone]()
     - [/auth]() - *will ask user the preferred auth method*
 
     Required query parameters:
@@ -19,7 +20,7 @@ Use Estonian ID-card, Mobile-ID, Smart-ID or E-mail as OAuth authentication prov
 
     Optional parameters - if not set, user must input required ones (depends of auth method):
     - idcode - *only for [/auth/mobile-id]() and [/auth/smart-id]()*
-    - phone - *only for [/auth/mobile-id]()*
+    - phone - *only for [/auth/mobile-id]() and [/auth/phone]()*
     - email - *only for [/auth/e-mail]()*
 
     ```bash
