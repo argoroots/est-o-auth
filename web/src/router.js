@@ -109,6 +109,7 @@ router.beforeEach(async (to, from, next) => {
     return
   }
 
+  to.meta.description = client.description
   to.meta.providers = client.providers
 
   next()

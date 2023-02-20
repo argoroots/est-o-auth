@@ -1,5 +1,6 @@
 <script setup>
 import backgroundBlobs from '@/components/BackgroundBlobs.vue'
+const { meta } = useRoute()
 </script>
 
 <template>
@@ -8,7 +9,14 @@ import backgroundBlobs from '@/components/BackgroundBlobs.vue'
     <section>
       <h1>OAuth.ee <span>by Argo Roots</span></h1>
       <router-view />
-      <footer />
+      <footer>
+        <p
+          v-if="meta.description"
+          class="text-center"
+        >
+          {{ meta.description }}
+        </p>
+      </footer>
     </section>
   </main>
 </template>

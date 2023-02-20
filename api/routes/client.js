@@ -24,6 +24,7 @@ async function getClient (headers, params, res) {
   res.writeHead(200, { 'Content-Type': 'application/json' })
   res.end(JSON.stringify({
     client: client.id,
+    description: client.description,
     redirect_uri: client.redirect_uris.includes(params.redirect_uri),
     providers: client.providers
   }))
