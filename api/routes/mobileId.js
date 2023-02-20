@@ -167,8 +167,7 @@ async function startMidSession (idcode, phone) {
   const newBinary = bin.substring(0, 6) + bin.slice(-7)
   const consent = String(parseInt(newBinary, 2)).padStart(4, '0')
 
-  // const skResponse = await fetch('https://mid.sk.ee/mid-api/authentication', {
-  const skResponse = await fetch('https://tsp.demo.sk.ee/mid-api/authentication', {
+  const skResponse = await fetch('https://mid.sk.ee/mid-api/authentication', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -194,8 +193,7 @@ async function startMidSession (idcode, phone) {
 }
 
 async function checkMidSession (sessionId) {
-  // const skResponse = await fetch(`https://mid.sk.ee/mid-api/authentication/session/${sessionId}?timeoutMs=2000`).then(response => response.json())
-  const skResponse = await fetch(`https://tsp.demo.sk.ee/mid-api/authentication/session/${sessionId}?timeoutMs=2000`).then(response => response.json())
+  const skResponse = await fetch(`https://mid.sk.ee/mid-api/authentication/session/${sessionId}?timeoutMs=2000`).then(response => response.json())
 
   if (skResponse.state === 'RUNNING') {
     return 'RUNNING'

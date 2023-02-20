@@ -52,8 +52,6 @@ async function postPhone (headers, params, res) {
     phone: params.phone
   })
 
-  const url = `${process.env.EMAIL_URL}?email=${params.email}&code=${code}`
-
   const sns = new SNSClient({
     region: process.env.AWS_SES_REGION,
     credentials: {

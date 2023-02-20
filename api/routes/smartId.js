@@ -160,8 +160,7 @@ async function startSidSession (idcode, phone) {
   const newBinary = bin.substring(0, 6) + bin.slice(-7)
   const consent = String(parseInt(newBinary, 2)).padStart(4, '0')
 
-  // const skResponse = await fetch(`https://sid.demo.sk.ee/smart-id-rp/v2/authentication/etsi/PNOEE-${idcode}`, {
-  const skResponse = await fetch(`https://sid.demo.sk.ee/smart-id-rp/v2/authentication/etsi/PNOEE-${idcode}`, {
+  const skResponse = await fetch(`https://rp-api.smart-id.com/v2/authentication/etsi/PNOEE-${idcode}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -193,8 +192,7 @@ async function startSidSession (idcode, phone) {
 }
 
 async function checkSidSession (sessionId) {
-  // const skResponse = await fetch(`https://rp-api.smart-id.com/v2/session/${sessionId}?timeoutMs=2000`).then(response => response.json())
-  const skResponse = await fetch(`https://sid.demo.sk.ee/smart-id-rp/v2/session/${sessionId}?timeoutMs=2000`).then(response => response.json())
+  const skResponse = await fetch(`https://rp-api.smart-id.com/v2/session/${sessionId}?timeoutMs=2000`).then(response => response.json())
 
   if (skResponse.state === 'RUNNING') {
     return 'RUNNING'
