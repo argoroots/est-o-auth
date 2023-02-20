@@ -104,7 +104,7 @@ router.beforeEach(async (to, from, next) => {
     return
   }
 
-  next()
+  next({ path, query, meta: { providers: client.providers } })
 })
 
 export default router

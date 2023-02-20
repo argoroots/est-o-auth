@@ -4,8 +4,7 @@ import { useRoute } from 'vue-router'
 import { ApplicationMobile, Chat, Email, SimCard } from '@vicons/carbon'
 import SmartIdIcon from '@/components/SmartIdIcon.vue'
 
-const { query } = useRoute()
-const queryMethods = (query.methods || 'smart-id,mobile-id,id-card,e-mail,phone').split(',')
+const { query, meta } = useRoute()
 
 const methods = [
   {
@@ -40,7 +39,7 @@ const methods = [
   }
 ]
 
-const allowedMethods = computed(() => methods.filter(m => queryMethods.includes(m.id)))
+const allowedMethods = computed(() => methods.filter(m => meta.providers.includes(m.id)))
 </script>
 
 <template>
