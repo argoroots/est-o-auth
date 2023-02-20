@@ -77,6 +77,11 @@ async function onStartSession () {
 
 async function onAuthenticate () {
   const response = await post('mobile-id/code', {
+    response_type: query.response_type,
+    client_id: query.client_id,
+    redirect_uri: query.redirect_uri,
+    scope: query.scope,
+    state: query.state,
     idcode: idcode.value,
     session: session.value
   })

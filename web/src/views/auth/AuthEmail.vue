@@ -58,6 +58,11 @@ async function onAuthenticate () {
   isError.value = false
 
   const response = await post('e-mail/code', {
+    response_type: query.response_type,
+    client_id: query.client_id,
+    redirect_uri: query.redirect_uri,
+    scope: query.scope,
+    state: query.state,
     email: email.value,
     code: code.value
   })

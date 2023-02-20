@@ -52,7 +52,7 @@ async function postEmail (headers, params, res) {
     email: params.email
   })
 
-  const url = `${process.env.EMAIL_URL}?email=${params.email}&code=${code}`
+  const url = `${process.env.EMAIL_URL}?response_type=code&scope=openid&client_id=${params.client_id}&redirect_uri=${params.redirect_uri}&email=${params.email}&code=${code}`
 
   const ses = new SESClient({
     region: process.env.AWS_SES_REGION,
