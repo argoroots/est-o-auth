@@ -4,6 +4,7 @@ const client = require('./routes/client.js')
 const mobileId = require('./routes/mobileId.js')
 const smartId = require('./routes/smartId.js')
 const idCard = require('./routes/idCard.js')
+const google = require('./routes/google.js')
 const email = require('./routes/email.js')
 const phone = require('./routes/phone.js')
 const token = require('./routes/token.js')
@@ -36,6 +37,12 @@ const server = http.createServer(async (req, res) => {
         break
       case 'GET /api/id-card':
         await idCard.getCode(headers, params, res)
+        break
+      case 'GET /api/google':
+        await google.getGoogle(headers, params, res)
+        break
+      case 'POST /api/google':
+        await google.postGoogle(headers, params, res)
         break
       case 'POST /api/e-mail':
         await email.postEmail(headers, params, res)
