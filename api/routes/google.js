@@ -96,8 +96,8 @@ async function postGoogle (headers, params, res) {
 
   const queryString = Object.keys(query).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(query[key])}`).join('&')
 
-  res.writeHead(200, { 'Content-Type': 'application/json' })
-  res.end(JSON.stringify({ redirect: `${decodedState.uri}?${queryString}` }))
+  res.writeHead(302, { Location: `${decodedState.uri}?${queryString}` })
+  res.end()
 }
 
 async function getToken (code) {
