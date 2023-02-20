@@ -48,7 +48,7 @@ async function onStartSession () {
 
   isSending.value = false
 
-  if (response.phoneSent) {
+  if (response.smsSent) {
     isPhoneSent.value = true
   }
 }
