@@ -2,6 +2,12 @@ const bcrypt = require('bcrypt')
 const storage = require('./_storage.js')
 
 async function getToken (headers, params, res) {
+  if (params.grant_type !== 'authorization_code') {
+    res.writeHead(400, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Parameter grant_type must be "authorization_code"' }))
+    return
+  }
+
   if (!params.client_id) {
     res.writeHead(400, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify({ error: 'Parameter client_id is required' }))
@@ -20,12 +26,6 @@ async function getToken (headers, params, res) {
     return
   }
 
-  if (params.grant_type !== 'authorization_code') {
-    res.writeHead(400, { 'Content-Type': 'application/json' })
-    res.end(JSON.stringify({ error: 'Parameter grant_type must be "authorization_code"' }))
-    return
-  }
-
   const client = await storage.getClient(params.client_id)
 
   if (!client) {
@@ -34,7 +34,9 @@ async function getToken (headers, params, res) {
     return
   }
 
-  if (!bcrypt.compare(params.client_secret, client.secret)) {
+  const validSecret = await bcrypt.compare(params.client_secret, client.secret)
+
+  if (!validSecret) {
     res.writeHead(403, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify({ error: 'Invalid client_secret' }))
     return
