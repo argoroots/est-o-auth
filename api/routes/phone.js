@@ -40,11 +40,11 @@ async function postPhone (headers, params, res) {
     return
   }
 
-  if (!client.redirect_uris.includes(params.redirect_uri)) {
-    res.writeHead(403, { 'Content-Type': 'application/json' })
-    res.end(JSON.stringify({ error: 'Invalid redirect_uri' }))
-    return
-  }
+  // if (!client.redirect_uris.includes(params.redirect_uri)) {
+  //   res.writeHead(403, { 'Content-Type': 'application/json' })
+  //   res.end(JSON.stringify({ error: 'Invalid redirect_uri' }))
+  //   return
+  // }
 
   const code = await storage.setPhoneSession({
     redirect_uri: params.redirect_uri,
@@ -114,11 +114,11 @@ async function postCode (headers, params, res) {
     return
   }
 
-  if (!client.redirect_uris.includes(params.redirect_uri)) {
-    res.writeHead(403, { 'Content-Type': 'application/json' })
-    res.end(JSON.stringify({ error: 'Invalid redirect_uri' }))
-    return
-  }
+  // if (!client.redirect_uris.includes(params.redirect_uri)) {
+  //   res.writeHead(403, { 'Content-Type': 'application/json' })
+  //   res.end(JSON.stringify({ error: 'Invalid redirect_uri' }))
+  //   return
+  // }
 
   const phoneSession = await storage.getPhoneSession(params.phone, params.code)
 

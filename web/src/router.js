@@ -99,10 +99,10 @@ router.beforeEach(async (to, from, next) => {
     return
   }
 
-  if (!client.redirect_uri) {
-    next({ path: '/auth/error', query: { ...query, error: 'redirect_uri' } })
-    return
-  }
+  // if (!client.redirect_uri) {
+  //   next({ path: '/auth/error', query: { ...query, error: 'redirect_uri' } })
+  //   return
+  // }
 
   if (path.startsWith('/auth/') && !client.providers.some(x => path === `/auth/${x}`)) {
     next({ path: '/auth/error', query: { ...query, error: 'provider' } })

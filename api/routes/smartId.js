@@ -40,11 +40,11 @@ async function postSession (headers, params, res) {
     return
   }
 
-  if (!client.redirect_uris.includes(params.redirect_uri)) {
-    res.writeHead(403, { 'Content-Type': 'application/json' })
-    res.end(JSON.stringify({ error: 'Invalid redirect_uri' }))
-    return
-  }
+  // if (!client.redirect_uris.includes(params.redirect_uri)) {
+  //   res.writeHead(403, { 'Content-Type': 'application/json' })
+  //   res.end(JSON.stringify({ error: 'Invalid redirect_uri' }))
+  //   return
+  // }
 
   const { skSession, consent } = await startSidSession(params.idcode)
 
@@ -107,11 +107,11 @@ async function postCode (headers, params, res) {
     return
   }
 
-  if (!client.redirect_uris.includes(params.redirect_uri)) {
-    res.writeHead(403, { 'Content-Type': 'application/json' })
-    res.end(JSON.stringify({ error: 'Invalid redirect_uri' }))
-    return
-  }
+  // if (!client.redirect_uris.includes(params.redirect_uri)) {
+  //   res.writeHead(403, { 'Content-Type': 'application/json' })
+  //   res.end(JSON.stringify({ error: 'Invalid redirect_uri' }))
+  //   return
+  // }
 
   const sidSession = await storage.getSidSession(params.idcode, params.session, false)
 
