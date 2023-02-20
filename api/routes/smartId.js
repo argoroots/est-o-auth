@@ -34,6 +34,12 @@ async function postSession (headers, params, res) {
     return
   }
 
+  if (!client.redirect_uris.includes(params.redirect_uri)) {
+    res.writeHead(403, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Invalid redirect_uri' }))
+    return
+  }
+
   const { skSession, consent } = await startSidSession(params.idcode)
 
   const session = await storage.setSidSession({
