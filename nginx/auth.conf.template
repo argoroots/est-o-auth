@@ -48,7 +48,7 @@ server {
     gzip on;
     gzip_types text/html application/javascript application/json text/css;
 
-    location ~ (/token|/user|/api/e-mail|/api/e-mail/code|/api/phone|/api/phone/code|/api/mobile-id|/api/mobile-id/code|/api/smart-id|/api/smart-id/code)$ {
+    location ~ (/token|/user|/api/phone|/api/phone/code|/api/mobile-id|/api/mobile-id/code|/api/smart-id|/api/smart-id/code|/api/e-mail|/api/e-mail/code|/api/phone|/api/phone/code)$ {
         if ($request_method = "OPTIONS") {
             add_header Access-Control-Allow-Headers "*";
             add_header Access-Control-Allow-Methods "GET, POST, OPTIONS";
@@ -75,7 +75,7 @@ server {
         proxy_set_header X-Real-IP         $remote_addr;
     }
 
-    location ~ (/|/docs|/auth|/auth/e-mail|/auth/mobile-id|/auth/smart-id|/auth/id-card|/auth/error)$ {
+    location ~ (/|/docs|/auth|/auth/mobile-id|/auth/smart-id|/auth/id-card|/auth/e-mail|/auth/phone|/auth/error)$ {
         root      /etc/nginx/html;
         index     index.html;
         try_files $uri $uri/ $uri.html /index.html;
