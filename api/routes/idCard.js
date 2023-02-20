@@ -7,6 +7,12 @@ async function getCode (headers, params, res) {
     return
   }
 
+  if (!params.client_id) {
+    res.writeHead(400, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Parameter client_id is required' }))
+    return
+  }
+
   if (!params.redirect_uri) {
     res.writeHead(400, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify({ error: 'Parameter redirect_uri is required' }))
