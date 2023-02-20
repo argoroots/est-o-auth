@@ -69,11 +69,6 @@ router.beforeEach(async (to, from, next) => {
     return
   }
 
-  if (path === '/auth/e-mail' && query.code && query.email) {
-    next()
-    return
-  }
-
   if (query.response_type !== 'code') {
     next({ path: '/auth/error', query: { ...query, error: 'response_type' } })
     return
@@ -104,7 +99,7 @@ router.beforeEach(async (to, from, next) => {
     return
   }
 
-  if (!client.providers.some(x => path === `/auth/${x}`)) {
+  if (path.startsWith('/auth/') && !client.providers.some(x => path === `/auth/${x}`)) {
     next({ path: '/auth/error', query: { ...query, error: 'provider' } })
     return
   }
