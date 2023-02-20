@@ -48,7 +48,7 @@ server {
     gzip on;
     gzip_types text/html application/javascript application/json text/css;
 
-    location ~ (/token|/user|/api/phone|/api/phone/code|/api/mobile-id|/api/mobile-id/code|/api/smart-id|/api/smart-id/code|/api/e-mail|/api/e-mail/code|/api/phone|/api/phone/code)$ {
+    location ~ (/token|/user|/api/client|/api/mobile-id|/api/mobile-id/code|/api/smart-id|/api/smart-id/code|/api/e-mail|/api/e-mail/code|/api/phone|/api/phone/code)$ {
         if ($request_method = "OPTIONS") {
             add_header Access-Control-Allow-Headers "*";
             add_header Access-Control-Allow-Methods "GET, POST, OPTIONS";
