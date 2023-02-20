@@ -1,6 +1,8 @@
 const { createClient } = require('redis')
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
+const YAML = require('yaml')
+const fs = require('node:fs/promises')
 
 const redis = createClient({ url: process.env.REDIS })
 
@@ -145,6 +147,13 @@ async function getToken (code, expiresIn) {
   return jwt.sign(JSON.parse(user), process.env.JWT_SECRET, { expiresIn })
 }
 
+async function getClient (clientId) {
+  const file = await fs.readFile(process.env.CLIENTS_YAML, 'utf8')
+  const clients = YAML.parse(file)
+
+  return clients.find(client => client.id === clientId)
+}
+
 module.exports = {
   setEmailSession,
   getEmailSession,
@@ -155,5 +164,6 @@ module.exports = {
   setSidSession,
   getSidSession,
   saveUser,
-  getToken
+  getToken,
+  getClient
 }

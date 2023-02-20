@@ -25,6 +25,20 @@ async function getToken (headers, params, res) {
     return
   }
 
+  const client = await storage.getClient(params.client_id)
+
+  if (!client) {
+    res.writeHead(403, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Invalid client_id' }))
+    return
+  }
+
+  if (client.secret !== params.client_secret) {
+    res.writeHead(403, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Invalid client_secret' }))
+    return
+  }
+
   const token = await storage.getToken(params.code, 3600)
 
   if (!token) {

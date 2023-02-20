@@ -25,6 +25,14 @@ async function getCode (headers, params, res) {
     return
   }
 
+  const client = await storage.getClient(params.client_id)
+
+  if (!client) {
+    res.writeHead(403, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Invalid client_id' }))
+    return
+  }
+
   const userInfo = Object.fromEntries(headers.ssl_client_s_dn.split(',').map(x => {
     const info = x.split('=')
     return [info[0], info[1]]

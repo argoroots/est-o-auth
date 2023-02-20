@@ -25,6 +25,7 @@ services:
             MOBILEID_UUID: ${MOBILEID_UUID}
             SMARTID_NAME: ${SMARTID_NAME}
             SMARTID_UUID: ${SMARTID_UUID}
+            CLIENTS_YAML: ${CLIENTS_YAML}
         depends_on:
             - redis
 

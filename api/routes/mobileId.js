@@ -32,6 +32,14 @@ async function postSession (headers, params, res) {
     return
   }
 
+  const client = await storage.getClient(params.client_id)
+
+  if (!client) {
+    res.writeHead(403, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Invalid client_id' }))
+    return
+  }
+
   const { skSession, consent } = await startMidSession(params.idcode, params.phone)
 
   const session = await storage.setMidSession({

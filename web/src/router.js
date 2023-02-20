@@ -78,16 +78,6 @@ router.beforeEach((to, from, next) => {
     return
   }
 
-  if (query.client_id !== 'test') {
-    next({ path: '/auth/error', query: { ...query, error: 'client_id' } })
-    return
-  }
-
-  if (query.redirect_uri !== 'http://localhost:8080') {
-    next({ path: '/auth/error', query: { ...query, error: 'redirect_uri' } })
-    return
-  }
-
   if (query.scope !== 'openid') {
     next({ path: '/auth/error', query: { ...query, error: 'scope' } })
     return
