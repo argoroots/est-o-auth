@@ -1,5 +1,7 @@
 <script setup>
+import { useRoute } from 'vue-router'
 import backgroundBlobs from '@/components/BackgroundBlobs.vue'
+
 const { meta } = useRoute()
 </script>
 
