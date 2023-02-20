@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { post } from '@/api.js'
+import { get } from '@/api.js'
 
 const routes = [
   {
@@ -89,7 +89,7 @@ router.beforeEach(async (to, from, next) => {
     return
   }
 
-  const response = await post('client', {
+  const response = await get('client', {
     client_id: query.client_id,
     redirect_uri: query.redirect_uri
   })
