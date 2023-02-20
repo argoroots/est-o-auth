@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { post } from '@/api.js'
 
 const routes = [
   {
@@ -60,7 +61,7 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const { path, query } = to
 
   if (['/', '/docs', '/auth/error'].includes(path)) {
@@ -73,11 +74,6 @@ router.beforeEach((to, from, next) => {
     return
   }
 
-  if (!query.response_type || !query.client_id || !query.redirect_uri || !query.scope || !query.state) {
-    next({ path: '/auth/error', query: { ...query, error: 'missing_parameter' } })
-    return
-  }
-
   if (query.response_type !== 'code') {
     next({ path: '/auth/error', query: { ...query, error: 'response_type' } })
     return
@@ -87,6 +83,18 @@ router.beforeEach((to, from, next) => {
     next({ path: '/auth/error', query: { ...query, error: 'scope' } })
     return
   }
+
+  if (!query.client_id || !query.redirect_uri || !query.state) {
+    next({ path: '/auth/error', query: { ...query, error: 'missing_parameter' } })
+    return
+  }
+
+  const response = await post('client', {
+    client_id: query.client_id,
+    redirect_uri: query.redirect_uri
+  })
+
+  console.log(response)
 
   next()
 })
