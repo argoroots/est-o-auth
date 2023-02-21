@@ -14,7 +14,7 @@ const { meta } = useRoute()
       <footer>
         <p
           v-if="meta.description"
-          class="px-8 pt-16 text-center"
+          class="px-8 pt-16"
         >
           {{ meta.description }}
         </p>
