@@ -14,10 +14,10 @@ async function getUser (headers, params, res) {
 
     res.writeHead(200, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify({
-      idcode: decodedToken.idcode,
-      firstname: decodedToken.firstname,
-      lastname: decodedToken.lastname,
-      email: decodedToken.email
+      id: decodedToken.id,
+      email: decodedToken.email,
+      name: decodedToken.name,
+      provider: decodedToken.provider
     }))
   } catch (e) {
     res.writeHead(401, { 'Content-Type': 'application/json' })

@@ -85,7 +85,6 @@ async function postGoogle (headers, params, res) {
     id: profile.id,
     email: profile.emails?.[0]?.value,
     name: profile.displayName,
-    picture: profile.image?.url,
     provider: 'google'
   })
 
