@@ -50,10 +50,13 @@ async function getCode (headers, params, res) {
     return [info[0], info[1]]
   }))
 
+  const id = userInfo.serialNumber.replace('PNOEE-', '')
+  const name = `${userInfo.GN} ${userInfo.SN}`
+
   const code = await storage.saveUser({
-    id: userInfo.serialNumber,
-    email: `${userInfo.serialNumber}@eesti.ee`,
-    name: `${userInfo.GN} ${userInfo.SN}`,
+    id,
+    email: `${id}@eesti.ee`,
+    name,
     provider: 'id-card'
   })
 
