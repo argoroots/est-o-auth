@@ -129,7 +129,8 @@ async function postCode (headers, params, res) {
   }
 
   const code = await storage.saveUser({
-    phone: phoneSession.phone
+    id: phoneSession.phone,
+    provider: 'phone'
   })
 
   const query = { code }

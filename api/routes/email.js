@@ -145,7 +145,9 @@ async function postCode (headers, params, res) {
   }
 
   const code = await storage.saveUser({
-    email: emailSession.email
+    id: emailSession.email,
+    email: emailSession.email,
+    provider: 'e-mail'
   })
 
   const query = { code }

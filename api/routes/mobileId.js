@@ -139,8 +139,9 @@ async function postCode (headers, params, res) {
   await storage.getMidSession(params.idcode, params.session, true)
 
   const code = await storage.saveUser({
+    id: midSession.idcode,
     email: `${midSession.idcode}@eesti.ee`,
-    idcode: midSession.idcode
+    provider: 'mobile-id'
   })
 
   const query = { code }

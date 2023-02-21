@@ -83,9 +83,10 @@ async function postGoogle (headers, params, res) {
 
   const code = await storage.saveUser({
     id: profile.id,
-    name: profile.displayName,
     email: profile.emails?.[0]?.value,
-    picture: profile.image?.url
+    name: profile.displayName,
+    picture: profile.image?.url,
+    provider: 'google'
   })
 
   const query = { code }
