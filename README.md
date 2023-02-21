@@ -74,10 +74,9 @@ Use Estonian ID-card, Mobile-ID, Smart-ID or E-mail as OAuth authentication prov
     Response contains user information as JSON object.
     ```json
     {
+      "id": "38001085718",
       "email": "38001085718@eesti.ee",
-      "idcode": "38001085718",
-      "firstname": "JAAK-KRISTJAN",
-      "lastname": "JÕEORG"
+      "name": "JAAK-KRISTJAN JÕEORG"
     }
     ```
 
