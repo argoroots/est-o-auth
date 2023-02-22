@@ -11,8 +11,8 @@
     "lint": "eslint ./ --fix --ignore-path ../.gitignore --ext .js"
   },
   "dependencies": {
-    "@aws-sdk/client-ses": "3.272.0",
-    "@aws-sdk/client-sns": "3.272.0",
+    "@aws-sdk/client-ses": "3.276.0",
+    "@aws-sdk/client-sns": "3.276.0",
     "bcrypt": "5.1.0",
     "jsonwebtoken": "9.0.0",
     "redis": "4.6.4",
