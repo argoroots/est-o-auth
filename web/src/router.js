@@ -10,11 +10,13 @@ const routes = [
   {
     path: '/docs',
     name: 'DocsPage',
+    meta: { title: 'Documentation' },
     component: () => import('@/views/DocsPage.vue')
   },
   {
     path: '/terms',
     name: 'TermsPage',
+    meta: { title: 'Terms & Conditions' },
     component: () => import('@/views/TermsPage.vue')
   },
   {
@@ -30,36 +32,43 @@ const routes = [
       {
         path: 'mobile-id',
         name: 'AuthMobileID',
+        meta: { title: 'Mobile-ID' },
         component: () => import('@/views/auth/AuthMobileID.vue')
       },
       {
         path: 'smart-id',
         name: 'AuthSmartID',
+        meta: { title: 'Smart-ID' },
         component: () => import('@/views/auth/AuthSmartID.vue')
       },
       {
         path: 'id-card',
         name: 'AuthIDCard',
+        meta: { title: 'ID-Card' },
         component: () => import('@/views/auth/AuthIDCard.vue')
       },
       {
         path: 'e-mail',
         name: 'AuthEmail',
+        meta: { title: 'E-mail' },
         component: () => import('@/views/auth/AuthEmail.vue')
       },
       {
         path: 'google',
         name: 'AuthGoogle',
+        meta: { title: 'Google' },
         component: () => import('@/views/auth/AuthGoogle.vue')
       },
       {
         path: 'phone',
         name: 'AuthPhone',
+        meta: { title: 'Phone' },
         component: () => import('@/views/auth/AuthPhone.vue')
       },
       {
         path: 'error',
         name: 'AuthError',
+        meta: { title: 'Error' },
         component: () => import('@/views/auth/AuthError.vue')
       }
     ]
@@ -72,7 +81,9 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  const { path, query } = to
+  const { meta, path, query } = to
+
+  if (meta.title) document.title = `OAuth.ee · ${meta.title}`
 
   if (['/', '/auth/error', '/docs', '/terms'].includes(path)) {
     next()
