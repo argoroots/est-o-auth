@@ -1,7 +1,13 @@
 <template>
   <section>
-    <h1>OAuth.ee <span>by Argo Roots</span></h1>
+    <h1>
+      <a href="/">OAuth.ee <span>by Argo Roots</span></a>
+    </h1>
+
     <ol>
+      <li>
+        Read our <a href="/terms">Terms & Conditions</a>.
+      </li>
       <li>
         <a href="mailto:argo@roots.ee?subject=How to start with OAuth.ee?">Make request</a> to get <em>client_id</em> and <em>client_secret</em>. You need those on later steps.
       </li>
@@ -94,16 +100,16 @@ section {
   @apply lg:px-0;
 }
 
-a {
-  @apply text-red-900;
-}
-
 ol {
   @apply list-decimal;
 }
 
 ol > li {
   @apply mb-8;
+}
+
+li a {
+  @apply text-red-900;
 }
 
 ul {

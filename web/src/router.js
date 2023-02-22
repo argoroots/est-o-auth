@@ -13,6 +13,11 @@ const routes = [
     component: () => import('@/views/DocsPage.vue')
   },
   {
+    path: '/terms',
+    name: 'TermsPage',
+    component: () => import('@/views/TermsPage.vue')
+  },
+  {
     path: '/auth',
     name: 'AuthPage',
     component: () => import('@/views/AuthPage.vue'),
@@ -69,7 +74,7 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const { path, query } = to
 
-  if (['/', '/docs', '/auth/error'].includes(path)) {
+  if (['/', '/auth/error', '/docs', '/terms'].includes(path)) {
     next()
     return
   }
