@@ -1,12 +1,16 @@
 <template>
   <section>
     <h1>
-      <a href="/">OAuth.ee <span>by Argo Roots</span></a>
+      <router-link to="/">
+        OAuth.ee <span>by Argo Roots</span>
+      </router-link>
     </h1>
 
     <ol>
       <li>
-        Read our <a href="/terms">Terms & Conditions</a>.
+        Read our <router-link to="/terms">
+          Terms & Conditions
+        </router-link>.
       </li>
       <li>
         <a href="mailto:argo@roots.ee?subject=How to start with OAuth.ee?">Make request</a> to get <em>client_id</em> and <em>client_secret</em>. You need those on later steps.

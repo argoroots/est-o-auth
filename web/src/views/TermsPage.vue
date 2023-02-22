@@ -1,7 +1,9 @@
 <template>
   <section>
     <h1>
-      <a href="/">OAuth.ee <span>Terms & Conditions</span></a>
+      <router-link to="/">
+        OAuth.ee <span>Terms & Conditions</span>
+      </router-link>
     </h1>
 
     <ol>

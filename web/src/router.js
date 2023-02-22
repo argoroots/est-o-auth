@@ -83,7 +83,7 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const { meta, path, query } = to
 
-  if (meta.title) document.title = `OAuth.ee · ${meta.title}`
+  document.title = meta.title ? `OAuth.ee · ${meta.title}` : 'OAuth.ee'
 
   if (['/', '/auth/error', '/docs', '/terms'].includes(path)) {
     next()
