@@ -1,8 +1,10 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { ApplicationMobile, Chat, Email, LogoGoogle, Identification } from '@vicons/carbon'
+import { Chat, Email, LogoGoogle } from '@vicons/carbon'
 import SmartIdIcon from '@/components/SmartIdIcon.vue'
+import MobileIdIcon from '@/components/MobileIdIcon.vue'
+import IdCardIcon from '@/components/IdCardIcon.vue'
 
 const { query, meta } = useRoute()
 
@@ -16,13 +18,13 @@ const methods = [
   {
     id: 'mobile-id',
     label: 'Mobile-ID',
-    icon: ApplicationMobile,
+    icon: MobileIdIcon,
     to: { path: '/auth/mobile-id', query }
   },
   {
     id: 'id-card',
     label: 'ID-Card',
-    icon: Identification,
+    icon: IdCardIcon,
     to: { path: '/auth/id-card', query }
   },
   {

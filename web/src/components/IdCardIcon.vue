@@ -1,0 +1,39 @@
+<template>
+  <svg
+    viewBox="0 0 48 48"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      stroke="currentColor"
+      stroke-width="2"
+      fill="none"
+      d="M5,9h38c2.2,0,4,1.8,4,4v22c0,2.2-1.8,4-4,4H5c-2.2,0-4-1.8-4-4V13C1,10.8,2.8,9,5,9z"
+    />
+    <path
+      stroke="currentColor"
+      stroke-width="2"
+      fill="none"
+      d="M9,32v-5c0-1.1,0.9-2,2-2h10c1.1,0,2,0.9,2,2v7"
+    />
+    <circle
+      stroke="currentColor"
+      stroke-width="2"
+      fill="none"
+      cx="16"
+      cy="18"
+      r="3"
+    />
+    <path
+      stroke="currentColor"
+      stroke-width="2"
+      fill="none"
+      d="M40,17H28"
+    />
+    <path
+      stroke="currentColor"
+      stroke-width="2"
+      fill="none"
+      d="M40,21H28"
+    />
+  </svg>
+</template>
