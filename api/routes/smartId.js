@@ -151,16 +151,10 @@ async function postCode (headers, params, res) {
 
 async function startSidSession (idcode, phone) {
   const hash = crypto.randomBytes(32).toString('hex')
-  const hashBuffer = Buffer.from(hash, 'hex')
-  const binArray = []
-
-  for (const v of hashBuffer.values()) {
-    binArray.push(v.toString(2).padStart(8, '0'))
-  }
-
-  const bin = binArray.join('')
-  const newBinary = bin.substring(0, 6) + bin.slice(-7)
-  const consent = String(parseInt(newBinary, 2)).padStart(4, '0')
+  const digest = crypto.createHash('sha512').update(hash).digest('base64')
+  const sha256HashedInput = crypto.createHash('sha256').update(Buffer.from(digest, 'base64')).digest()
+  const integer = sha256HashedInput.readUIntBE(sha256HashedInput.length - 2, 2)
+  const consent = String((integer % 10000).toString()).padStart(4, '0')
 
   const skResponse = await fetch(`https://rp-api.smart-id.com/v2/authentication/etsi/PNOEE-${idcode}`, {
     method: 'POST',
@@ -168,7 +162,7 @@ async function startSidSession (idcode, phone) {
     body: JSON.stringify({
       relyingPartyName: process.env.SMARTID_NAME,
       relyingPartyUUID: process.env.SMARTID_UUID,
-      hash: hashBuffer.toString('base64'),
+      hash: digest,
       hashType: 'SHA256',
       allowedInteractionsOrder: [
         {
