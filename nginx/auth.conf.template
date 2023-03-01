@@ -77,7 +77,7 @@ server {
         proxy_set_header X-Real-IP         $remote_addr;
     }
 
-    location ~ (/|/docs|/terms|/auth|/auth/mobile-id|/auth/smart-id|/auth/id-card|/auth/google|/auth/e-mail|/auth/phone|/auth/error)$ {
+    location ~ (/|/docs|/terms|/auth|/auth/mobile-id|/auth/smart-id|/auth/id-card|/auth/google|/auth/e-mail|/auth/phone|/auth/error|/.well-known/microsoft-identity-association.json)$ {
         root      /etc/nginx/html;
         index     index.html;
         try_files $uri $uri/ $uri.html /index.html;
