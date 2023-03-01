@@ -150,7 +150,7 @@ async function postCode (headers, params, res) {
 }
 
 async function startSidSession (idcode, phone) {
-  const hash = crypto.randomBytes(32).toString('hex')
+  const hash = crypto.randomBytes(64)
   const digest = crypto.createHash('sha512').update(hash).digest('base64')
   const sha256HashedInput = crypto.createHash('sha256').update(Buffer.from(digest, 'base64')).digest()
   const integer = sha256HashedInput.readUIntBE(sha256HashedInput.length - 2, 2)
@@ -163,7 +163,7 @@ async function startSidSession (idcode, phone) {
       relyingPartyName: process.env.SMARTID_NAME,
       relyingPartyUUID: process.env.SMARTID_UUID,
       hash: digest,
-      hashType: 'SHA256',
+      hashType: 'SHA512',
       allowedInteractionsOrder: [
         {
           type: 'verificationCodeChoice'
