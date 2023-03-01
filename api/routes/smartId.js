@@ -166,11 +166,11 @@ async function startSidSession (idcode, phone) {
       hashType: 'SHA512',
       allowedInteractionsOrder: [
         {
-          type: 'verificationCodeChoice'
+          type: 'displayTextAndPIN'
           // displayText60: 'Up to 60 characters of text here..'
         },
         {
-          type: 'displayTextAndPIN'
+          type: 'verificationCodeChoice'
           // displayText60: 'Up to 60 characters of text here..'
         }
       ]
