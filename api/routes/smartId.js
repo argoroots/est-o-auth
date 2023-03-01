@@ -178,6 +178,7 @@ async function startSidSession (idcode, phone) {
   }).then(response => response.json())
 
   if (!skResponse.sessionID) {
+    console.error(skResponse)
     throw new Error(skResponse.error || 'Smart-ID session start failed')
   }
 
