@@ -11,6 +11,18 @@ const { query, meta } = useRoute()
 
 const methods = [
   {
+    id: 'apple',
+    label: 'Apple',
+    icon: AppleIcon,
+    to: { path: '/auth/apple', query }
+  },
+  {
+    id: 'google',
+    label: 'Google',
+    icon: LogoGoogle,
+    to: { path: '/auth/google', query }
+  },
+  {
     id: 'smart-id',
     label: 'Smart-ID',
     icon: SmartIdIcon,
@@ -27,18 +39,6 @@ const methods = [
     label: 'ID-Card',
     icon: IdCardIcon,
     to: { path: '/auth/id-card', query }
-  },
-  {
-    id: 'apple',
-    label: 'Apple',
-    icon: AppleIcon,
-    to: { path: '/auth/apple', query }
-  },
-  {
-    id: 'google',
-    label: 'Google',
-    icon: LogoGoogle,
-    to: { path: '/auth/google', query }
   },
   {
     id: 'e-mail',
