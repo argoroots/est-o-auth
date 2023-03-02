@@ -54,6 +54,12 @@ const routes = [
         component: () => import('@/views/auth/AuthEmail.vue')
       },
       {
+        path: 'apple',
+        name: 'AuthApple',
+        meta: { title: 'Apple' },
+        component: () => import('@/views/auth/AuthApple.vue')
+      },
+      {
         path: 'google',
         name: 'AuthGoogle',
         meta: { title: 'Google' },

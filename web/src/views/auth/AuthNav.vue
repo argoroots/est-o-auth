@@ -5,6 +5,7 @@ import { Chat, Email, LogoGoogle } from '@vicons/carbon'
 import SmartIdIcon from '@/components/SmartIdIcon.vue'
 import MobileIdIcon from '@/components/MobileIdIcon.vue'
 import IdCardIcon from '@/components/IdCardIcon.vue'
+import AppleIcon from '@/components/AppleIcon.vue'
 
 const { query, meta } = useRoute()
 
@@ -26,6 +27,12 @@ const methods = [
     label: 'ID-Card',
     icon: IdCardIcon,
     to: { path: '/auth/id-card', query }
+  },
+  {
+    id: 'apple',
+    label: 'Apple',
+    icon: AppleIcon,
+    to: { path: '/auth/apple', query }
   },
   {
     id: 'google',

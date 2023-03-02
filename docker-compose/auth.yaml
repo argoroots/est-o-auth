@@ -25,6 +25,9 @@ services:
             MOBILEID_UUID: ${MOBILEID_UUID}
             SMARTID_NAME: ${SMARTID_NAME}
             SMARTID_UUID: ${SMARTID_UUID}
+            APPLE_ID: ${APPLE_ID}
+            APPLE_SECRET: ${APPLE_SECRET}
+            APPLE_TEAM: ${APPLE_TEAM}
             GOOGLE_ID: ${GOOGLE_ID}
             GOOGLE_SECRET: ${GOOGLE_SECRET}
             CLIENTS_YAML: /usr/src/est-o-auth/clients.yaml
