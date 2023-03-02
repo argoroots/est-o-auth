@@ -1,7 +1,7 @@
 <script setup>
-import { ArrowRight } from '@vicons/carbon'
 import backgroundBlobs from '@/components/BackgroundBlobs.vue'
 import formWrapper from '@/components/FormWrapper.vue'
+import ArrowRightIcon from '@/components/icons/SmartIdIcon.vue'
 </script>
 
 <template>
@@ -16,7 +16,7 @@ import formWrapper from '@/components/FormWrapper.vue'
       </form-wrapper>
       <footer>
         <router-link to="/docs">
-          Get Started <arrow-right />
+          Get Started <arrow-right-icon />
         </router-link>
       </footer>
     </section>

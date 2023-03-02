@@ -1,11 +1,13 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { Chat, Email, LogoGoogle } from '@vicons/carbon'
-import SmartIdIcon from '@/components/SmartIdIcon.vue'
-import MobileIdIcon from '@/components/MobileIdIcon.vue'
-import IdCardIcon from '@/components/IdCardIcon.vue'
-import AppleIcon from '@/components/AppleIcon.vue'
+import AppleIcon from '@/components/icons/AppleIcon.vue'
+import ChatIcon from '@/components/icons/ChatIcon.vue'
+import EmailIcon from '@/components/icons/EmailIcon.vue'
+import GoogleIcon from '@/components/icons/GoogleIcon.vue'
+import IdCardIcon from '@/components/icons/IdCardIcon.vue'
+import MobileIdIcon from '@/components/icons/MobileIdIcon.vue'
+import SmartIdIcon from '@/components/icons/SmartIdIcon.vue'
 
 const { query, meta } = useRoute()
 
@@ -19,7 +21,7 @@ const methods = [
   {
     id: 'google',
     label: 'Google',
-    icon: LogoGoogle,
+    icon: GoogleIcon,
     to: { path: '/auth/google', query }
   },
   {
@@ -43,13 +45,13 @@ const methods = [
   {
     id: 'e-mail',
     label: 'E-mail',
-    icon: Email,
+    icon: EmailIcon,
     to: { path: '/auth/e-mail', query }
   },
   {
     id: 'phone',
     label: 'Phone',
-    icon: Chat,
+    icon: ChatIcon,
     to: { path: '/auth/phone', query }
   }
 ]
