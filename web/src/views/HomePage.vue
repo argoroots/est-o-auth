@@ -1,7 +1,7 @@
 <script setup>
 import backgroundBlobs from '@/components/BackgroundBlobs.vue'
 import formWrapper from '@/components/FormWrapper.vue'
-import ArrowRightIcon from '@/components/icons/SmartIdIcon.vue'
+import ArrowRightIcon from '@/components/icons/ArrowRightIcon.vue'
 </script>
 
 <template>
