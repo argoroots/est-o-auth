@@ -81,18 +81,12 @@ async function postApple (headers, params, res) {
   const accessToken = await getToken(params.code)
 
   const profile = jwt.decode(accessToken)
-  const profileUser = params.user ? JSON.parse(params.user) : {}
 
-  console.log(profile)
-  console.log(profileUser)
-
-  const code = '123'
-  // const code = await storage.saveUser({
-  //   id: profile.id,
-  //   email: profile.emails?.[0]?.value,
-  //   name: profile.displayName,
-  //   provider: 'apple'
-  // })
+  const code = await storage.saveUser({
+    id: profile.sub,
+    email: profile.email,
+    provider: 'apple'
+  })
 
   const query = { code }
 
