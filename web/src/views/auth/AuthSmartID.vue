@@ -99,6 +99,7 @@ async function onAuthenticate () {
       placeholder="38001085718"
       autofocus
       @blur="validateIdcode"
+      @keypress.enter="onStartSession"
     />
     <p
       v-if="isError"

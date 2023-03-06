@@ -124,6 +124,7 @@ async function onAuthenticate () {
       label="Phone"
       placeholder="+37200000000"
       @blur="validatePhone"
+      @keypress.enter="onStartSession"
     />
     <p
       v-if="isError"

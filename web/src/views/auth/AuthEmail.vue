@@ -86,7 +86,7 @@ async function onAuthenticate () {
       type="email"
       placeholder="jaak-kristjan@jõeorg.ee"
       autofocus
-      @submit="onStartSession"
+      @keypress.enter="onStartSession"
     />
     <form-button @click="onStartSession">
       Authenticate
@@ -102,7 +102,7 @@ async function onAuthenticate () {
       label="Verification Code"
       placeholder="123ABC"
       autofocus
-      @submit="onAuthenticate"
+      @keypress.enter="onAuthenticate"
     />
     <p
       v-if="isError"
