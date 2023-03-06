@@ -10,6 +10,7 @@ import formButton from '@/components/FormButton.vue'
 const { query } = useRoute()
 const idcode = ref(query.idcode)
 const phone = ref(query.phone)
+const phoneInput = ref()
 const isSending = ref(false)
 const isError = ref(false)
 const interval = ref()
@@ -116,9 +117,11 @@ async function onAuthenticate () {
       placeholder="38001085718"
       autofocus
       @blur="validateIdcode"
+      @keypress.enter="phoneInput.focus()"
     />
     <form-input
       id="phone"
+      ref="phoneInput"
       v-model="phone"
       type="tel"
       label="Phone"
