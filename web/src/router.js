@@ -30,16 +30,28 @@ const routes = [
         component: () => import('@/views/auth/AuthNav.vue')
       },
       {
-        path: 'mobile-id',
-        name: 'AuthMobileID',
-        meta: { title: 'Mobile-ID' },
-        component: () => import('@/views/auth/AuthMobileID.vue')
+        path: 'apple',
+        name: 'AuthApple',
+        meta: { title: 'Apple' },
+        component: () => import('@/views/auth/AuthApple.vue')
+      },
+      {
+        path: 'google',
+        name: 'AuthGoogle',
+        meta: { title: 'Google' },
+        component: () => import('@/views/auth/AuthGoogle.vue')
       },
       {
         path: 'smart-id',
         name: 'AuthSmartID',
         meta: { title: 'Smart-ID' },
         component: () => import('@/views/auth/AuthSmartID.vue')
+      },
+      {
+        path: 'mobile-id',
+        name: 'AuthMobileID',
+        meta: { title: 'Mobile-ID' },
+        component: () => import('@/views/auth/AuthMobileID.vue')
       },
       {
         path: 'id-card',
@@ -52,18 +64,6 @@ const routes = [
         name: 'AuthEmail',
         meta: { title: 'E-mail' },
         component: () => import('@/views/auth/AuthEmail.vue')
-      },
-      {
-        path: 'apple',
-        name: 'AuthApple',
-        meta: { title: 'Apple' },
-        component: () => import('@/views/auth/AuthApple.vue')
-      },
-      {
-        path: 'google',
-        name: 'AuthGoogle',
-        meta: { title: 'Google' },
-        component: () => import('@/views/auth/AuthGoogle.vue')
       },
       {
         path: 'phone',
