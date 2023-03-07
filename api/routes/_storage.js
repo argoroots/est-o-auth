@@ -166,7 +166,7 @@ async function setUsage (client, provider) {
 
   const update = {
     TableName: 'oauth-usage',
-    Key: { client: { S: client } },
+    Key: { client: { S: client }, date: {} },
     UpdateExpression: 'SET requests = if_not_exists(requests, :zero) + :one',
     ExpressionAttributeValues: {
       ':zero': { N: '0' },
