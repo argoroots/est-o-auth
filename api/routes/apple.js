@@ -55,6 +55,8 @@ async function getApple (headers, params, res) {
 
   res.writeHead(302, { Location: url })
   res.end()
+
+  await storage.setUsage(params.client_id, 'apple')
 }
 
 async function postApple (headers, params, res) {

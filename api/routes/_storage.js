@@ -3,6 +3,7 @@ const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 const YAML = require('yaml')
 const fs = require('node:fs/promises')
+const { DynamoDBClient, UpdateItemCommand } = require('@aws-sdk/client-dynamodb') // ES Modules import
 
 const redis = createClient({ url: process.env.REDIS })
 
@@ -144,7 +145,7 @@ async function getToken (code, expiresIn) {
   await redis.del(key)
   await redis.disconnect()
 
-  return jwt.sign(JSON.parse(user), process.env.JWT_SECRET, { expiresIn })
+  return jwt.sign(JSON.parse(user), process.env.JWT_SECRET, { expiresIn, notBefore: 0 })
 }
 
 async function getClient (clientId) {
@@ -152,6 +153,40 @@ async function getClient (clientId) {
   const clients = YAML.parse(file)
 
   return clients.find(client => client.id === clientId)
+}
+
+async function setUsage (client, provider) {
+  const dynamodb = new DynamoDBClient({
+    region: process.env.AWS_SES_REGION,
+    credentials: {
+      accessKeyId: process.env.AWS_SES_ID,
+      secretAccessKey: process.env.AWS_SES_KEY
+    }
+  })
+
+  await dynamodb.send(new UpdateItemCommand({
+    TableName: 'oauth-usage',
+    Key: { client: { S: `${client}:${provider}` } },
+    UpdateExpression: 'SET date = :date, count = if_not_exists(count, :zero) + :one',
+    ExpressionAttributeValues: {
+      ':date': { S: new Date().toISOString().substring(0, 10) },
+      ':zero': { N: '0' },
+      ':one': { N: '1' }
+    },
+    ReturnValues: 'UPDATED_NEW'
+  }))
+
+  await dynamodb.send(new UpdateItemCommand({
+    TableName: 'oauth-usage',
+    Key: { client: { S: `${client}:${provider}` } },
+    UpdateExpression: 'SET date = :date, count = if_not_exists(count, :zero) + :one',
+    ExpressionAttributeValues: {
+      ':date': { S: new Date().toISOString().substring(0, 7) },
+      ':zero': { N: '0' },
+      ':one': { N: '1' }
+    },
+    ReturnValues: 'UPDATED_NEW'
+  }))
 }
 
 module.exports = {
@@ -165,5 +200,6 @@ module.exports = {
   getSidSession,
   saveUser,
   getToken,
-  getClient
+  getClient,
+  setUsage
 }
