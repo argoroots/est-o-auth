@@ -70,6 +70,8 @@ async function getCode (headers, params, res) {
 
   res.writeHead(302, { Location: `${params.redirect_uri}?${queryString}` })
   res.end()
+
+  await storage.setUsage(params.client_id, 'id-card')
 }
 
 module.exports = {

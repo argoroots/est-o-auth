@@ -55,6 +55,8 @@ async function getGoogle (headers, params, res) {
 
   res.writeHead(302, { Location: url })
   res.end()
+
+  await storage.setUsage(params.client_id, 'google')
 }
 
 async function postGoogle (headers, params, res) {

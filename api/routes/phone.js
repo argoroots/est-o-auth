@@ -67,6 +67,8 @@ async function postPhone (headers, params, res) {
 
   res.writeHead(200, { 'Content-Type': 'application/json' })
   res.end(JSON.stringify({ smsSent: true }))
+
+  await storage.setUsage(params.client_id, 'phone')
 }
 
 async function postCode (headers, params, res) {

@@ -60,6 +60,8 @@ async function postSession (headers, params, res) {
     consent,
     session
   }))
+
+  await storage.setUsage(params.client_id, 'smart-id')
 }
 
 async function postCode (headers, params, res) {

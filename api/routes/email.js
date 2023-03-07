@@ -83,6 +83,8 @@ async function postEmail (headers, params, res) {
 
   res.writeHead(200, { 'Content-Type': 'application/json' })
   res.end(JSON.stringify({ emailSent: true }))
+
+  await storage.setUsage(params.client_id, 'e-mail')
 }
 
 async function postCode (headers, params, res) {

@@ -67,6 +67,8 @@ async function postSession (headers, params, res) {
     consent,
     session
   }))
+
+  await storage.setUsage(params.client_id, 'mobile-id')
 }
 
 async function postCode (headers, params, res) {
