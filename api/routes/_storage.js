@@ -164,33 +164,28 @@ async function setUsage (client, provider) {
     }
   })
 
-  await dynamodb.send(new UpdateItemCommand({
+  const update = {
     TableName: 'oauth-usage',
-    Key: {
-      client: { S: `${client}:${provider}` },
-      date: { S: new Date().toISOString().substring(0, 10) }
-    },
+    Key: { client: { S: client } },
     UpdateExpression: 'SET requests = if_not_exists(requests, :zero) + :one',
     ExpressionAttributeValues: {
       ':zero': { N: '0' },
       ':one': { N: '1' }
     },
     ReturnValues: 'UPDATED_NEW'
-  }))
+  }
 
-  await dynamodb.send(new UpdateItemCommand({
-    TableName: 'oauth-usage',
-    Key: {
-      client: { S: `${client}:${provider}` },
-      date: { S: new Date().toISOString().substring(0, 7) }
-    },
-    UpdateExpression: 'SET requests = if_not_exists(requests, :zero) + :one',
-    ExpressionAttributeValues: {
-      ':zero': { N: '0' },
-      ':one': { N: '1' }
-    },
-    ReturnValues: 'UPDATED_NEW'
-  }))
+  update.Key.date.S = `${provider}-${new Date().toISOString().substring(0, 4)}`
+  await dynamodb.send(new UpdateItemCommand(update))
+
+  update.Key.date.S = `${provider}-${new Date().toISOString().substring(0, 7)}`
+  await dynamodb.send(new UpdateItemCommand(update))
+
+  update.Key.date.S = `${provider}-${new Date().toISOString().substring(0, 10)}`
+  await dynamodb.send(new UpdateItemCommand(update))
+
+  update.Key.date.S = `${provider}-${new Date().toISOString()}`
+  await dynamodb.send(new UpdateItemCommand(update))
 }
 
 module.exports = {
