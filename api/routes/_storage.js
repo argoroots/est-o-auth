@@ -166,10 +166,12 @@ async function setUsage (client, provider) {
 
   await dynamodb.send(new UpdateItemCommand({
     TableName: 'oauth-usage',
-    Key: { client: { S: `${client}:${provider}` } },
-    UpdateExpression: 'SET date = :date, count = if_not_exists(count, :zero) + :one',
+    Key: {
+      client: { S: `${client}:${provider}` },
+      date: { S: new Date().toISOString().substring(0, 10) }
+    },
+    UpdateExpression: 'SET count = if_not_exists(count, :zero) + :one',
     ExpressionAttributeValues: {
-      ':date': { S: new Date().toISOString().substring(0, 10) },
       ':zero': { N: '0' },
       ':one': { N: '1' }
     },
@@ -178,10 +180,12 @@ async function setUsage (client, provider) {
 
   await dynamodb.send(new UpdateItemCommand({
     TableName: 'oauth-usage',
-    Key: { client: { S: `${client}:${provider}` } },
-    UpdateExpression: 'SET date = :date, count = if_not_exists(count, :zero) + :one',
+    Key: {
+      client: { S: `${client}:${provider}` },
+      date: { S: new Date().toISOString().substring(0, 7) }
+    },
+    UpdateExpression: 'SET count = if_not_exists(count, :zero) + :one',
     ExpressionAttributeValues: {
-      ':date': { S: new Date().toISOString().substring(0, 7) },
       ':zero': { N: '0' },
       ':one': { N: '1' }
     },
