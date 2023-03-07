@@ -170,7 +170,7 @@ async function setUsage (client, provider) {
       client: { S: `${client}:${provider}` },
       date: { S: new Date().toISOString().substring(0, 10) }
     },
-    UpdateExpression: 'SET count = if_not_exists(count, :zero) + :one',
+    UpdateExpression: 'SET requests = if_not_exists(requests, :zero) + :one',
     ExpressionAttributeValues: {
       ':zero': { N: '0' },
       ':one': { N: '1' }
@@ -184,7 +184,7 @@ async function setUsage (client, provider) {
       client: { S: `${client}:${provider}` },
       date: { S: new Date().toISOString().substring(0, 7) }
     },
-    UpdateExpression: 'SET count = if_not_exists(count, :zero) + :one',
+    UpdateExpression: 'SET requests = if_not_exists(requests, :zero) + :one',
     ExpressionAttributeValues: {
       ':zero': { N: '0' },
       ':one': { N: '1' }
