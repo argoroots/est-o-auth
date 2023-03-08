@@ -215,5 +215,6 @@ module.exports = {
   saveUser,
   getToken,
   getClient,
-  setUsage
+  setUsage,
+  getUsage
 }
