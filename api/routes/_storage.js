@@ -238,10 +238,10 @@ async function getUsage (client) {
     config.Key.date.S = `${provider}-${nowStr.substring(0, 10)}`
     const { Item: todayItem } = await dynamodb.send(new GetItemCommand(config))
 
-    result.year[provider] = parseInt(yearItem.requests.N)
-    result.lastMonth[provider] = parseInt(lastMonthItem.requests.N)
-    result.month[provider] = parseInt(monthItem.requests.N)
-    result.today[provider] = parseInt(todayItem.requests.N)
+    result.year[provider] = parseInt(yearItem?.requests?.N ?? '0')
+    result.lastMonth[provider] = parseInt(lastMonthItem?.requests?.N ?? '0')
+    result.month[provider] = parseInt(monthItem?.requests?.N ?? '0')
+    result.today[provider] = parseInt(todayItem?.requests?.N ?? '0')
   }
 
   return result
