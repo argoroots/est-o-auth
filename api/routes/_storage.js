@@ -220,7 +220,7 @@ async function getUsage (client) {
     Key: { client: { S: client }, date: {} }
   }
 
-  providers.forEach(async provider => {
+  for await (const provider of providers) {
     const now = new Date()
     const nowStr = now.toISOString()
     const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1)
@@ -242,7 +242,7 @@ async function getUsage (client) {
     result.lastMonth[provider] = parseInt(lastMonthItem.requests.N)
     result.month[provider] = parseInt(monthItem.requests.N)
     result.today[provider] = parseInt(todayItem.requests.N)
-  })
+  }
 
   return result
 }
