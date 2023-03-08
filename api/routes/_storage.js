@@ -212,9 +212,9 @@ async function getUsage (client, provider) {
   const { Item: today } = await dynamodb.send(new GetItemCommand(config))
 
   return {
-    year,
-    month,
-    today
+    year: parseInt(year.requests.N),
+    month: parseInt(month.requests.N),
+    today: parseInt(today.requests.N)
   }
 }
 
