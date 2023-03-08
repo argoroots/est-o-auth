@@ -188,7 +188,7 @@ async function setUsage (client, provider) {
   await dynamodb.send(new UpdateItemCommand(config))
 }
 
-async function getUsage (client, provider, date) {
+async function getUsage (client, provider) {
   const dynamodb = new DynamoDBClient({
     region: process.env.AWS_SES_REGION,
     credentials: {
@@ -197,12 +197,25 @@ async function getUsage (client, provider, date) {
     }
   })
 
-  const { Item: item } = await dynamodb.send(new GetItemCommand({
+  const config = {
     TableName: 'oauth-usage',
-    Key: { client: { S: client }, date: { S: date } }
-  }))
+    Key: { client: { S: client }, date: {} }
+  }
 
-  return item?.requests?.N || 0
+  config.Key.date.S = `${provider}-${new Date().toISOString().substring(0, 4)}`
+  const { Item: year } = await dynamodb.send(new GetItemCommand(config))
+
+  config.Key.date.S = `${provider}-${new Date().toISOString().substring(0, 7)}`
+  const { Item: month } = await dynamodb.send(new GetItemCommand(config))
+
+  config.Key.date.S = `${provider}-${new Date().toISOString().substring(0, 10)}`
+  const { Item: today } = await dynamodb.send(new GetItemCommand(config))
+
+  return {
+    year,
+    month,
+    today
+  }
 }
 
 module.exports = {

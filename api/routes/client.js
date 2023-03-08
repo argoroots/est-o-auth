@@ -21,7 +21,7 @@ async function getClient (headers, params, res) {
     return
   }
 
-  const usageGoogle = await storage.getUsage(params.client_id, 'google', new Date().toISOString().substring(0, 7))
+  const usageGoogle = await storage.getUsage(params.client_id, 'google')
 
   res.writeHead(200, { 'Content-Type': 'application/json' })
   res.end(JSON.stringify({
