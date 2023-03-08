@@ -175,20 +175,22 @@ async function setUsage (client, provider) {
     ReturnValues: 'UPDATED_NEW'
   }
 
-  config.Key.date.S = `${provider}-${new Date().toISOString().substring(0, 4)}`
+  const now = new Date().toISOString()
+
+  config.Key.date.S = `${provider}-${now.substring(0, 4)}`
   await dynamodb.send(new UpdateItemCommand(config))
 
-  config.Key.date.S = `${provider}-${new Date().toISOString().substring(0, 7)}`
+  config.Key.date.S = `${provider}-${now.substring(0, 7)}`
   await dynamodb.send(new UpdateItemCommand(config))
 
-  config.Key.date.S = `${provider}-${new Date().toISOString().substring(0, 10)}`
+  config.Key.date.S = `${provider}-${now.substring(0, 10)}`
   await dynamodb.send(new UpdateItemCommand(config))
 
-  config.Key.date.S = `${provider}-${new Date().toISOString()}`
+  config.Key.date.S = `${provider}-${now}`
   await dynamodb.send(new UpdateItemCommand(config))
 }
 
-async function getUsage (client, provider) {
+async function getUsage (client) {
   const dynamodb = new DynamoDBClient({
     region: process.env.AWS_SES_REGION,
     credentials: {
@@ -197,25 +199,52 @@ async function getUsage (client, provider) {
     }
   })
 
+  const providers = [
+    'apple',
+    'google',
+    'smart-id',
+    'mobile-id',
+    'id-card',
+    'e-mail',
+    'phone'
+  ]
+
+  const result = {
+    year: {},
+    month: {},
+    today: {}
+  }
+
   const config = {
     TableName: 'oauth-usage',
     Key: { client: { S: client }, date: {} }
   }
 
-  config.Key.date.S = `${provider}-${new Date().toISOString().substring(0, 4)}`
-  const { Item: year } = await dynamodb.send(new GetItemCommand(config))
+  providers.forEach(async provider => {
+    const now = new Date()
+    const nowStr = now.toISOString()
+    const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1)
+    const lastMonthStr = lastMonth.toISOString()
 
-  config.Key.date.S = `${provider}-${new Date().toISOString().substring(0, 7)}`
-  const { Item: month } = await dynamodb.send(new GetItemCommand(config))
+    config.Key.date.S = `${provider}-${nowStr.substring(0, 4)}`
+    const { Item: yearItem } = await dynamodb.send(new GetItemCommand(config))
 
-  config.Key.date.S = `${provider}-${new Date().toISOString().substring(0, 10)}`
-  const { Item: today } = await dynamodb.send(new GetItemCommand(config))
+    config.Key.date.S = `${provider}-${lastMonthStr.substring(0, 7)}`
+    const { Item: lastMonthItem } = await dynamodb.send(new GetItemCommand(config))
 
-  return {
-    year: parseInt(year.requests.N),
-    month: parseInt(month.requests.N),
-    today: parseInt(today.requests.N)
-  }
+    config.Key.date.S = `${provider}-${nowStr.substring(0, 7)}`
+    const { Item: monthItem } = await dynamodb.send(new GetItemCommand(config))
+
+    config.Key.date.S = `${provider}-${nowStr.substring(0, 10)}`
+    const { Item: todayItem } = await dynamodb.send(new GetItemCommand(config))
+
+    result.year[provider] = parseInt(yearItem.requests.N)
+    result.lastMonth[provider] = parseInt(lastMonthItem.requests.N)
+    result.month[provider] = parseInt(monthItem.requests.N)
+    result.today[provider] = parseInt(todayItem.requests.N)
+  })
+
+  return result
 }
 
 module.exports = {

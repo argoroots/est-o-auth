@@ -21,7 +21,7 @@ async function getClient (headers, params, res) {
     return
   }
 
-  const usageGoogle = await storage.getUsage(params.client_id, 'google')
+  const usage = await storage.getUsage(params.client_id)
 
   res.writeHead(200, { 'Content-Type': 'application/json' })
   res.end(JSON.stringify({
@@ -29,9 +29,7 @@ async function getClient (headers, params, res) {
     description: client.description,
     redirect_uri: client.redirect_uris.includes(params.redirect_uri),
     providers: client.providers,
-    usage: {
-      google: usageGoogle
-    }
+    usage
   }))
 }
 
