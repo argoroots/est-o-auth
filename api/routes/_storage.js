@@ -197,10 +197,12 @@ async function getUsage (client, provider, date) {
     }
   })
 
-  return await dynamodb.send(new GetItemCommand({
+  const { Item: item } = await dynamodb.send(new GetItemCommand({
     TableName: 'oauth-usage',
     Key: { client: { S: client }, date: { S: date } }
   }))
+
+  return item?.requests?.N || 0
 }
 
 module.exports = {
