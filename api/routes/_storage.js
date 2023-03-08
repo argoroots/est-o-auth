@@ -3,7 +3,7 @@ const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 const YAML = require('yaml')
 const fs = require('node:fs/promises')
-const { DynamoDBClient, UpdateItemCommand } = require('@aws-sdk/client-dynamodb') // ES Modules import
+const { DynamoDBClient, GetItemCommand, UpdateItemCommand } = require('@aws-sdk/client-dynamodb') // ES Modules import
 
 const redis = createClient({ url: process.env.REDIS })
 
@@ -164,7 +164,7 @@ async function setUsage (client, provider) {
     }
   })
 
-  const update = {
+  const config = {
     TableName: 'oauth-usage',
     Key: { client: { S: client }, date: {} },
     UpdateExpression: 'SET requests = if_not_exists(requests, :zero) + :one',
@@ -175,17 +175,32 @@ async function setUsage (client, provider) {
     ReturnValues: 'UPDATED_NEW'
   }
 
-  update.Key.date.S = `${provider}-${new Date().toISOString().substring(0, 4)}`
-  await dynamodb.send(new UpdateItemCommand(update))
+  config.Key.date.S = `${provider}-${new Date().toISOString().substring(0, 4)}`
+  await dynamodb.send(new UpdateItemCommand(config))
 
-  update.Key.date.S = `${provider}-${new Date().toISOString().substring(0, 7)}`
-  await dynamodb.send(new UpdateItemCommand(update))
+  config.Key.date.S = `${provider}-${new Date().toISOString().substring(0, 7)}`
+  await dynamodb.send(new UpdateItemCommand(config))
 
-  update.Key.date.S = `${provider}-${new Date().toISOString().substring(0, 10)}`
-  await dynamodb.send(new UpdateItemCommand(update))
+  config.Key.date.S = `${provider}-${new Date().toISOString().substring(0, 10)}`
+  await dynamodb.send(new UpdateItemCommand(config))
 
-  update.Key.date.S = `${provider}-${new Date().toISOString()}`
-  await dynamodb.send(new UpdateItemCommand(update))
+  config.Key.date.S = `${provider}-${new Date().toISOString()}`
+  await dynamodb.send(new UpdateItemCommand(config))
+}
+
+async function getUsage (client, provider, date) {
+  const dynamodb = new DynamoDBClient({
+    region: process.env.AWS_SES_REGION,
+    credentials: {
+      accessKeyId: process.env.AWS_SES_ID,
+      secretAccessKey: process.env.AWS_SES_KEY
+    }
+  })
+
+  return await dynamodb.send(new GetItemCommand({
+    TableName: 'oauth-usage',
+    Key: { client: { S: client }, date: { S: date } }
+  }))
 }
 
 module.exports = {
