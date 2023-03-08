@@ -212,6 +212,7 @@ async function getUsage (client) {
   const result = {
     year: {},
     month: {},
+    lastMonth: {},
     today: {}
   }
 
