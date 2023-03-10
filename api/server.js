@@ -4,6 +4,7 @@ const client = require('./routes/client.js')
 const mobileId = require('./routes/mobileId.js')
 const smartId = require('./routes/smartId.js')
 const idCard = require('./routes/idCard.js')
+const webEid = require('./routes/webEid.js')
 const apple = require('./routes/apple.js')
 const google = require('./routes/google.js')
 const email = require('./routes/email.js')
@@ -40,7 +41,10 @@ const server = http.createServer(async (req, res) => {
         await idCard.getCode(headers, params, res)
         break
       case 'GET /api/web-eid/nonce':
-        await idCard.getWebEidNonce(headers, params, res)
+        await webEid.getWebEidNonce(headers, params, res)
+        break
+      case 'POST /api/web-eid/code':
+        await webEid.postCode(headers, params, res)
         break
       case 'GET /api/apple':
         await apple.getApple(headers, params, res)
