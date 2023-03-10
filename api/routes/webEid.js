@@ -106,6 +106,12 @@ async function postCode (headers, params, res) {
     return
   }
 
+  if (!cert.keyUsage.includes('1.3.6.1.5.5.7.3.2')) {
+    res.writeHead(400, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Certificate is not for authentication' }))
+    return
+  }
+
   const userInfo = Object.fromEntries(cert.subject.split('\n').map(x => x.split('=')))
   const issuerInfo = Object.fromEntries(cert.issuer.split('\n').map(x => x.split('=')))
 
