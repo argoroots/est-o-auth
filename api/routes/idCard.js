@@ -1,3 +1,4 @@
+const crypto = require('crypto')
 const storage = require('./_storage.js')
 
 async function getCode (headers, params, res) {
@@ -74,6 +75,11 @@ async function getCode (headers, params, res) {
   await storage.setUsage(params.client_id, 'id-card')
 }
 
+async function getWebEidNonce (headers, params, res) {
+  return crypto.randomBytes(32).toString('base64')
+}
+
 module.exports = {
-  getCode
+  getCode,
+  getWebEidNonce
 }

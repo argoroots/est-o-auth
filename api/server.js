@@ -39,6 +39,9 @@ const server = http.createServer(async (req, res) => {
       case 'GET /api/id-card':
         await idCard.getCode(headers, params, res)
         break
+      case 'GET /api/web-eid/nonce':
+        await idCard.getWebEidNonce(headers, params, res)
+        break
       case 'GET /api/apple':
         await apple.getApple(headers, params, res)
         break
