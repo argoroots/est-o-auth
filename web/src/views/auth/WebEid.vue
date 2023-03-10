@@ -5,7 +5,7 @@ import { authenticate } from '@web-eid/web-eid-library/web-eid.js'
 import { get } from '@/api.js'
 
 onMounted(async () => {
-  const { nonce } = await get('api/web-eid/nonce')
+  const { nonce } = await get('web-eid/nonce')
 
   console.log('nonce', nonce)
 
