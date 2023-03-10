@@ -11,6 +11,7 @@
     "lint": "eslint ./ --fix --ignore-path ../.gitignore --ext .js,.vue"
   },
   "dependencies": {
+    "@web-eid/web-eid-library": "2.0.1",
     "vue": "3.2.47",
     "vue-router": "4.1.6"
   },
