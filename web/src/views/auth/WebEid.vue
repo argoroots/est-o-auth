@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { authenticate } from '@web-eid/web-eid-library/web-eid.js'
 
-import { get } from '@/api.js'
+import { get, post } from '@/api.js'
 import formWrapper from '@/components/FormWrapper.vue'
 
 const { query } = useRoute()
@@ -19,9 +19,23 @@ onMounted(async () => {
       scope: query.scope,
       state: query.state
     })
-    const authToken = await authenticate(nonce, { lang: 'en' })
 
-    console.log('authToken', authToken)
+    const { unverifiedCertificate } = await authenticate(nonce, { lang: 'en' })
+
+    const response = await post('web-eid/code', {
+      response_type: query.response_type,
+      client_id: query.client_id,
+      redirect_uri: query.redirect_uri,
+      scope: query.scope,
+      state: query.state,
+      certificate: unverifiedCertificate
+    })
+
+    if (response.redirect) {
+      window.location.href = response.redirect
+    } else {
+      console.log(response)
+    }
   } catch (error) {
     errorMessage.value = error.message || error
   }
