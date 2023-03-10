@@ -41,7 +41,7 @@ const server = http.createServer(async (req, res) => {
         await idCard.getCode(headers, params, res)
         break
       case 'GET /api/web-eid/nonce':
-        await webEid.getWebEidNonce(headers, params, res)
+        await webEid.getNonce(headers, params, res)
         break
       case 'POST /api/web-eid/code':
         await webEid.postCode(headers, params, res)
