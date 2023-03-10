@@ -76,7 +76,10 @@ async function getCode (headers, params, res) {
 }
 
 async function getWebEidNonce (headers, params, res) {
-  return crypto.randomBytes(32).toString('base64')
+  const nonce = crypto.randomBytes(32).toString('base64')
+
+  res.writeHead(200, { 'Content-Type': 'application/json' })
+  res.end(JSON.stringify({ nonce }))
 }
 
 module.exports = {
