@@ -1,15 +1,24 @@
 <script setup>
 import { onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { authenticate } from '@web-eid/web-eid-library/web-eid.js'
 
 import { get } from '@/api.js'
 import formWrapper from '@/components/FormWrapper.vue'
 
+const { query } = useRoute()
+
 const errorMessage = ref(null)
 
 onMounted(async () => {
   try {
-    const { nonce } = await get('web-eid/nonce')
+    const { nonce } = await get('web-eid/nonce', {
+      response_type: query.response_type,
+      client_id: query.client_id,
+      redirect_uri: query.redirect_uri,
+      scope: query.scope,
+      state: query.state
+    })
     const authToken = await authenticate(nonce, { lang: 'en' })
 
     console.log('authToken', authToken)
@@ -20,7 +29,10 @@ onMounted(async () => {
 </script>
 
 <template>
-  <form-wrapper v-if="errorMessage">
+  <form-wrapper
+    v-if="errorMessage"
+    class="mb-0.5"
+  >
     <h2>
       Error
     </h2>

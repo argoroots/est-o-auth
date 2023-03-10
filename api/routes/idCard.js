@@ -76,6 +76,30 @@ async function getCode (headers, params, res) {
 }
 
 async function getWebEidNonce (headers, params, res) {
+  if (params.response_type !== 'code') {
+    res.writeHead(400, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Parameter response_type must be "code"' }))
+    return
+  }
+
+  if (params.scope !== 'openid') {
+    res.writeHead(400, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Parameter scope must be "openid"' }))
+    return
+  }
+
+  if (!params.client_id) {
+    res.writeHead(400, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Parameter client_id is required' }))
+    return
+  }
+
+  if (!params.redirect_uri) {
+    res.writeHead(400, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Parameter redirect_uri is required' }))
+    return
+  }
+
   const nonce = crypto.randomBytes(32).toString('base64')
 
   res.writeHead(200, { 'Content-Type': 'application/json' })
