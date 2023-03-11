@@ -4,7 +4,6 @@ services:
         restart: 'no'
         environment:
             NODE_ENV: production
-            VITE_APP_IDCARD_DOMAIN: ${IDCARD_DOMAIN}
         volumes:
             - ./data/public:/usr/src/est-o-auth/dist
 

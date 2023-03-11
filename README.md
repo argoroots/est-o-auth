@@ -93,7 +93,6 @@ Use Estonian ID-card, Mobile-ID, Smart-ID, E-mail or Phone as OAuth authenticati
 1. In _.env_ file, set correct domains for authentication and id-card services (Nginx needs separate domain for ID-Card authentication); e-mail address (to get Let's Encrypt cert expiration notifications) and some random string for JWT token signing.
     ```
     DOMAIN=auth.example.com
-    IDCARD_DOMAIN=id.auth.example.com
     EMAIL=auth@example.com
     JWT_SECRET=Iel0jrC7fKFMjK2OBI4VYp2ygtrDQZBV
     ```

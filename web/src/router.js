@@ -60,12 +60,6 @@ const routes = [
         component: () => import('@/views/auth/AuthIDCard.vue')
       },
       {
-        path: 'web-eid',
-        name: 'WebEid',
-        meta: { title: 'Web eID' },
-        component: () => import('@/views/auth/WebEid.vue')
-      },
-      {
         path: 'e-mail',
         name: 'AuthEmail',
         meta: { title: 'E-mail' },

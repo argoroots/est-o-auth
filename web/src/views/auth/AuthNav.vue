@@ -43,13 +43,6 @@ const methods = [
     to: { path: '/auth/id-card', query }
   },
   {
-    id: 'web-eid',
-    label: 'Web eID',
-    description: 'beta',
-    icon: IdCardIcon,
-    to: { path: '/auth/web-eid', query }
-  },
-  {
     id: 'e-mail',
     label: 'E-mail',
     icon: EmailIcon,
