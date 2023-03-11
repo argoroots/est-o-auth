@@ -6,7 +6,6 @@ services:
             - 80:80
         environment:
             DOMAIN: ${DOMAIN}
-            IDCARD_DOMAIN: ${IDCARD_DOMAIN}
         volumes:
             - ./nginx/certbot.conf.template:/etc/nginx/templates/certbot.conf.template:ro
             - ./data/certbot/www:/var/www/certbot:ro
@@ -16,4 +15,4 @@ services:
         volumes:
             - ./data/certbot/conf:/etc/letsencrypt
             - ./data/certbot/www:/var/www/certbot
-        command: certonly --webroot --webroot-path=/var/www/certbot --agree-tos --no-eff-email --email $EMAIL -d $DOMAIN -d $IDCARD_DOMAIN
+        command: certonly --webroot --webroot-path=/var/www/certbot --agree-tos --no-eff-email --email $EMAIL -d $DOMAIN
