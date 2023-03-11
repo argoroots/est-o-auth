@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { authenticate } from '@web-eid/web-eid-library/web-eid.js'
+import { authenticate, ErrorCode } from '@web-eid/web-eid-library/web-eid.js'
 
 import { get, post } from '@/api.js'
 import formWrapper from '@/components/FormWrapper.vue'
@@ -37,21 +37,41 @@ onMounted(async () => {
       console.log(response)
     }
   } catch (error) {
-    errorMessage.value = error.message || error
+    switch (error.code) {
+      case ErrorCode.ERR_WEBEID_ACTION_TIMEOUT:
+        errorMessage.value = 'Authentication timed out, please try again'
+        break
+      case ErrorCode.ERR_WEBEID_USER_TIMEOUT:
+        errorMessage.value = 'Authentication timed out, please try again'
+        break
+      case ErrorCode.ERR_WEBEID_VERSION_MISMATCH:
+        if (error.requiresUpdate?.extension) errorMessage.value = 'Web eID browser extension needs to be updated'
+        if (error.requiresUpdate?.nativeApp) errorMessage.value = 'Web eID application needs to be updated'
+
+        errorMessage.value = 'Authentication timed out, please try again!'
+        break
+      case ErrorCode.ERR_WEBEID_EXTENSION_UNAVAILABLE:
+        errorMessage.value = 'Web eID browser extension is not installed. You can download it from <a href="https://www.id.ee/en/article/install-id-software/" target="_blank">ID.ee</a>.'
+        break
+      case ErrorCode.ERR_WEBEID_NATIVE_UNAVAILABLE:
+        errorMessage.value = 'Web eID application is not installed. You can download it from <a href="https://www.id.ee/en/article/install-id-software/" target="_blank">ID.ee</a>.'
+        break
+      default:
+        errorMessage.value = error.message || error
+        break
+    }
   }
 })
 </script>
 
 <template>
-  <form-wrapper
-    v-if="errorMessage"
-    class="mb-0.5"
-  >
-    <h2>
-      Error
-    </h2>
-    <p>
-      {{ errorMessage }}
+  <form-wrapper class="mb-0.5 text-center">
+    <template v-if="errorMessage">
+      <h2>Error</h2>
+      <p v-html="errorMessage" />
+    </template>
+    <p v-else>
+      Please insert your ID-card into the card reader and follow the instructions on the screen.
     </p>
   </form-wrapper>
 </template>
