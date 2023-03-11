@@ -50,7 +50,7 @@ server {
     gzip on;
     gzip_types text/html application/javascript application/json text/css;
 
-    location ~ (/token|/user|/api/client|/api/apple|/api/google|/api/smart-id|/api/smart-id/code|/api/mobile-id|/api/mobile-id/code|/api/web-eid/nonce|/api/web-eid/code|/api/e-mail|/api/e-mail/code|/api/phone|/api/phone/code)$ {
+    location ~ (/token|/user|/api/client|/api/apple|/api/google|/api/smart-id|/api/smart-id/code|/api/mobile-id|/api/mobile-id/code|/api/id-card/nonce|/api/id-card/code|/api/e-mail|/api/e-mail/code|/api/phone|/api/phone/code)$ {
         if ($request_method = "OPTIONS") {
             add_header Access-Control-Allow-Headers "*";
             add_header Access-Control-Allow-Methods "GET, POST, OPTIONS";

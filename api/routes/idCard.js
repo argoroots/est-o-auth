@@ -1,6 +1,7 @@
+const { randomBytes, X509Certificate } = require('crypto')
 const storage = require('./_storage.js')
 
-async function getCode (headers, params, res) {
+async function getNonce (headers, params, res) {
   if (params.response_type !== 'code') {
     res.writeHead(400, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify({ error: 'Parameter response_type must be "code"' }))
@@ -25,9 +26,54 @@ async function getCode (headers, params, res) {
     return
   }
 
-  if (headers.ssl_client_verify !== 'SUCCESS' || !headers.ssl_client_s_dn) {
+  const client = await storage.getClient(params.client_id)
+
+  if (!client) {
+    res.writeHead(403, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Invalid client_id' }))
+    return
+  }
+
+  // if (!client.redirect_uris.includes(params.redirect_uri)) {
+  //   res.writeHead(403, { 'Content-Type': 'application/json' })
+  //   res.end(JSON.stringify({ error: 'Invalid redirect_uri' }))
+  //   return
+  // }
+
+  const nonce = randomBytes(32).toString('base64')
+
+  res.writeHead(200, { 'Content-Type': 'application/json' })
+  res.end(JSON.stringify({ nonce }))
+}
+
+async function postCode (headers, params, res) {
+  if (params.response_type !== 'code') {
     res.writeHead(400, { 'Content-Type': 'application/json' })
-    res.end(JSON.stringify({ error: 'ID-Card error' }))
+    res.end(JSON.stringify({ error: 'Parameter response_type must be "code"' }))
+    return
+  }
+
+  if (params.scope !== 'openid') {
+    res.writeHead(400, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Parameter scope must be "openid"' }))
+    return
+  }
+
+  if (!params.client_id) {
+    res.writeHead(400, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Parameter client_id is required' }))
+    return
+  }
+
+  if (!params.redirect_uri) {
+    res.writeHead(400, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Parameter redirect_uri is required' }))
+    return
+  }
+
+  if (!params.certificate) {
+    res.writeHead(400, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Parameter certificate is required' }))
     return
   }
 
@@ -45,19 +91,38 @@ async function getCode (headers, params, res) {
   //   return
   // }
 
-  const userInfo = Object.fromEntries(headers.ssl_client_s_dn.split(',').map(x => {
-    const info = x.split('=')
-    return [info[0], info[1]]
-  }))
+  const certBuffer = Buffer.from(params.certificate, 'base64')
+  const cert = new X509Certificate(certBuffer)
 
-  const id = userInfo.serialNumber.replace('PNOEE-', '')
+  if (new Date() < new Date(cert.validFrom)) {
+    res.writeHead(400, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Certificate is not yet valid' }))
+    return
+  }
+
+  if (new Date() > new Date(cert.validTo)) {
+    res.writeHead(400, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Certificate is expired' }))
+    return
+  }
+
+  if (!cert.keyUsage.includes('1.3.6.1.5.5.7.3.2')) {
+    res.writeHead(400, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Certificate is not for authentication' }))
+    return
+  }
+
+  const userInfo = Object.fromEntries(cert.subject.split('\n').map(x => x.split('=')))
+  const issuerInfo = Object.fromEntries(cert.issuer.split('\n').map(x => x.split('=')))
+
+  const id = userInfo.serialNumber
   const name = `${userInfo.GN} ${userInfo.SN}`
 
   const code = await storage.saveUser({
     id,
     email: `${id}@eesti.ee`,
     name,
-    provider: 'id-card'
+    provider: 'web-eid'
   })
 
   const query = { code }
@@ -68,12 +133,13 @@ async function getCode (headers, params, res) {
 
   const queryString = Object.keys(query).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(query[key])}`).join('&')
 
-  res.writeHead(302, { Location: `${params.redirect_uri}?${queryString}` })
-  res.end()
+  res.writeHead(200, { 'Content-Type': 'application/json' })
+  res.end(JSON.stringify({ redirect: `${params.redirect_uri}?${queryString}` }))
 
-  await storage.setUsage(params.client_id, 'id-card')
+  await storage.setUsage(params.client_id, 'web-eid')
 }
 
 module.exports = {
-  getCode
+  getNonce,
+  postCode
 }
