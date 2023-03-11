@@ -122,7 +122,7 @@ async function postCode (headers, params, res) {
     id,
     email: `${id}@eesti.ee`,
     name,
-    provider: 'web-eid'
+    provider: 'id-card'
   })
 
   const query = { code }
@@ -136,7 +136,7 @@ async function postCode (headers, params, res) {
   res.writeHead(200, { 'Content-Type': 'application/json' })
   res.end(JSON.stringify({ redirect: `${params.redirect_uri}?${queryString}` }))
 
-  await storage.setUsage(params.client_id, 'web-eid')
+  await storage.setUsage(params.client_id, 'id-card')
 }
 
 module.exports = {

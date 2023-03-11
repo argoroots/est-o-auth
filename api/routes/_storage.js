@@ -205,7 +205,6 @@ async function getUsage (client) {
     'smart-id',
     'mobile-id',
     'id-card',
-    'web-eid',
     'e-mail',
     'phone'
   ]
