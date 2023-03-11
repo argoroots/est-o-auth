@@ -10,8 +10,6 @@ services:
     auth:
         build: ./api
         restart: unless-stopped
-        ports:
-            - 80:80
         environment:
             NODE_ENV: production
             PORT: 80
@@ -39,4 +37,19 @@ services:
 
     redis:
         image: redis:7.0-alpine
+
+    nginx:
+        image: nginx:1.22-alpine
         restart: unless-stopped
+        ports:
+            - 443:443
+        environment:
+            DOMAIN: ${DOMAIN}
+        volumes:
+            - ./nginx/auth.conf.template:/etc/nginx/templates/auth.conf.template:ro
+            - ./data/id-card/dhparam.pem:/etc/nginx/dhparam.pem:ro
+            - ./data/certbot/conf:/etc/letsencrypt:ro
+            - ./data/logs:/etc/nginx/logs
+            - ./data/public:/etc/nginx/html:ro
+        depends_on:
+            - auth

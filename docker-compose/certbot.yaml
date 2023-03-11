@@ -1,0 +1,18 @@
+services:
+    nginx_certbot:
+        image: nginx:1.22-alpine
+        restart: unless-stopped
+        ports:
+            - 80:80
+        environment:
+            DOMAIN: ${DOMAIN}
+        volumes:
+            - ./nginx/certbot.conf.template:/etc/nginx/templates/certbot.conf.template:ro
+            - ./data/certbot/www:/var/www/certbot:ro
+
+    certbot:
+        image: certbot/certbot
+        volumes:
+            - ./data/certbot/conf:/etc/letsencrypt
+            - ./data/certbot/www:/var/www/certbot
+        command: certonly --webroot --webroot-path=/var/www/certbot --agree-tos --no-eff-email --email $EMAIL -d $DOMAIN

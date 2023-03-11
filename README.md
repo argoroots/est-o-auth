@@ -96,6 +96,21 @@ Use Estonian ID-card, Mobile-ID, Smart-ID, E-mail or Phone as OAuth authenticati
     EMAIL=auth@example.com
     JWT_SECRET=Iel0jrC7fKFMjK2OBI4VYp2ygtrDQZBV
     ```
+1. Generate HTTPS certificates:
+    ```shell
+    docker-compose --project-directory ./ -f ./docker-compose/certbot.yaml up --abort-on-container-exit
+    ```
+1. Renew HTTPS certificates - NB! run only when certificates are expiring and not on 1st setup:
+    ```shell
+    docker-compose --project-directory ./ -f ./docker-compose/certbot.yaml -f ./docker-compose/certbot-renew.yaml up --abort-on-container-exit
+    docker-compose --project-directory ./ -f ./docker-compose/auth.yaml restart nginx
+    ```
+
+1. Get ID-Card certificates:
+    ```shell
+    docker-compose --project-directory ./ -f ./docker-compose/id-card.yaml up
+    ```
+
 1. Start service:
     ```shell
     docker-compose --project-directory ./ -f ./docker-compose/auth.yaml up -d --build --remove-orphans
