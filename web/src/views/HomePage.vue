@@ -8,7 +8,9 @@ import ArrowRightIcon from '@/components/icons/ArrowRightIcon.vue'
   <main>
     <background-blobs />
     <section>
-      <h1>OAuth.ee <span>by Argo Roots</span></h1>
+      <header>
+        <h1>OAuth.ee <span>by Argo Roots</span></h1>
+      </header>
       <form-wrapper>
         <p class="text-center">
           Use Estonian ID-card, Mobile-ID, Smart-ID, E-mail or Phone as OAuth authentication provider.

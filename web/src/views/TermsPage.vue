@@ -1,11 +1,13 @@
 <template>
-  <section>
+  <header>
     <h1>
       <router-link to="/">
         OAuth.ee <span>Terms & Conditions</span>
       </router-link>
     </h1>
+  </header>
 
+  <section>
     <ol>
       <li>By using OAuth.ee service, you agree to comply with the terms and conditions outlined in this document.</li>
       <li>OAuth.ee does not store any credentials, such as usernames and passwords.</li>

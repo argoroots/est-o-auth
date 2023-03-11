@@ -1,11 +1,13 @@
 <template>
-  <section>
+  <header>
     <h1>
       <router-link to="/">
         OAuth.ee <span>by Argo Roots</span>
       </router-link>
     </h1>
+  </header>
 
+  <section>
     <ol>
       <li>
         Read our <router-link to="/terms">
