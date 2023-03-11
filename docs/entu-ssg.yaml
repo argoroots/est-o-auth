@@ -1,9 +1,0 @@
-source: ./src
-build: ./dist
-
-server:
-    port: 4000
-    public: ./public
-
-dev:
-    aliases: true
