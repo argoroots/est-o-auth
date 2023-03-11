@@ -12,7 +12,7 @@ const errorMessage = ref(null)
 
 onMounted(async () => {
   try {
-    const { nonce } = await get('web-eid/nonce', {
+    const { nonce } = await get('id-card/nonce', {
       response_type: query.response_type,
       client_id: query.client_id,
       redirect_uri: query.redirect_uri,
@@ -22,7 +22,7 @@ onMounted(async () => {
 
     const { unverifiedCertificate } = await authenticate(nonce, { lang: 'en' })
 
-    const response = await post('web-eid/code', {
+    const response = await post('id-card/code', {
       response_type: query.response_type,
       client_id: query.client_id,
       redirect_uri: query.redirect_uri,
