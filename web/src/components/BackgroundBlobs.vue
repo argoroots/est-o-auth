@@ -9,6 +9,7 @@
 <style scoped>
 #blobs {
   @apply relative;
+  @apply top-20;
 }
 
 .blob {

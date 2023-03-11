@@ -9,16 +9,17 @@ const { meta } = useRoute()
   <main>
     <background-blobs />
     <section>
-      <h1>OAuth.ee <span>by Argo Roots</span></h1>
-      <router-view />
-      <footer>
+      <header>
+        <h1>OAuth.ee <span>by Argo Roots</span></h1>
         <p
           v-if="meta.description"
-          class="px-8 pt-16"
+          class="mt-8"
         >
           {{ meta.description }}
         </p>
-      </footer>
+      </header>
+      <router-view />
+      <footer />
     </section>
   </main>
 </template>

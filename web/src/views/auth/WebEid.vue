@@ -69,7 +69,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <form-wrapper class="mb-0.5 text-center">
+  <form-wrapper class="text-center">
     <template v-if="errorMessage">
       <h2>Error</h2>
       <p v-html="errorMessage" />

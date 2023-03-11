@@ -22,14 +22,17 @@ body {
   @apply overflow-y-auto;
 }
 
-h1 {
+header {
   @apply mb-0.5;
-  @apply px-8;
-  @apply py-16;
-  @apply font-thin;
-  @apply text-4xl;
+  @apply p-8;
+  @apply pt-16;
   @apply text-center;
   @apply bg-white;
+}
+
+h1 {
+  @apply font-thin;
+  @apply text-4xl;
 }
 
 h1 a {
