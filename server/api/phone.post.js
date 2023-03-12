@@ -1,6 +1,5 @@
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
-  const client = await getClient(event)
 
   const phoneSession = await getSessionData(`phone:${body.idcode}:${body.code}`)
 
