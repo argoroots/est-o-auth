@@ -2,13 +2,15 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const client = await getClient(event)
 
-  const sidSession = await getSessionData(`smart-id:${body.idcode}:${body.session}`)
+  const sidSession = await getSessionData(`smart-id:${body.idcode}:${body.session}`, false)
 
   if (!sidSession) throw createError({ statusCode: 403, statusMessage: 'Invalid idcode or session' })
 
   const skResponse = await checkSidSession(sidSession.skSession)
 
   if (skResponse !== 'OK') return { status: skResponse }
+
+  await getSessionData(`smart-id:${body.idcode}:${body.session}`, true)
 
   const code = await saveUser({
     id: sidSession.idcode,

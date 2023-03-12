@@ -1,7 +1,7 @@
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
-  const emailSession = await getSessionData(`email:${body.email}:${body.code}`)
+  const emailSession = await getSessionData(`email:${body.email}:${body.code}`, true)
 
   if (!emailSession) throw createError({ statusCode: 403, statusMessage: 'Invalid e-mail or code' })
 

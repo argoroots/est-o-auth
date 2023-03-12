@@ -24,7 +24,7 @@ export async function setSessionData (id, data) {
   await dynamodb.send(new PutItemCommand(command))
 }
 
-export async function getSessionData (id) {
+export async function getSessionData (id, deleteItem) {
   const command = {
     TableName: 'oauth-session',
     Key: { id: { S: id } }
@@ -34,7 +34,7 @@ export async function getSessionData (id) {
 
   if (!item) return
 
-  await dynamodb.send(new DeleteItemCommand(command))
+  if (deleteItem) await dynamodb.send(new DeleteItemCommand(command))
 
   return JSON.parse(item.data.S)
 }
@@ -48,7 +48,7 @@ export async function saveUser (data) {
 }
 
 export async function getToken (code, expiresIn) {
-  const user = await getSessionData(`user:${code}`)
+  const user = await getSessionData(`user:${code}`, true)
 
   if (!user) return
 
