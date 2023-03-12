@@ -18,23 +18,15 @@ export default defineEventHandler(async (event) => {
     algorithm: 'ES256'
   })
 
-  console.log({
-    client_id: config.appleId,
-    client_secret: clientSecret,
-    redirect_uri: `${config.url}/api/apple`,
-    grant_type: 'authorization_code',
-    code: body.code
-  })
-
   const { id_token: idToken } = await $fetch('https://appleid.apple.com/auth/token', {
     method: 'POST',
-    body: {
+    body: new URLSearchParams({
       client_id: config.appleId,
       client_secret: clientSecret,
       redirect_uri: `${config.url}/api/apple`,
       grant_type: 'authorization_code',
       code: body.code
-    }
+    })
   })
 
   const profile = jwt.decode(idToken)
