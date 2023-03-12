@@ -32,7 +32,7 @@ export default defineNuxtConfig({
     skidName: '',
     skidUuid: '',
     appleId: '',
-    appleTeamId: '',
+    appleTeam: '',
     appleSecret: '',
     googleId: '',
     googleSecret: ''
