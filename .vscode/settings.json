@@ -5,8 +5,12 @@
   "editor.quickSuggestions": {
     "strings": true
   },
-  "eslint.validate": ["javascript", "vue"],
-  "eslint.workingDirectories": ["./api", "./web"],
+  "eslint.validate": [
+    "javascript",
+    "typecript",
+    "vue"
+  ],
+  "css.lint.unknownAtRules": "ignore",
   "tailwindCSS.includeLanguages": {
     "vue": "html",
     "vue-html": "html"

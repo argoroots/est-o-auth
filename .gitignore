@@ -1,4 +1,12 @@
+.cache
+.certs
+.clients.yaml
+.DS_Store
 .env
+.nitro
+.nuxt
+.output
+*.log*
 data
 dist
 node_modules

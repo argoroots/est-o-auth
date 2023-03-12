@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer utilities {
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+}
+
+html {
+  @apply bg-white;
+}
+
+#__nuxt {}
+
+body {
+  @apply font-extralight;
+  @apply text-stone-600;
+  @apply bg-white;
+  @apply overflow-x-hidden;
+  @apply overflow-y-auto;
+}
+
+header {
+  @apply mb-0.5;
+  @apply p-8;
+  @apply pt-16;
+  @apply text-center;
+  @apply bg-white;
+}
+
+h1 {
+  @apply font-thin;
+  @apply text-4xl;
+}
+
+h1 a {
+  @apply text-stone-600;
+}
+
+h1 a:hover {
+  @apply no-underline
+}
+
+h1 span {
+  @apply block;
+  @apply ml-28;
+  @apply italic;
+  @apply text-sm;
+}
+
+h2 {
+  @apply text-center;
+  @apply text-red-700;
+  @apply text-xl;
+}
+
+a {
+  @apply text-red-700;
+  @apply hover:underline;
+}
+
+footer {
+  @apply grow;
+  @apply bg-white;
+  @apply text-center;
+}

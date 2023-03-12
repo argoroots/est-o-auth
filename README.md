@@ -35,10 +35,10 @@ Use Estonian ID-card, Mobile-ID, Smart-ID, E-mail or Phone as OAuth authenticati
     https://example.com/auth/callback?code=CYD9MDm8gY2F8EhV&state=5600684163565994
     ```
 
-3. Make POST request to [/token]() sending *client_id*, *client_secret*, *grant_type* and *code* (got from previous step). Parameter grant_type must always be "authorization_code".
+3. Make POST request to [/api/token]() sending *client_id*, *client_secret*, *grant_type* and *code* (got from previous step). Parameter grant_type must always be "authorization_code".
 
     ```http
-    POST /token HTTP/1.1
+    POST /api/token HTTP/1.1
     Host: oauth.ee
     Content-Type: application/json; charset=utf-8
     Content-Length: 165
@@ -63,10 +63,10 @@ Use Estonian ID-card, Mobile-ID, Smart-ID, E-mail or Phone as OAuth authenticati
 
 
 
-4. To get user information make GET request to [/user]() with *access_token* (got from previous step) as query parameter or as Bearer authorization header (preferred!).
+4. To get user information make GET request to [/api/user]() with *access_token* (got from previous step) as query parameter or as Bearer authorization header (preferred!).
 
     ```http
-    GET /user HTTP/1.1
+    GET /api/user HTTP/1.1
     Host: oauth.ee
     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     ```
@@ -95,6 +95,11 @@ Use Estonian ID-card, Mobile-ID, Smart-ID, E-mail or Phone as OAuth authenticati
     DOMAIN=auth.example.com
     EMAIL=auth@example.com
     JWT_SECRET=Iel0jrC7fKFMjK2OBI4VYp2ygtrDQZBV
+    ```
+1. Generate SSL certificates for local development:
+    ```shell
+    mkdir ./certs
+    openssl req -x509 -out ./certs/localhost.crt -keyout ./certs/localhost.key -newkey rsa:2048 -nodes -subj '/CN=localhost' -extensions EXT -config <(printf "[req]\ndistinguished_name = dn\n[dn]\nCN=localhost\n[EXT]\nsubjectAltName=DNS:localhost\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
     ```
 1. Start service:
     ```shell
