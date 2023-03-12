@@ -9,7 +9,6 @@ services:
             PORT: 80
             NUXT_URL: ${NUXT_URL}
             NUXT_JWT_SECRET: ${NUXT_JWT_SECRET}
-            NUXT_EMAIL: ${NUXT_EMAIL}
             NUXT_EMAIL_FROM: ${NUXT_EMAIL_FROM}
             NUXT_AWS_ID: ${NUXT_AWS_ID}
             NUXT_AWS_SECRET: ${NUXT_AWS_SECRET}
