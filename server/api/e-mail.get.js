@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
   })
 
   const search = new URLSearchParams({ ...query, code }).toString()
-  const url = `${config.url}?${search}`
+  const url = `${config.url}/auth/e-mail?${search}`
 
   const ses = new SESClient({
     region: config.awsRegion,
