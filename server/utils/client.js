@@ -34,7 +34,7 @@ export async function checkRequest (event) {
 export async function getClient (event) {
   const { client_id: clientId } = isMethod(event, 'GET') ? getQuery(event) : await readBody(event)
 
-  if (!clientId) return
+  if (!clientId) throw createError({ statusCode: 403, statusMessage: 'Invalid client_id' })
 
   const file = await readFile('.clients.yaml', 'utf8')
   const clients = yaml.parse(file)

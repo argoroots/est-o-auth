@@ -1,8 +1,9 @@
 import jwt from 'jsonwebtoken'
 
-export default defineEventHandler((event) => {
+export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
   const query = getQuery(event)
+  const client = await getClient(event)
 
   const search = new URLSearchParams({
     client_id: config.googleId,
@@ -12,6 +13,8 @@ export default defineEventHandler((event) => {
     scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
     state: jwt.sign({ uri: query.redirect_uri, state: query.state }, config.jwtSecret, { expiresIn: '5m' })
   }).toString()
+
+  await setUsage(client.id, 'google')
 
   return { url: `https://accounts.google.com/o/oauth2/v2/auth?${search}` }
 })

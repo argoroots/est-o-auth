@@ -2,6 +2,7 @@ import { randomUUID, randomBytes, createHash } from 'crypto'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
+  const client = await getClient(event)
   const session = randomUUID().replaceAll('-', '')
 
   const { skSession, consent } = await startSidSession(query.idcode)
@@ -12,6 +13,8 @@ export default defineEventHandler(async (event) => {
     idcode: query.idcode,
     skSession
   })
+
+  await setUsage(client.id, 'smart-id')
 
   return { consent, session }
 })

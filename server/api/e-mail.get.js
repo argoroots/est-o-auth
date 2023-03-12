@@ -3,6 +3,7 @@ import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses'
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
   const query = getQuery(event)
+  const client = await getClient(event)
   const code = String(Math.round(Math.random() * 1000000)).padStart(6, '0')
 
   await setSessionData(`email:${query.email}:${code}`, {
@@ -40,6 +41,8 @@ export default defineEventHandler(async (event) => {
       }
     }
   }))
+
+  await setUsage(client.id, 'e-mail')
 
   return { sent: true }
 })

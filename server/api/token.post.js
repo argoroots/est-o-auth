@@ -2,15 +2,12 @@ import bcrypt from 'bcrypt'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
+  const client = await getClient(event)
 
   if (body?.grant_type !== 'authorization_code') throw createError({ statusCode: 400, statusMessage: 'Parameter grant_type must be "authorization_code"' })
   if (!body?.client_id) throw createError({ statusCode: 400, statusMessage: 'Parameter client_id is required' })
   if (!body?.client_secret) throw createError({ statusCode: 400, statusMessage: 'Parameter client_secret is required' })
   if (!body?.code) throw createError({ statusCode: 400, statusMessage: 'Parameter code is required' })
-
-  const client = await getClient(event)
-
-  if (!client) throw createError({ statusCode: 403, statusMessage: 'Invalid client_id' })
 
   const validSecret = await bcrypt.compare(body.client_secret, client.secret)
 

@@ -2,6 +2,7 @@ import { randomUUID, randomBytes } from 'crypto'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
+  const client = await getClient(event)
   const session = randomUUID().replaceAll('-', '')
 
   const { skSession, consent } = await startMidSession(query.idcode, query.phone)
@@ -13,6 +14,8 @@ export default defineEventHandler(async (event) => {
     phone: query.phone,
     skSession
   })
+
+  await setUsage(client.id, 'mobile-id')
 
   return { consent, session }
 })

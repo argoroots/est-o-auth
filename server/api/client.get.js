@@ -1,9 +1,6 @@
 export default defineEventHandler(async (event) => {
   const client = await getClient(event)
-
-  if (!client) throw createError({ statusCode: 404, statusMessage: 'Client not found!' })
-
-  const usage = {} // await storage.getUsage(query.client_id)
+  const usage = await getUsage(client.id)
 
   return {
     client: client.id,

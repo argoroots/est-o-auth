@@ -2,6 +2,7 @@ import { X509Certificate } from 'crypto'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
+  const client = await getClient(event)
 
   const certBuffer = Buffer.from(body.unverifiedCertificate, 'base64')
   const cert = new X509Certificate(certBuffer)
@@ -21,6 +22,8 @@ export default defineEventHandler(async (event) => {
   })
 
   const search = new URLSearchParams({ code, state: body.state }).toString()
+
+  await setUsage(client.id, 'id-card')
 
   return { url: `${body.redirect_uri}?${search}` }
 })
