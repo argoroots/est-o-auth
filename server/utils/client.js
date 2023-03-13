@@ -1,6 +1,9 @@
 import { readFile } from 'fs/promises'
 import yaml from 'yaml'
 
+const file = await readFile('.clients.yaml', 'utf8')
+const clients = yaml.parse(file)
+
 export async function checkRequest (event) {
   if (query.response_type !== 'code') {
     throw createError({ statusCode: 400, statusMessage: 'The response type (response_type) in the request do not match required value "code"!' })
@@ -34,10 +37,11 @@ export async function checkRequest (event) {
 export async function getClient (event) {
   const { client_id: clientId } = isMethod(event, 'GET') ? getQuery(event) : await readBody(event)
 
-  if (!clientId) throw createError({ statusCode: 403, statusMessage: 'Invalid client_id' })
+  if (!clientId) throw createError({ statusCode: 403, statusMessage: 'Required parameter client_id is missing!' })
 
-  const file = await readFile('.clients.yaml', 'utf8')
-  const clients = yaml.parse(file)
+  const client = clients?.find(client => client.id === clientId)
 
-  return clients?.find(client => client.id === clientId)
+  if (!client) throw createError({ statusCode: 403, statusMessage: 'Invalid client_id' })
+
+  return client
 }
