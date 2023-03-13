@@ -17,6 +17,7 @@ export async function setSessionData (id, data) {
     TableName: 'oauth-session',
     Item: {
       id: { S: id },
+      created: { S: new Date().toISOString() },
       data: { S: JSON.stringify(data) }
     }
   }
