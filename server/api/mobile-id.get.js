@@ -46,7 +46,7 @@ async function startMidSession (idcode, phone, displayText) {
       phoneNumber: phone,
       hash: hashBuffer.toString('base64'),
       hashType: 'SHA256',
-      language: 'EST',
+      language: 'ENG',
       displayText
     }
   })
