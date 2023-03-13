@@ -1,14 +1,16 @@
 import { createVerify, verify, X509Certificate } from 'crypto'
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event)
+  await checkRequest(event, 'id-card', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state'])
+
   const client = await getClient(event)
+  const body = await readBody(event)
 
   const certBuffer = Buffer.from(body.unverifiedCertificate, 'base64')
   const cert = new X509Certificate(certBuffer)
   const verifier = createVerify(body.algorithm)
   const userInfo = Object.fromEntries(cert.subject.split('\n').map(x => x.split('=')))
-  const issuerInfo = Object.fromEntries(cert.issuer.split('\n').map(x => x.split('=')))
+  // const issuerInfo = Object.fromEntries(cert.issuer.split('\n').map(x => x.split('=')))
 
   verifier.update(body.unverifiedCertificate)
 

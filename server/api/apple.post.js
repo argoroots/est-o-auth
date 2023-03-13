@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken'
 
 export default defineEventHandler(async (event) => {
+  await checkRequest(event, 'apple', ['code', 'state'])
+
   const config = useRuntimeConfig()
   const body = await readBody(event)
 

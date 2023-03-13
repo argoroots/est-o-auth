@@ -1,9 +1,11 @@
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses'
 
 export default defineEventHandler(async (event) => {
+  await checkRequest(event, 'e-mail', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state'])
+
+  const client = await getClient(event)
   const config = useRuntimeConfig()
   const query = getQuery(event)
-  const client = await getClient(event)
   const code = String(Math.round(Math.random() * 1000000)).padStart(6, '0')
 
   await setSessionData(`email:${query.email}:${code}`, {

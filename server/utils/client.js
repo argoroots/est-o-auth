@@ -4,34 +4,19 @@ import yaml from 'yaml'
 const file = readFileSync('.clients.yaml', 'utf8')
 const clients = yaml.parse(file)
 
-export async function checkRequest (event) {
-  if (query.response_type !== 'code') {
-    throw createError({ statusCode: 400, statusMessage: 'The response type (response_type) in the request do not match required value "code"!' })
-  }
+export async function checkRequest (event, provider, params = []) {
+  const data = isMethod(event, 'GET') ? getQuery(event) : await readBody(event)
 
-  if (query.scope !== 'openid') {
-    throw createError({ statusCode: 400, statusMessage: 'The scope in the request do not match required value "openid"!' })
-  }
+  if (params.some(x => !data[x])) throw createError({ statusCode: 400, statusMessage: 'Required parameter is missing!' })
+  if (params.includes('response_type') && data.response_type !== 'code') throw createError({ statusCode: 400, statusMessage: 'The response type do not match required value "code"!' })
+  if (params.includes('scope') && data.scope !== 'openid') throw createError({ statusCode: 400, statusMessage: 'The scope do not match required value "openid"!' })
 
-  if (!query.client_id || !query.redirect_uri || !query.state) {
-    throw createError({ statusCode: 400, statusMessage: 'Required parameter (response_type, client_id, redirect_uri, scope or state) is missing!' })
-  }
+  if (!data.client_id) return
 
-  const client = await getClient(event)
+  const client = clients?.find(client => client.id === data.client_id)
 
-  if (!client) {
-    throw createError({ statusCode: 400, statusMessage: 'The client ID (client_id) in the request do not match a registered client ID!' })
-  }
-
-  // if (!redirectUri) {
-  //   throw createError({ statusCode: 400, statusMessage: 'The redirect URI (redirect_uri) in the request do not match a registered redirect URI!' })
-  // }
-
-  if (!path.startsWith('/api/client') && !client.providers.some(x => path === `/api/${x}`)) {
-    throw createError({ statusCode: 400, statusMessage: 'The authentication provider in the request do not match a registered authentication provider!' })
-  }
-
-  event.context.auth = client
+  if (provider && !client.providers.includes(provider)) throw createError({ statusCode: 400, statusMessage: 'The authentication provider do not match a registered authentication provider!' })
+  // if (!redirectUri) throw createError({ statusCode: 400, statusMessage: 'The redirect URI (redirect_uri) do not match a registered redirect URI!' })
 }
 
 export async function getClient (event) {

@@ -1,9 +1,11 @@
 import jwt from 'jsonwebtoken'
 
 export default defineEventHandler(async (event) => {
+  await checkRequest(event, 'apple', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state'])
+
+  const client = await getClient(event)
   const config = useRuntimeConfig()
   const query = getQuery(event)
-  const client = await getClient(event)
 
   const search = new URLSearchParams({
     client_id: config.appleId,

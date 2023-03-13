@@ -1,7 +1,9 @@
 export default defineEventHandler(async (event) => {
+  await checkRequest(event, 'phone', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'phone', 'code'])
+
   const body = await readBody(event)
 
-  const phoneSession = await getSessionData(`phone:${body.idcode}:${body.code}`, true)
+  const phoneSession = await getSessionData(`phone:${body.phone}:${body.code}`, true)
 
   if (!phoneSession) throw createError({ statusCode: 403, statusMessage: 'Invalid phone or code' })
 
