@@ -15,11 +15,7 @@ async function onAuthenticate (authResponse) {
     }
   })
 
-  if (data.value.url) {
-    await navigateTo(data.value.url, { external: true })
-  } else {
-    console.log(data.value)
-  }
+  if (data.value.url) await navigateTo(data.value.url, { external: true })
 }
 </script>
 

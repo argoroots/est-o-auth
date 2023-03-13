@@ -75,52 +75,52 @@ async function onAuthenticate () {
 
     isSending.value = false
     isError.value = true
-
-    console.log(data.value)
   }
 }
 </script>
 
 <template>
-  <form-wrapper v-if="!isSending && !consent">
-    <form-input
-      id="idcode"
-      v-model="idcode"
-      type="tel"
-      label="ID code"
-      placeholder="38001085718"
-      autofocus
-      @blur="validateIdcode"
-      @keypress.enter="() => phoneInput.focus()"
-    />
-    <form-input
-      id="phone"
-      ref="phoneInput"
-      v-model="phone"
-      type="tel"
-      label="Phone"
-      placeholder="+37200000000"
-      @blur="validatePhone"
-      @keypress.enter="onStartSession"
-    />
-    <p
-      v-if="isError"
-      class="text-red-700"
-    >
-      Something is not right! Check ID code and Phone.
-    </p>
-    <form-button @click="onStartSession">
-      Authenticate
-    </form-button>
-  </form-wrapper>
+  <form-wrapper v-if="!isSending">
+    <template v-if="!consent">
+      <form-input
+        id="idcode"
+        v-model="idcode"
+        type="tel"
+        label="ID code"
+        placeholder="38001085718"
+        autofocus
+        @blur="validateIdcode"
+        @keypress.enter="() => phoneInput.focus()"
+      />
+      <form-input
+        id="phone"
+        ref="phoneInput"
+        v-model="phone"
+        type="tel"
+        label="Phone"
+        placeholder="+37200000000"
+        @blur="validatePhone"
+        @keypress.enter="onStartSession"
+      />
+      <p
+        v-if="isError"
+        class="text-red-700"
+      >
+        Something is not right! Check ID code and Phone.
+      </p>
+      <form-button @click="onStartSession">
+        Authenticate
+      </form-button>
+    </template>
 
-  <form-wrapper v-if="!isSending && consent">
-    <p>
-      Enter your Mobile-ID PIN1 on your phone, if you are convinced the control code shown on your device matches the one shown here.
-    </p>
-    <p class="consent">
-      {{ consent }}
-    </p>
+    <template v-else>
+      <p>
+        Enter your Mobile-ID PIN1 on your phone, if you are convinced the control code shown on your device matches the one shown here.
+      </p>
+      <p class="consent">
+        {{ consent }}
+      </p>
+    </template>
   </form-wrapper>
 </template>
 

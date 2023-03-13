@@ -52,47 +52,47 @@ async function onAuthenticate () {
     isSending.value = false
     isPhoneSent.value = true
     isError.value = true
-
-    console.log(data.value)
   }
 }
 </script>
 
 <template>
-  <form-wrapper v-if="!isSending && !isPhoneSent">
-    <form-input
-      id="phone"
-      v-model="phone"
-      type="tel"
-      label="Phone"
-      placeholder="+37200000000"
-      autofocus
-      @keypress.enter="onStartSession"
-    />
-    <form-button @click="onStartSession">
-      Authenticate
-    </form-button>
-  </form-wrapper>
+  <form-wrapper v-if="!isSending">
+    <template v-if="!isPhoneSent">
+      <form-input
+        id="phone"
+        v-model="phone"
+        type="tel"
+        label="Phone"
+        placeholder="+37200000000"
+        autofocus
+        @keypress.enter="onStartSession"
+      />
+      <form-button @click="onStartSession">
+        Authenticate
+      </form-button>
+    </template>
 
-  <form-wrapper v-if="!isSending && isPhoneSent">
-    <h2>Check Your phone!</h2>
-    <p>We sent a verification code to phone number {{ phone }}. Please enter it below.</p>
-    <form-input
-      id="code"
-      v-model="code"
-      label="Verification Code"
-      placeholder="123ABC"
-      autofocus
-      @keypress.enter="onAuthenticate"
-    />
-    <p
-      v-if="isError"
-      class="text-red-700"
-    >
-      Invalid verification code!
-    </p>
-    <form-button @click="onAuthenticate">
-      Authenticate
-    </form-button>
+    <template v-else>
+      <h2>Check Your phone!</h2>
+      <p>We sent a verification code to phone number {{ phone }}. Please enter it below.</p>
+      <form-input
+        id="code"
+        v-model="code"
+        label="Verification Code"
+        placeholder="123ABC"
+        autofocus
+        @keypress.enter="onAuthenticate"
+      />
+      <p
+        v-if="isError"
+        class="text-red-700"
+      >
+        Invalid verification code!
+      </p>
+      <form-button @click="onAuthenticate">
+        Authenticate
+      </form-button>
+    </template>
   </form-wrapper>
 </template>

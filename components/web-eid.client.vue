@@ -37,6 +37,7 @@ onMounted(async () => {
         errorMessage.value = 'Web eID application is not installed. You can download it from <a href="https://www.id.ee/en/article/install-id-software/" target="_blank">ID.ee</a>.'
         break
       default:
+        // eslint-disable-next-line no-console
         console.error(error)
         errorMessage.value = error.message || error
         break
