@@ -1,7 +1,7 @@
 <script setup>
 const { query } = useRoute()
 
-const { data: client } = await useFetch('/api/client', { query: { client_id: query.client_id, redirect_uri: query.redirect_uri } })
+const { data: client } = await useFetch('/api/client', { query })
 </script>
 
 <template>

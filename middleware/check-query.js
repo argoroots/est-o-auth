@@ -36,7 +36,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     })
   }
 
-  const { data: client } = await useFetch('/api/client', { query: { client_id: query.client_id, redirect_uri: query.redirect_uri } })
+  const { data: client } = await useFetch('/api/client', { query })
 
   if (!client.value) {
     return showError({
