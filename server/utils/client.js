@@ -1,7 +1,7 @@
-import { readFile } from 'fs/promises'
+import { readFileSync } from 'fs'
 import yaml from 'yaml'
 
-const file = await readFile('.clients.yaml', 'utf8')
+const file = readFileSync('.clients.yaml', 'utf8')
 const clients = yaml.parse(file)
 
 export async function checkRequest (event) {
