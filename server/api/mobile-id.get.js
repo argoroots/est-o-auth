@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event)
   const session = randomUUID().replaceAll('-', '')
 
-  const { skSession, consent } = await startMidSession(query.idcode, query.phone)
+  const { skSession, consent } = await startMidSession(query.idcode, query.phone, client.skidText)
 
   await setSessionData(`mobile-id:${query.idcode}:${session}`, {
     redirect_uri: query.redirect_uri,
@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
   return { consent, session }
 })
 
-async function startMidSession (idcode, phone) {
+async function startMidSession (idcode, phone, displayText) {
   const config = useRuntimeConfig()
   const hash = randomBytes(32).toString('hex')
   const hashBuffer = Buffer.from(hash, 'hex')
@@ -46,8 +46,8 @@ async function startMidSession (idcode, phone) {
       phoneNumber: phone,
       hash: hashBuffer.toString('base64'),
       hashType: 'SHA256',
-      language: 'EST'
-      // displayText: 'This is display text.'
+      language: 'EST',
+      displayText
     }
   })
 

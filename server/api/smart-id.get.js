@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event)
   const session = randomUUID().replaceAll('-', '')
 
-  const { skSession, consent } = await startSidSession(query.idcode)
+  const { skSession, consent } = await startSidSession(query.idcode, client.skidText)
 
   await setSessionData(`smart-id:${query.idcode}:${session}`, {
     redirect_uri: query.redirect_uri,
@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
   return { consent, session }
 })
 
-async function startSidSession (idcode, phone) {
+async function startSidSession (idcode, displayText60) {
   const config = useRuntimeConfig()
   const hash = randomBytes(64)
   const digest = createHash('sha512').update(hash).digest('base64')
@@ -36,13 +36,10 @@ async function startSidSession (idcode, phone) {
       relyingPartyUUID: config.skidUuid,
       hash: digest,
       hashType: 'SHA512',
-      allowedInteractionsOrder: [{
-        type: 'displayTextAndPIN'
-        // displayText60: 'Up to 60 characters of text here..'
-      }, {
-        type: 'verificationCodeChoice'
-        // displayText60: 'Up to 60 characters of text here..'
-      }]
+      allowedInteractionsOrder: [
+        { type: 'displayTextAndPIN', displayText60 },
+        { type: 'verificationCodeChoice', displayText60 }
+      ]
     }
   })
 
