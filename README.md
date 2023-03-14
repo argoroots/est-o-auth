@@ -99,7 +99,8 @@ Use Estonian ID-card, Mobile-ID, Smart-ID, E-mail or Phone as OAuth authenticati
 1. Generate SSL certificates for local development:
     ```shell
     mkdir ./certs
-    openssl req -x509 -out ./certs/localhost.crt -keyout ./certs/localhost.key -newkey rsa:2048 -nodes -subj '/CN=localhost' -extensions EXT -config <(printf "[req]\ndistinguished_name = dn\n[dn]\nCN=localhost\n[EXT]\nsubjectAltName=DNS:localhost\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
+    cd ./certs
+    openssl req -x509 -out localhost.crt -keyout localhost.key -newkey rsa:2048 -nodes -subj '/CN=localhost' -extensions EXT -config <(printf "[req]\ndistinguished_name = dn\n[dn]\nCN=localhost\n[EXT]\nsubjectAltName=DNS:localhost\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
     ```
 1. Start service:
     ```shell
