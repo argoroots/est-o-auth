@@ -53,7 +53,7 @@ export async function getToken (code, expiresIn) {
 
   if (!user) return
 
-  return jwt.sign(user, config.jwtSecret, { expiresIn, notBefore: 0, subject: user.email })
+  return jwt.sign(user, config.jwtSecret, { expiresIn, notBefore: 0, subject: user.email || user.id })
 }
 
 export async function setUsage (client, provider) {
