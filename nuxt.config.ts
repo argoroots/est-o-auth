@@ -36,5 +36,6 @@ export default defineNuxtConfig({
     appleSecret: '',
     googleId: '',
     googleSecret: ''
-  }
+  },
+  ssr: false
 })
