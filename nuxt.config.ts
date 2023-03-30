@@ -9,6 +9,9 @@ export default defineNuxtConfig({
       ],
       link: [
         { rel: 'icon', type: 'image/png', href: '/oauth-256.png' }
+      ],
+      script: [
+        { src: 'https://plausible.io/js/script.js', 'data-domain': 'oauth.ee', defer: true }
       ]
     }
   },
