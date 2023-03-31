@@ -16,9 +16,10 @@ export default defineEventHandler(async (event) => {
   if (new Date() > new Date(cert.validTo)) throw createError({ statusCode: 400, statusMessage: 'Certificate is expired' })
   if (!cert.keyUsage.includes('1.3.6.1.5.5.7.3.2')) throw createError({ statusCode: 400, statusMessage: 'Certificate is not for authentication' })
 
+  const idcode = userInfo.serialNumber.replace('PNOEE-', '')
   const code = await saveUser({
-    id: userInfo.serialNumber,
-    email: `${userInfo.serialNumber}@eesti.ee`,
+    id: idcode,
+    email: `${idcode}@eesti.ee`,
     name: `${userInfo.GN} ${userInfo.SN}`,
     provider: 'id-card'
   })
