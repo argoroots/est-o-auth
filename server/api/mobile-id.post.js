@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
   const code = await saveUser({
     id: sidSession.idcode,
     email: `${sidSession.idcode}@eesti.ee`,
-    provider: 'smart-id'
+    provider: 'mobile-id'
   })
 
   const search = new URLSearchParams({ code, state: sidSession.state }).toString()
