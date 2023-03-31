@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
 
   checkRequest(query, 'mobile-id', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'idcode', 'phone'])
 
-  const client = await getClient(event)
+  const client = getClient(query)
   const session = randomUUID().replaceAll('-', '')
 
   const { skSession, consent } = await startMidSession(query.idcode, query.phone, client.skidText)

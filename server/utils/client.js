@@ -17,9 +17,7 @@ export function checkRequest (data, provider, params = []) {
   // if (!redirectUri) throw createError({ statusCode: 400, statusMessage: 'The redirect URI (redirect_uri) do not match a registered redirect URI!' })
 }
 
-export async function getClient (event) {
-  const { client_id: clientId } = isMethod(event, 'GET') ? getQuery(event) : await readBody(event)
-
+export function getClient ({ client_id: clientId }) {
   if (!clientId) throw createError({ statusCode: 403, statusMessage: 'Required parameter client_id is missing!' })
 
   const client = clients?.find(client => client.id === clientId)

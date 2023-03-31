@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
 
   checkRequest(query, 'e-mail', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state'])
 
-  const client = await getClient(event)
+  const client = getClient(query)
   const config = useRuntimeConfig()
   const code = String(Math.round(Math.random() * 1000000)).padStart(6, '0')
 

@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
 
   checkRequest(query, 'apple', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state'])
 
-  const client = await getClient(event)
+  const client = getClient(query)
   const config = useRuntimeConfig()
 
   const search = new URLSearchParams({

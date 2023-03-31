@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
 
   checkRequest(query, 'smart-id', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'idcode'])
 
-  const client = await getClient(event)
+  const client = getClient(query)
   const session = randomUUID().replaceAll('-', '')
 
   const { skSession, consent } = await startSidSession(query.idcode, client.skidText)

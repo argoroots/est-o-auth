@@ -1,6 +1,6 @@
 import { randomBytes } from 'crypto'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler((event) => {
   const query = getQuery(event)
 
   checkRequest(query, 'id-card', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state'])
