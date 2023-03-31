@@ -1,8 +1,8 @@
 export default defineEventHandler(async (event) => {
-  await checkRequest(event, 'smart-id', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'idcode', 'session'])
-  await getClient(event)
-
   const body = await readBody(event)
+
+  checkRequest(body, 'smart-id', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'idcode', 'session'])
+  await getClient(event)
 
   const sidSession = await getSessionData(`smart-id:${body.idcode}:${body.session}`, false)
 

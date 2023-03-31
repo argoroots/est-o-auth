@@ -1,10 +1,11 @@
 import { randomUUID, randomBytes, createHash } from 'crypto'
 
 export default defineEventHandler(async (event) => {
-  await checkRequest(event, 'smart-id', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'idcode'])
+  const query = getQuery(event)
+
+  checkRequest(query, 'smart-id', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'idcode'])
 
   const client = await getClient(event)
-  const query = getQuery(event)
   const session = randomUUID().replaceAll('-', '')
 
   const { skSession, consent } = await startSidSession(query.idcode, client.skidText)

@@ -1,16 +1,16 @@
 import jwt from 'jsonwebtoken'
 
 export default defineEventHandler(async (event) => {
-  const data = isMethod(event, 'GET') ? getQuery(event) : await readBody(event)
+  const body = await readBody(event)
+
+  checkRequest(body, 'google', ['code', 'state'])
+
+  if (!body.state) throw createError({ statusCode: 400, statusMessage: 'Parameter state is required' })
+  if (!body.code) throw createError({ statusCode: 400, statusMessage: 'Parameter code is required' })
+  if (body.error) throw createError({ statusCode: 500, statusMessage: body.error })
+
   const config = useRuntimeConfig()
-
-  checkRequest(data, 'google', ['code', 'state'])
-
-  if (!data.state) throw createError({ statusCode: 400, statusMessage: 'Parameter state is required' })
-  if (!data.code) throw createError({ statusCode: 400, statusMessage: 'Parameter code is required' })
-  if (data.error) throw createError({ statusCode: 500, statusMessage: data.error })
-
-  const decodedState = jwt.verify(data.state, config.jwtSecret)
+  const decodedState = jwt.verify(body.state, config.jwtSecret)
 
   const { access_token: accessToken } = await $fetch('https://www.googleapis.com/oauth2/v4/token', {
     method: 'POST',
@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
       client_secret: config.googleSecret,
       redirect_uri: `${config.url}/api/google`,
       grant_type: 'authorization_code',
-      code: data.code
+      code: body.code
     }
   })
 

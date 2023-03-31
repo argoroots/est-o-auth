@@ -1,15 +1,15 @@
 import jwt from 'jsonwebtoken'
 
 export default defineEventHandler(async (event) => {
-  await checkRequest(event, 'apple', ['code', 'state'])
-
-  const config = useRuntimeConfig()
   const body = await readBody(event)
+
+  checkRequest(body, 'apple', ['code', 'state'])
 
   if (!body.state) throw createError({ statusCode: 400, statusMessage: 'Parameter state is required' })
   if (!body.code) throw createError({ statusCode: 400, statusMessage: 'Parameter code is required' })
   if (body.error) throw createError({ statusCode: 500, statusMessage: body.error })
 
+  const config = useRuntimeConfig()
   const decodedState = jwt.verify(body.state, config.jwtSecret)
 
   const clientSecret = jwt.sign({}, config.appleSecret, {
