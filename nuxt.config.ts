@@ -40,5 +40,6 @@ export default defineNuxtConfig({
     googleId: '',
     googleSecret: ''
   },
+  spaLoadingTemplate: false,
   ssr: false
 })
