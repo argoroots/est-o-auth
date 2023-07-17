@@ -1,4 +1,3 @@
-
 import { randomUUID } from 'crypto'
 import { DynamoDBClient, DeleteItemCommand, GetItemCommand, PutItemCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb' // ES
 import jwt from 'jsonwebtoken'
