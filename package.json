@@ -17,19 +17,19 @@
     "cleanup": "nuxt cleanup"
   },
   "devDependencies": {
-    "@aws-sdk/client-dynamodb": "3.405.0",
-    "@aws-sdk/client-ses": "3.405.0",
-    "@aws-sdk/client-sns": "3.405.0",
+    "@aws-sdk/client-dynamodb": "3.418.0",
+    "@aws-sdk/client-ses": "3.418.0",
+    "@aws-sdk/client-sns": "3.418.0",
     "@nuxtjs/eslint-config": "12.0.0",
     "@nuxtjs/i18n": "8.0.0-rc.4",
     "@web-eid/web-eid-library": "2.0.2",
-    "autoprefixer": "10.4.15",
+    "autoprefixer": "10.4.16",
     "bcrypt": "5.1.1",
-    "eslint": "8.48.0",
+    "eslint": "8.50.0",
     "eslint-config-standard": "17.1.0",
     "jsonwebtoken": "9.0.2",
-    "nuxt": "3.7.0",
-    "postcss": "8.4.29",
+    "nuxt": "3.7.3",
+    "postcss": "8.4.30",
     "tailwindcss": "3.3.3"
   }
 }
