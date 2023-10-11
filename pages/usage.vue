@@ -68,6 +68,9 @@ useHead({ title: client.value.client + ' usage' })
       {{ sum(client.usage.today) }}
     </div>
     <div class="th !border-0">
+      {{ sum(client.usage.yesterday) }}
+    </div>
+    <div class="th !border-0">
       {{ sum(client.usage.month) }}
     </div>
     <div class="th !border-0">
