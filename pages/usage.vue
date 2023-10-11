@@ -29,6 +29,9 @@ useHead({ title: client.value.client + ' usage' })
       today
     </div>
     <div class="th">
+      yesterday
+    </div>
+    <div class="th">
       this month
     </div>
     <div class="th">
@@ -46,6 +49,9 @@ useHead({ title: client.value.client + ' usage' })
       </div>
       <div class="tr border-r">
         {{ client.usage.today[p] || '' }}
+      </div>
+      <div class="tr border-r">
+        {{ client.usage.yesterday[p] || '' }}
       </div>
       <div class="tr border-r">
         {{ client.usage.month[p] || '' }}

@@ -94,10 +94,11 @@ export async function getUsage (client) {
   ]
 
   const result = {
-    year: {},
+    today: {},
+    yesterday: {},
     month: {},
     lastMonth: {},
-    today: {}
+    year: {}
   }
 
   const config = {
@@ -108,11 +109,16 @@ export async function getUsage (client) {
   for await (const provider of providers) {
     const now = new Date()
     const nowStr = now.toISOString()
+    const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1)
+    const yesterdayStr = yesterday.toISOString()
     const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1)
     const lastMonthStr = lastMonth.toISOString()
 
-    config.Key.date.S = `${provider}-${nowStr.substring(0, 4)}`
-    const { Item: yearItem } = await dynamodb.send(new GetItemCommand(config))
+    config.Key.date.S = `${provider}-${nowStr.substring(0, 10)}`
+    const { Item: todayItem } = await dynamodb.send(new GetItemCommand(config))
+
+    config.Key.date.S = `${provider}-${yesterdayStr.substring(0, 10)}`
+    const { Item: yesterdayItem } = await dynamodb.send(new GetItemCommand(config))
 
     config.Key.date.S = `${provider}-${lastMonthStr.substring(0, 7)}`
     const { Item: lastMonthItem } = await dynamodb.send(new GetItemCommand(config))
@@ -120,13 +126,14 @@ export async function getUsage (client) {
     config.Key.date.S = `${provider}-${nowStr.substring(0, 7)}`
     const { Item: monthItem } = await dynamodb.send(new GetItemCommand(config))
 
-    config.Key.date.S = `${provider}-${nowStr.substring(0, 10)}`
-    const { Item: todayItem } = await dynamodb.send(new GetItemCommand(config))
+    config.Key.date.S = `${provider}-${nowStr.substring(0, 4)}`
+    const { Item: yearItem } = await dynamodb.send(new GetItemCommand(config))
 
-    result.year[provider] = parseInt(yearItem?.requests?.N ?? '0')
+    result.today[provider] = parseInt(todayItem?.requests?.N ?? '0')
+    result.yesterday[provider] = parseInt(yesterdayItem?.requests?.N ?? '0')
     result.lastMonth[provider] = parseInt(lastMonthItem?.requests?.N ?? '0')
     result.month[provider] = parseInt(monthItem?.requests?.N ?? '0')
-    result.today[provider] = parseInt(todayItem?.requests?.N ?? '0')
+    result.year[provider] = parseInt(yearItem?.requests?.N ?? '0')
   }
 
   return result
