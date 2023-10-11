@@ -23,7 +23,7 @@ useHead({ title: client.value.client + ' usage' })
 </script>
 
 <template>
-  <div class="grid grid-cols-5">
+  <div class="grid grid-cols-6">
     <div class="th" />
     <div class="th">
       today
