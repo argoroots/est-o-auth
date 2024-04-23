@@ -3,9 +3,9 @@ import { SNSClient, PublishCommand } from '@aws-sdk/client-sns'
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
-  checkRequest(query, 'phone', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'phone'])
+  await checkRequest(query, 'phone', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'phone'])
 
-  const client = getClient(query)
+  const client = await getClient(query)
   const config = useRuntimeConfig()
   const code = String(Math.round(Math.random() * 1000000)).padStart(6, '0')
 

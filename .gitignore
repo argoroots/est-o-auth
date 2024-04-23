@@ -1,6 +1,5 @@
 .cache
 .certs
-.clients.yaml
 .DS_Store
 .env
 .nitro

@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
-  checkRequest(body, 'google', ['code', 'state'])
+  await checkRequest(body, 'google', ['code', 'state'])
 
   if (!body.state) throw createError({ statusCode: 400, statusMessage: 'Parameter state is required' })
   if (!body.code) throw createError({ statusCode: 400, statusMessage: 'Parameter code is required' })

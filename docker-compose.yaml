@@ -20,5 +20,3 @@ services:
             NUXT_APPLE_SECRET: ${NUXT_APPLE_SECRET}
             NUXT_GOOGLE_ID: ${NUXT_GOOGLE_ID}
             NUXT_GOOGLE_SECRET: ${NUXT_GOOGLE_SECRET}
-        volumes:
-            - ./data/clients.yaml:/usr/src/est-o-auth/.clients.yaml:ro

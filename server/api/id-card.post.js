@@ -3,9 +3,9 @@ import { X509Certificate } from 'crypto'
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
-  checkRequest(body, 'id-card', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state'])
+  await checkRequest(body, 'id-card', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state'])
 
-  const client = getClient(body)
+  const client = await getClient(body)
 
   const certBuffer = Buffer.from(body.unverifiedCertificate, 'base64')
   const cert = new X509Certificate(certBuffer)

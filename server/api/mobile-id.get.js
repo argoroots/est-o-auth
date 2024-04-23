@@ -3,9 +3,9 @@ import { randomUUID, randomBytes } from 'crypto'
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
-  checkRequest(query, 'mobile-id', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'idcode', 'phone'])
+  await checkRequest(query, 'mobile-id', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'idcode', 'phone'])
 
-  const client = getClient(query)
+  const client = await getClient(query)
   const session = randomUUID().replaceAll('-', '')
 
   const { skSession, consent } = await startMidSession(query.idcode, query.phone, client.skidText)

@@ -1,7 +1,7 @@
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
-  checkRequest(body, 'e-mail', ['email', 'code'])
+  await checkRequest(body, 'e-mail', ['email', 'code'])
 
   const emailSession = await getSessionData(`email:${body.email}:${body.code}`, true)
 

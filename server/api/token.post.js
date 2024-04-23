@@ -3,9 +3,9 @@ import bcrypt from 'bcrypt'
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
-  checkRequest(body, null, ['client_id', 'client_secret', 'grant_type', 'code'])
+  await checkRequest(body, null, ['client_id', 'client_secret', 'grant_type', 'code'])
 
-  const client = getClient(body)
+  const client = await getClient(body)
 
   if (body?.grant_type !== 'authorization_code') throw createError({ statusCode: 400, statusMessage: 'Parameter grant_type must be "authorization_code"' })
   if (!body?.client_id) throw createError({ statusCode: 400, statusMessage: 'Parameter client_id is required' })

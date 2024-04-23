@@ -1,9 +1,9 @@
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
-  checkRequest(query, null, ['client_id', 'redirect_uri', 'response_type', 'scope', 'state'])
+  await checkRequest(query, null, ['client_id', 'redirect_uri', 'response_type', 'scope', 'state'])
 
-  const client = getClient(query)
+  const client = await getClient(query)
   const usage = await getUsage(client.id)
 
   return {

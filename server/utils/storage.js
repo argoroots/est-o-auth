@@ -138,3 +138,22 @@ export async function getUsage (client) {
 
   return result
 }
+
+export async function getClientConfig (client) {
+  if (!client) return
+
+  const config = {
+    TableName: 'oauth-clients',
+    Key: { id: { S: client } }
+  }
+
+  const { Item } = await dynamodb.send(new GetItemCommand(config))
+
+  return {
+    id: Item?.id?.S,
+    secret: Item?.secret?.S,
+    skidText: Item?.skidText?.S,
+    redirectUris: Item?.redirectUris?.SS,
+    providers: Item?.providers?.SS
+  }
+}
