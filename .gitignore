@@ -6,6 +6,5 @@
 .nuxt
 .output
 *.log*
-data
 dist
 node_modules
