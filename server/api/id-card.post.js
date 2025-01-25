@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
 
   const certBuffer = Buffer.from(body.unverifiedCertificate, 'base64')
   const cert = new X509Certificate(certBuffer)
-  const userInfo = Object.fromEntries(cert.subject.split('\n').map(x => x.split('=')))
+  const userInfo = Object.fromEntries(cert.subject.split('\n').map((x) => x.split('=')))
   // const issuerInfo = Object.fromEntries(cert.issuer.split('\n').map(x => x.split('=')))
 
   if (new Date() < new Date(cert.validFrom)) throw createError({ statusCode: 400, statusMessage: 'Certificate is not yet valid' })

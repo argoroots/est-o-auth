@@ -13,7 +13,8 @@ onMounted(async () => {
     const authResponse = await authenticate(props.nonce, { lang: 'en' })
 
     emit('authenticate', authResponse)
-  } catch (error) {
+  }
+  catch (error) {
     switch (error.code) {
       case ErrorCode.ERR_WEBEID_USER_CANCELLED:
         history.back()
@@ -37,7 +38,6 @@ onMounted(async () => {
         errorMessage.value = 'Web eID application is not installed. You can download it from <a href="https://www.id.ee/en/article/install-id-software/" target="_blank">ID.ee</a>.'
         break
       default:
-        // eslint-disable-next-line no-console
         console.error(error)
         errorMessage.value = error.message || error
         break

@@ -1,6 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2024-09-02',
+  modules: [
+    '@nuxt/eslint',
+    '@nuxtjs/i18n',
+    '@nuxtjs/tailwindcss'
+  ],
+  ssr: false,
   app: {
     head: {
       htmlAttrs: { lang: 'en' },
@@ -17,18 +22,7 @@ export default defineNuxtConfig({
     }
   },
   css: ['~/assets/tailwind.css'],
-  i18n: {
-    vueI18n: './i18n.config.ts'
-  },
-  modules: [
-    '@nuxtjs/i18n'
-  ],
-  postcss: {
-    plugins: {
-      tailwindcss: {},
-      autoprefixer: {}
-    }
-  },
+  spaLoadingTemplate: false,
   runtimeConfig: {
     url: '',
     jwtSecret: '',
@@ -44,6 +38,18 @@ export default defineNuxtConfig({
     googleId: '',
     googleSecret: ''
   },
-  spaLoadingTemplate: false,
-  ssr: false
+  compatibilityDate: '2024-09-02',
+  eslint: {
+    config: {
+      autoInit: false,
+      stylistic: true
+    }
+  },
+  i18n: {
+    vueI18n: '~/.config/i18n.config.ts'
+  },
+  tailwindcss: {
+    cssPath: '~/assets/tailwind.css',
+    configPath: '~/.config/tailwind.config.ts'
+  }
 })

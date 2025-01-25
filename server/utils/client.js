@@ -1,5 +1,5 @@
 export async function checkRequest (data, provider, params = []) {
-  if (params.some(x => !data[x])) throw createError({ statusCode: 400, statusMessage: 'Required parameter is missing!' })
+  if (params.some((x) => !data[x])) throw createError({ statusCode: 400, statusMessage: 'Required parameter is missing!' })
   if (params.includes('response_type') && data.response_type !== 'code') throw createError({ statusCode: 400, statusMessage: 'The response type do not match required value "code"!' })
   if (params.includes('scope') && data.scope !== 'openid') throw createError({ statusCode: 400, statusMessage: 'The scope do not match required value "openid"!' })
 

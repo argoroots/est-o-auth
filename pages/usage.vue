@@ -44,7 +44,7 @@ useHead({ title: client.value.client + ' usage' })
       v-for="p in providers"
       :key="p"
     >
-      <div class="th font-normal !text-left border-r">
+      <div class="th border-r !text-left font-normal">
         {{ p }}
       </div>
       <div class="tr border-r">

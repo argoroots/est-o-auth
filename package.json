@@ -5,8 +5,9 @@
   "description": "Use Estonian ID-card, Mobile-ID, Smart-ID or E-mail as OAuth authentication provider",
   "author": "Argo Roots <argo@roots.ee>",
   "license": "MIT",
+  "type": "module",
   "scripts": {
-    "lint": "eslint . --ext .vue,.js,.ts --fix --ignore-path .gitignore",
+    "lint": "eslint . --fix --config .config/eslint.config.js",
     "dev": "nuxt dev",
     "dev:ssl": "nuxt dev --https --ssl-cert .certs/localhost.crt --ssl-key .certs/localhost.key",
     "build": "nuxt build",
@@ -17,19 +18,18 @@
     "cleanup": "nuxt cleanup"
   },
   "devDependencies": {
-    "@aws-sdk/client-dynamodb": "3.637.0",
-    "@aws-sdk/client-ses": "3.637.0",
-    "@aws-sdk/client-sns": "3.637.0",
-    "@nuxtjs/eslint-config": "12.0.0",
-    "@nuxtjs/i18n": "8.5.1",
+    "@aws-sdk/client-dynamodb": "3.734.0",
+    "@aws-sdk/client-ses": "3.734.0",
+    "@aws-sdk/client-sns": "3.734.0",
+    "@nuxt/eslint": "0.7.5",
+    "@nuxtjs/i18n": "9.1.3",
+    "@nuxtjs/tailwindcss": "6.13.1",
     "@web-eid/web-eid-library": "2.0.2",
     "autoprefixer": "10.4.20",
     "bcrypt": "5.1.1",
-    "eslint": "8.56.0",
-    "eslint-config-standard": "17.1.0",
+    "eslint": "9.19.0",
+    "eslint-plugin-tailwindcss": "3.18.0",
     "jsonwebtoken": "9.0.2",
-    "nuxt": "3.13.0",
-    "postcss": "8.4.44",
-    "tailwindcss": "3.4.10"
+    "nuxt": "3.15.3"
   }
 }

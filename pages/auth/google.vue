@@ -15,7 +15,7 @@ onMounted(async () => await navigateTo(data.value.url, { external: true }))
     </p>
     <div class="pt-10 text-yellow-600">
       <svg
-        class="animate-spin mx-auto h-10 w-10"
+        class="mx-auto size-10 animate-spin"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"

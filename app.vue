@@ -1,6 +1,6 @@
 <script setup>
 useHead({
-  titleTemplate: title => title ? `${title} · OAuth.ee` : 'OAuth.ee'
+  titleTemplate: (title) => title ? `${title} · OAuth.ee` : 'OAuth.ee'
 })
 </script>
 

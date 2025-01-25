@@ -42,7 +42,8 @@ async function onAuthenticate () {
 
   if (data.value.url) {
     await navigateTo(data.value.url, { external: true })
-  } else {
+  }
+  else {
     isSending.value = false
     isEmailSent.value = true
     isError.value = true

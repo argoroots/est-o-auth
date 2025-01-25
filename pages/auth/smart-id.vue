@@ -56,7 +56,8 @@ async function onAuthenticate () {
 
   if (data.value.url) {
     await navigateTo(data.value.url, { external: true })
-  } else {
+  }
+  else {
     consent.value = null
     session.value = null
 

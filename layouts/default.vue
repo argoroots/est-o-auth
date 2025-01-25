@@ -24,8 +24,11 @@ const { data: client } = await useFetch('/api/client', { query })
 
       <slot />
 
-      <footer class="pb-4 flex items-end justify-center text-xs">
-        <a href="/terms" target="_blank">Terms & Conditions</a>
+      <footer class="flex items-end justify-center pb-4 text-xs">
+        <a
+          href="/terms"
+          target="_blank"
+        >Terms & Conditions</a>
       </footer>
     </section>
   </main>

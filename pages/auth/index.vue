@@ -19,7 +19,7 @@ const { data: client } = await useFetch('/api/client', { query })
 
 if (!client.value) throw createError({ statusCode: 400, statusMessage: 'The client ID (client_id) in the request do not match a registered client ID!' })
 
-const allowedMethods = computed(() => methods.filter(m => client.value?.providers.includes(m.id)))
+const allowedMethods = computed(() => methods.filter((m) => client.value?.providers.includes(m.id)))
 </script>
 
 <template>
