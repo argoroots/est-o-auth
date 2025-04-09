@@ -2,10 +2,13 @@
 useHead({
   titleTemplate: (title) => title ? `${title} · OAuth.ee` : 'OAuth.ee'
 })
+
+console.log('App.vue loaded');
+
 </script>
 
 <template>
-  <NuxtLayout>
-    <NuxtPage />
-  </NuxtLayout>
+  <nuxt-layout>
+    <nuxt-page />
+  </nuxt-layout>
 </template>

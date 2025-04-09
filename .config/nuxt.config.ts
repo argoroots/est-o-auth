@@ -21,7 +21,6 @@ export default defineNuxtConfig({
       ]
     }
   },
-  css: ['~/assets/tailwind.css'],
   spaLoadingTemplate: false,
   runtimeConfig: {
     url: '',
@@ -38,7 +37,10 @@ export default defineNuxtConfig({
     googleId: '',
     googleSecret: ''
   },
-  compatibilityDate: '2024-09-02',
+  future: {
+    compatibilityVersion: 4
+  },
+  compatibilityDate: '2024-08-05',
   eslint: {
     config: {
       autoInit: false,
@@ -46,10 +48,10 @@ export default defineNuxtConfig({
     }
   },
   i18n: {
-    vueI18n: '~/.config/i18n.config.ts'
+    vueI18n: '~~/.config/i18n.config.ts'
   },
   tailwindcss: {
     cssPath: '~/assets/tailwind.css',
-    configPath: '~/.config/tailwind.config.ts'
+    configPath: '~~/.config/tailwind.config.ts'
   }
 })

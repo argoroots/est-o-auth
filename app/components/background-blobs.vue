@@ -34,13 +34,11 @@
   @apply top-20;
   @apply left-10;
   @apply bg-red-100;
-  @apply animation-delay-2000;
 }
 
 .orange {
   @apply top-0;
   @apply -left-10;
   @apply bg-orange-100;
-  @apply animation-delay-4000;
 }
 </style>
