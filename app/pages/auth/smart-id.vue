@@ -23,17 +23,17 @@ async function onStartSession () {
 
   if (!idcode.value) return
 
-  const { data } = await useFetch('/api/smart-id', { query: { ...query, idcode: idcode.value } })
+  const data = await $fetch('/api/smart-id', { query: { ...query, idcode: idcode.value } })
 
   isSending.value = false
 
-  if (!data.value.consent || !data.value.session) {
+  if (!data.consent || !data.session) {
     isError.value = true
     return
   }
 
-  consent.value = data.value.consent
-  session.value = data.value.session
+  consent.value = data.consent
+  session.value = data.session
 
   interval.value = setInterval(async () => {
     await onAuthenticate()
@@ -41,7 +41,7 @@ async function onStartSession () {
 }
 
 async function onAuthenticate () {
-  const { data } = await useFetch('/api/smart-id', {
+  const data = await $fetch('/api/smart-id', {
     method: 'POST',
     body: {
       ...query,
@@ -50,12 +50,12 @@ async function onAuthenticate () {
     }
   })
 
-  if (data.value.status === 'RUNNING') return
+  if (data.status === 'RUNNING') return
 
   clearInterval(interval.value)
 
-  if (data.value.url) {
-    await navigateTo(data.value.url, { external: true })
+  if (data.url) {
+    await navigateTo(data.url, { external: true })
   }
   else {
     consent.value = null

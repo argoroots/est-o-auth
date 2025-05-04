@@ -7,7 +7,7 @@ const { query } = useRoute()
 const { data: nonceData } = await useFetch('/api/id-card', { query })
 
 async function onAuthenticate (authResponse) {
-  const { data } = await useFetch('/api/id-card', {
+  const data = await $fetch('/api/id-card', {
     method: 'POST',
     body: {
       ...query,
@@ -15,7 +15,7 @@ async function onAuthenticate (authResponse) {
     }
   })
 
-  if (data.value.url) await navigateTo(data.value.url, { external: true })
+  if (data.url) await navigateTo(data.url, { external: true })
 }
 </script>
 

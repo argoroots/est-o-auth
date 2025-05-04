@@ -17,11 +17,11 @@ async function onStartSession () {
 
   isSending.value = true
 
-  const { data } = await useFetch('/api/e-mail', { query: { ...query, email: email.value } })
+  const data = await $fetch('/api/e-mail', { query: { ...query, email: email.value } })
 
   isSending.value = false
 
-  if (data.value.sent) isEmailSent.value = true
+  if (data.sent) isEmailSent.value = true
 }
 
 async function onAuthenticate () {
@@ -31,7 +31,7 @@ async function onAuthenticate () {
   isSending.value = true
   isError.value = false
 
-  const { data } = await useFetch('/api/e-mail', {
+  const data = await $fetch('/api/e-mail', {
     method: 'POST',
     body: {
       ...query,
@@ -40,8 +40,8 @@ async function onAuthenticate () {
     }
   })
 
-  if (data.value.url) {
-    await navigateTo(data.value.url, { external: true })
+  if (data.url) {
+    await navigateTo(data.url, { external: true })
   }
   else {
     isSending.value = false

@@ -3,8 +3,7 @@ useHead({
   titleTemplate: (title) => title ? `${title} · OAuth.ee` : 'OAuth.ee'
 })
 
-console.log('App.vue loaded');
-
+console.log('App.vue loaded')
 </script>
 
 <template>

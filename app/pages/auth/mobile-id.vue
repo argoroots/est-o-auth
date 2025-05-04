@@ -36,17 +36,17 @@ async function onStartSession () {
 
   if (!idcode.value || !phone.value) return
 
-  const { data } = await useFetch('/api/mobile-id', { query: { ...query, idcode: idcode.value, phone: phone.value } })
+  const data = await $fetch('/api/mobile-id', { query: { ...query, idcode: idcode.value, phone: phone.value } })
 
   isSending.value = false
 
-  if (!data.value.consent || !data.value.session) {
+  if (!data.consent || !data.session) {
     isError.value = true
     return
   }
 
-  consent.value = data.value.consent
-  session.value = data.value.session
+  consent.value = data.consent
+  session.value = data.session
 
   interval.value = setInterval(async () => {
     await onAuthenticate()
@@ -54,7 +54,7 @@ async function onStartSession () {
 }
 
 async function onAuthenticate () {
-  const { data } = await useFetch('/api/mobile-id', {
+  const data = await $fetch('/api/mobile-id', {
     method: 'POST',
     body: {
       ...query,
@@ -63,12 +63,12 @@ async function onAuthenticate () {
     }
   })
 
-  if (data.value.status === 'RUNNING') return
+  if (data.status === 'RUNNING') return
 
   clearInterval(interval.value)
 
-  if (data.value.url) {
-    await navigateTo(data.value.url, { external: true })
+  if (data.url) {
+    await navigateTo(data.url, { external: true })
   }
   else {
     consent.value = null

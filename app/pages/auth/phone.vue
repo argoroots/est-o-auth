@@ -23,11 +23,11 @@ async function onStartSession () {
 
   isSending.value = true
 
-  const { data } = await useFetch('/api/phone', { query: { ...query, phone: phone.value } })
+  const data = await $fetch('/api/phone', { query: { ...query, phone: phone.value } })
 
   isSending.value = false
 
-  if (data.value.sent) isPhoneSent.value = true
+  if (data.sent) isPhoneSent.value = true
 }
 
 async function onAuthenticate () {
@@ -37,7 +37,7 @@ async function onAuthenticate () {
   isSending.value = true
   isError.value = false
 
-  const { data } = await useFetch('/api/phone', {
+  const data = await $fetch('/api/phone', {
     method: 'POST',
     body: {
       ...query,
@@ -46,8 +46,8 @@ async function onAuthenticate () {
     }
   })
 
-  if (data.value.url) {
-    await navigateTo(data.value.url, { external: true })
+  if (data.url) {
+    await navigateTo(data.url, { external: true })
   }
   else {
     isSending.value = false
