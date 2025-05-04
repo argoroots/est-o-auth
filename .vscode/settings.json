@@ -2,17 +2,12 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "editor.quickSuggestions": {
-    "strings": true
+  "eslint.options": {
+    "overrideConfigFile": "./.config/eslint.config.js"
   },
   "eslint.validate": [
     "javascript",
     "typecript",
     "vue"
-  ],
-  "css.lint.unknownAtRules": "ignore",
-  "tailwindCSS.includeLanguages": {
-    "vue": "html",
-    "vue-html": "html"
-  }
+  ]
 }
