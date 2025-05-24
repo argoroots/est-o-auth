@@ -23,7 +23,12 @@ export default defineEventHandler(async (event) => {
     }
   })
 
-  const profile = await $fetch('https://www.googleapis.com/plus/v1/people/me', { query: { access_token: accessToken } })
+  const profile = await $fetch('https://people.googleapis.com/v1/people/me', {
+    query: {
+      personFields: 'names,emailAddresses',
+      access_token: accessToken
+    }
+  })
 
   const code = await saveUser({
     id: profile.id,
