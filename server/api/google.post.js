@@ -31,9 +31,9 @@ export default defineEventHandler(async (event) => {
   })
 
   const code = await saveUser({
-    id: profile.id,
-    email: profile.emails?.[0]?.value,
-    name: profile.displayName,
+    id: profile.resourceName,
+    email: profile.emailAddresses?.at(0)?.value,
+    name: profile.names?.at(0)?.displayName,
     provider: 'google'
   })
 
