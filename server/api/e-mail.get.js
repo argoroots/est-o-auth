@@ -45,6 +45,7 @@ export default defineEventHandler(async (event) => {
     }
   }))
 
+  await setBillingUsage(client.stripeId, 'e-mail')
   await setUsage(client.id, 'e-mail')
 
   return { sent: true }

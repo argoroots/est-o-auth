@@ -154,6 +154,7 @@ export async function getClientConfig (client) {
     secret: Item?.secret?.S,
     skidText: Item?.skidText?.S,
     redirectUris: Item?.redirectUris?.SS,
-    providers: Item?.providers?.SS
+    providers: Item?.providers?.SS,
+    stripeId: Item?.stripeId?.S
   }
 }

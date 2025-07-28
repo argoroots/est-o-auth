@@ -28,6 +28,7 @@ export default defineEventHandler(async (event) => {
     Message: `Your OAuth.ee verification code is ${code}`
   }))
 
+  await setBillingUsage(client.stripeId, 'phone')
   await setUsage(client.id, 'phone')
 
   return { sent: true }

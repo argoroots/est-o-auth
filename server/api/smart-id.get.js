@@ -17,6 +17,7 @@ export default defineEventHandler(async (event) => {
     skSession
   })
 
+  await setBillingUsage(client.stripeId, 'smart-id')
   await setUsage(client.id, 'smart-id')
 
   return { consent, session }

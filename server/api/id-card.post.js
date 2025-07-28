@@ -26,6 +26,7 @@ export default defineEventHandler(async (event) => {
 
   const search = new URLSearchParams({ code, state: body.state }).toString()
 
+  await setBillingUsage(client.stripeId, 'id-card')
   await setUsage(client.id, 'id-card')
 
   return { url: `${body.redirect_uri}?${search}` }

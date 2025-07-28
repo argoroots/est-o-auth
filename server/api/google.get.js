@@ -17,6 +17,7 @@ export default defineEventHandler(async (event) => {
     state: jwt.sign({ uri: query.redirect_uri, state: query.state }, config.jwtSecret, { expiresIn: '5m' })
   }).toString()
 
+  await setBillingUsage(client.stripeId, 'google')
   await setUsage(client.id, 'google')
 
   return { url: `https://accounts.google.com/o/oauth2/v2/auth?${search}` }

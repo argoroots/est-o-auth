@@ -17,6 +17,7 @@ export default defineEventHandler(async (event) => {
     state: jwt.sign({ uri: query.redirect_uri, state: query.state }, config.jwtSecret, { expiresIn: '5m' })
   }).toString()
 
+  await setBillingUsage(client.stripeId, 'apple')
   await setUsage(client.id, 'apple')
 
   return { url: `https://appleid.apple.com/auth/authorize?${search}` }
