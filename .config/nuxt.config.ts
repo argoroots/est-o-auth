@@ -17,7 +17,7 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/png', href: '/oauth-256.png' }
       ],
       script: [
-        { src: 'https://plausible.io/js/script.js', 'data-domain': 'oauth.ee', defer: true }
+        { src: 'https://analytics.entu.dev/ea.min.js', 'data-site': 'oauth.ee', crossorigin: 'anonymous', defer: true }
       ]
     }
   },
