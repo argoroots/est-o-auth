@@ -21,7 +21,9 @@ async function onStartSession () {
 
   isSending.value = false
 
-  if (data.sent) isEmailSent.value = true
+  if (data.sent) {
+    isEmailSent.value = true
+  }
 }
 
 async function onAuthenticate () {
