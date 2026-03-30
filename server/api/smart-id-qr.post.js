@@ -71,6 +71,19 @@ function verifyAndExtractIdentity (skResponse, sidSession) {
   const hashAlg = (sig.signatureAlgorithmParameters?.hashAlgorithm || 'SHA-512').toLowerCase()
   const saltLength = sig.signatureAlgorithmParameters?.saltLength ?? constants.RSA_PSS_SALTLEN_MAX_SIGN
 
+  console.log('[smart-id-qr] sig fields:', JSON.stringify({
+    serverRandom: sig.serverRandom,
+    userChallenge: sig.userChallenge,
+    interactionTypeUsed: sig.interactionTypeUsed,
+    flowType: sig.flowType,
+    brokeredRpName: sig.brokeredRpName,
+    signatureAlgorithm: sig.signatureAlgorithm,
+    signatureAlgorithmParameters: sig.signatureAlgorithmParameters
+  }))
+  console.log('[smart-id-qr] top-level signatureProtocol:', skResponse.signatureProtocol)
+  console.log('[smart-id-qr] payload:', payload)
+  console.log('[smart-id-qr] hashAlg:', hashAlg, 'saltLength:', saltLength)
+
   const isValid = verify(
     hashAlg,
     Buffer.from(payload),
