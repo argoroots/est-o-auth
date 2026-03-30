@@ -3,109 +3,105 @@ definePageMeta({ middleware: ['check-query', 'check-provider'] })
 useHead({ title: 'Smart-ID' })
 
 const { query } = useRoute()
-const idcode = ref(query.idcode)
-const isSending = ref(false)
-const isError = ref(false)
-const interval = ref()
-const consent = ref(null)
 const session = ref(null)
+const qrUrl = ref(null)
+const deviceLinkUrl = ref(null)
+const isError = ref(false)
 
-if (idcode.value) onStartSession()
+const qrInterval = ref()
+const pollInterval = ref()
 
-function validateIdcode () {
-  if (!idcode.value) return
+onMounted(startSession)
 
-  idcode.value = idcode.value.replace(/\D/g, '')
-}
+onUnmounted(() => {
+  clearInterval(qrInterval.value)
+  clearInterval(pollInterval.value)
+})
 
-async function onStartSession () {
-  validateIdcode()
+async function startSession () {
+  try {
+    const data = await $fetch('/api/smart-id', { query })
 
-  if (!idcode.value) return
-
-  const data = await $fetch('/api/smart-id', { query: { ...query, idcode: idcode.value } })
-
-  isSending.value = false
-
-  if (!data.consent || !data.session) {
-    isError.value = true
-    return
-  }
-
-  consent.value = data.consent
-  session.value = data.session
-
-  interval.value = setInterval(async () => {
-    await onAuthenticate()
-  }, 5000)
-}
-
-async function onAuthenticate () {
-  const data = await $fetch('/api/smart-id', {
-    method: 'POST',
-    body: {
-      ...query,
-      idcode: idcode.value,
-      session: session.value
+    if (!data.session) {
+      isError.value = true
+      return
     }
-  })
 
-  if (data.status === 'RUNNING') return
+    session.value = data.session
 
-  clearInterval(interval.value)
+    await refreshQR()
 
-  if (data.url) {
-    await navigateTo(data.url, { external: true })
+    qrInterval.value = setInterval(refreshQR, 1000)
+    pollInterval.value = setInterval(pollStatus, 5000)
   }
-  else {
-    consent.value = null
-    session.value = null
+  catch {
+    isError.value = true
+  }
+}
 
-    isSending.value = false
+async function refreshQR () {
+  try {
+    const data = await $fetch('/api/smart-id-link', { query: { session: session.value } })
+    qrUrl.value = data.qrUrl
+    deviceLinkUrl.value = data.deviceLinkUrl
+  }
+  catch {
+    // session may have expired — let poll handle the error state
+  }
+}
+
+async function pollStatus () {
+  try {
+    const data = await $fetch('/api/smart-id', {
+      method: 'POST',
+      body: { ...query, session: session.value }
+    })
+
+    if (data.status === 'RUNNING') return
+
+    clearInterval(qrInterval.value)
+    clearInterval(pollInterval.value)
+
+    if (data.url) {
+      await navigateTo(data.url, { external: true })
+    }
+    else {
+      isError.value = true
+    }
+  }
+  catch {
+    clearInterval(qrInterval.value)
+    clearInterval(pollInterval.value)
+
     isError.value = true
   }
 }
 </script>
 
 <template>
-  <form-wrapper v-if="!isSending">
-    <template v-if="!consent">
-      <form-input
-        id="idcode"
-        v-model="idcode"
-        type="tel"
-        label="ID code"
-        placeholder="38001085718"
-        autofocus
-        @blur="validateIdcode"
-        @keypress.enter="onStartSession"
-      />
-      <p
-        v-if="isError"
-        class="text-red-700"
-      >
-        Something is not right! Check ID code.
+  <form-wrapper>
+    <template v-if="isError">
+      <p class="text-red-700">
+        Something went wrong. Please try again.
       </p>
-      <form-button @click="onStartSession">
-        Authenticate
-      </form-button>
+    </template>
+
+    <template v-else-if="qrUrl">
+      <p>
+        Open the Smart-ID app on your phone and scan the QR code, or tap the code to open Smart-ID directly on this device. The QR code refreshes automatically — keep this page open until authentication is complete.
+      </p>
+      <a
+        :href="deviceLinkUrl"
+        class="mx-auto block"
+      >
+        <qr-code :url="qrUrl" />
+      </a>
     </template>
 
     <template v-else>
-      <p>
-        Enter your Smart-ID PIN1 on your device, if you are convinced the control code shown on your device matches the one shown here.
-      </p>
-      <p class="consent">
-        {{ consent }}
+      <p class="text-center text-gray-500">
+        Starting Smart-ID session…
       </p>
     </template>
   </form-wrapper>
 </template>
-
-<style scoped>
-.consent {
-  @apply text-3xl;
-  @apply text-red-700;
-  @apply text-center;
-}
-</style>

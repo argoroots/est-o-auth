@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   if (!query.session) throw createError({ statusCode: 400, statusMessage: 'Missing session' })
 
   const config = useRuntimeConfig()
-  const sidSession = await getSessionData(`smart-id-qr:${query.session}`, false)
+  const sidSession = await getSessionData(`smart-id:${query.session}`, false)
 
   if (!sidSession) throw createError({ statusCode: 403, statusMessage: 'Invalid session' })
 
