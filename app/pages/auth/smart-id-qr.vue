@@ -105,4 +105,3 @@ async function pollStatus () {
     </template>
   </form-wrapper>
 </template>
-
