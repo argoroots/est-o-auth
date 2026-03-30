@@ -88,7 +88,7 @@ async function pollStatus () {
 
     <template v-else-if="qrUrl">
       <p>
-        Open the Smart-ID app on your phone and scan the QR code, or tap the code to open Smart-ID directly on this device. The QR code refreshes automatically — keep this page open until authentication is complete.
+        Open the Smart-ID app on your phone and scan the QR code, or tap the code to open Smart-ID directly on this device. Keep this page open until authentication is complete.
       </p>
       <a
         :href="deviceLinkUrl"
