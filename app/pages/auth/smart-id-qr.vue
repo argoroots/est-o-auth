@@ -4,7 +4,6 @@ useHead({ title: 'Smart-ID' })
 
 const { query } = useRoute()
 const session = ref(null)
-const verificationCode = ref(null)
 const qrUrl = ref(null)
 const deviceLinkUrl = ref(null)
 const isError = ref(false)
@@ -29,7 +28,6 @@ async function startSession () {
     }
 
     session.value = data.session
-    verificationCode.value = data.verificationCode
 
     await refreshQR()
 
@@ -98,12 +96,6 @@ async function pollStatus () {
       >
         <qr-code :url="qrUrl" />
       </a>
-      <p>
-        Enter your Smart-ID PIN1 on your device, if you are convinced the control code shown on your device matches the one shown here.
-      </p>
-      <p class="verification-code">
-        {{ verificationCode }}
-      </p>
     </template>
 
     <template v-else>
@@ -114,10 +106,3 @@ async function pollStatus () {
   </form-wrapper>
 </template>
 
-<style scoped>
-.verification-code {
-  @apply text-3xl;
-  @apply text-red-700;
-  @apply text-center;
-}
-</style>

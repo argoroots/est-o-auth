@@ -1,4 +1,4 @@
-import { randomUUID, randomBytes, createHash } from 'crypto'
+import { randomUUID, randomBytes } from 'crypto'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
@@ -25,14 +25,13 @@ export default defineEventHandler(async (event) => {
   await setBillingUsage(client.stripeId, 'smart-id')
   await setUsage(client.id, 'smart-id')
 
-  return { session, verificationCode: result.verificationCode }
+  return { session }
 })
 
 async function startSidSession (displayText60) {
   const config = useRuntimeConfig()
 
   const rpChallenge = randomBytes(64).toString('base64')
-  const verificationCode = computeVerificationCode(rpChallenge)
 
   const interactionsArray = [
     { type: 'displayTextAndPIN', displayText60: displayText60 || 'Log in' }
@@ -59,12 +58,5 @@ async function startSidSession (displayText60) {
 
   if (!skSession) throw createError({ statusCode: 400, statusMessage: error || 'Smart-ID session start failed' })
 
-  return { skSession, sessionToken, sessionSecret, deviceLinkBase, rpChallenge, interactions, verificationCode, startTime: Date.now() }
-}
-
-function computeVerificationCode (rpChallenge) {
-  const bytes = Buffer.from(rpChallenge, 'base64')
-  const hash = createHash('sha256').update(bytes).digest()
-  const integer = hash.readUIntBE(hash.length - 2, 2)
-  return String(integer % 10000).padStart(4, '0')
+  return { skSession, sessionToken, sessionSecret, deviceLinkBase, rpChallenge, interactions, startTime: Date.now() }
 }

@@ -43,7 +43,7 @@ function verifyAndExtractIdentity (skResponse, sidSession) {
 
   // Parse certificate and extract national identity code
   const x509 = new X509Certificate(Buffer.from(cert.value, 'base64'))
-  const match = x509.subject.match(/SERIALNUMBER=PNO\w{2}-(\d+)/)
+  const match = x509.subject.match(/SERIALNUMBER=PNO\w{2}-(\d+)/i)
 
   if (!match) throw createError({ statusCode: 400, statusMessage: 'Could not extract identity from certificate' })
 
