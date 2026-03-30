@@ -15,7 +15,8 @@ export function verifyAndExtractIdentity (skResponse, sidSession) {
 
   const idcode = match[1]
 
-  const { rpChallenge, interactions, initialCallbackUrl } = sidSession
+  const { rpChallenge, interactions } = sidSession
+  const initialCallbackUrl = sig.flowType === 'Web2App' ? sidSession.initialCallbackUrl : ''
   const rpNameB64 = Buffer.from(config.skidName).toString('base64')
   const interactionsDigest = createHash('sha256').update(interactions).digest('base64')
 
