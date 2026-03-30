@@ -7,8 +7,11 @@ export default defineEventHandler(async (event) => {
 
   const client = await getClient(query)
   const session = randomUUID().replaceAll('-', '')
+  const callbackValue = randomBytes(16).toString('base64url')
+  const origin = getRequestURL(event).origin
+  const initialCallbackUrl = `${origin}/api/smart-id-callback?session=${session}&value=${callbackValue}`
 
-  const result = await startSidSession(client.skidText)
+  const result = await startSidSession(client.skidText, initialCallbackUrl)
 
   await setSessionData(`smart-id:${session}`, {
     redirect_uri: query.redirect_uri,
@@ -19,6 +22,8 @@ export default defineEventHandler(async (event) => {
     deviceLinkBase: result.deviceLinkBase,
     rpChallenge: result.rpChallenge,
     interactions: result.interactions,
+    initialCallbackUrl,
+    callbackValue,
     startTime: result.startTime
   })
 
@@ -28,7 +33,7 @@ export default defineEventHandler(async (event) => {
   return { session }
 })
 
-async function startSidSession (displayText60) {
+async function startSidSession (displayText60, initialCallbackUrl) {
   const config = useRuntimeConfig()
 
   const rpChallenge = randomBytes(64).toString('base64')
@@ -43,6 +48,7 @@ async function startSidSession (displayText60) {
     body: {
       relyingPartyName: config.skidName,
       relyingPartyUUID: config.skidUuid,
+      initialCallbackUrl,
       signatureProtocol: 'ACSP_V2',
       signatureProtocolParameters: {
         rpChallenge,
