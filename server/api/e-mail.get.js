@@ -7,7 +7,9 @@ export default defineEventHandler(async (event) => {
 
   const client = await getClient(query)
   const config = useRuntimeConfig()
-  const code = String(Math.round(Math.random() * 1000000)).padStart(6, '0')
+  const [testEmail, testCode] = config.testUser.split(':')
+  const isTestUser = testEmail && testCode && query.email === testEmail
+  const code = isTestUser ? testCode : String(Math.round(Math.random() * 1000000)).padStart(6, '0')
 
   await setSessionData(`email:${query.email}:${code}`, {
     redirect_uri: query.redirect_uri,
