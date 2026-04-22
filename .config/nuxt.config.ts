@@ -36,7 +36,8 @@ export default defineNuxtConfig({
     appleSecret: '',
     googleId: '',
     googleSecret: '',
-    stripeKey: ''
+    stripeKey: '',
+    testUser: ''
   },
   future: {
     compatibilityVersion: 4
