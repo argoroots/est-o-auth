@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
   const isTestUser = testEmail && testCode && query.email === testEmail
   const code = isTestUser ? testCode : String(Math.round(Math.random() * 1000000)).padStart(6, '0')
 
-  console.log(`e-mail auth: ${query.email}`)
+  console.log(`e-mail auth debug: query.email=${JSON.stringify(query.email)} config.testUser=${JSON.stringify(config.testUser)} isTestUser=${isTestUser}`)
 
   await setSessionData(`email:${query.email}:${code}`, {
     redirect_uri: query.redirect_uri,
