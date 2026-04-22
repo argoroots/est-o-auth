@@ -11,6 +11,10 @@ export default defineEventHandler(async (event) => {
   const isTestUser = testEmail && testCode && query.email === testEmail
   const code = isTestUser ? testCode : String(Math.round(Math.random() * 1000000)).padStart(6, '0')
 
+  if (isTestUser) {
+    console.log(`e-mail auth: test user ${query.email}`)
+  }
+
   await setSessionData(`email:${query.email}:${code}`, {
     redirect_uri: query.redirect_uri,
     state: query.state,
