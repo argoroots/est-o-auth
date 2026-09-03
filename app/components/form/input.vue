@@ -42,6 +42,8 @@ const text = computed({
 </template>
 
 <style scoped>
+@reference "~/assets/tailwind.css";
+
 .form-input {
   @apply relative;
 }

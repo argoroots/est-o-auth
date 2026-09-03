@@ -12,6 +12,8 @@
 </template>
 
 <style scoped>
+@reference "~/assets/tailwind.css";
+
 main {
   @apply max-w-3xl;
   @apply mx-auto;

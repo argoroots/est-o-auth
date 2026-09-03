@@ -1,4 +1,4 @@
-export default defineNuxtRouteMiddleware(async (to) => {
+export default defineNuxtRouteMiddleware(async () => {
   // const { path, query } = to
 
   // const { data: client } = await useFetch('/api/client', query)

@@ -126,6 +126,8 @@ async function onAuthenticate () {
 </template>
 
 <style scoped>
+@reference "~/assets/tailwind.css";
+
 .consent {
   @apply text-3xl;
   @apply text-red-700;

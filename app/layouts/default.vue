@@ -35,6 +35,8 @@ const { data: client } = await useFetch('/api/client', { query })
 </template>
 
 <style scoped>
+@reference "~/assets/tailwind.css";
+
 main {
   @apply min-h-screen;
   @apply w-screen;

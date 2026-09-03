@@ -1,20 +1,52 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-@layer utilities {
-  .animation-delay-2000 {
-    animation-delay: 2s;
+@import "tailwindcss";
+
+@theme {
+  --animate-blob: blob 9s infinite;
+  --animate-spin: spin 2s linear infinite;
+
+  @keyframes blob {
+    0% {
+      transform: translate(0px, 0px) scale(1);
+    }
+    33% {
+      transform: translate(60px, -60px) scale(1.2);
+    }
+    66% {
+      transform: translate(-40px, 40px) scale(0.9);
+    }
+    100% {
+      transform: translate(0px, 0px) scale(1);
+    }
   }
-  .animation-delay-4000 {
-    animation-delay: 4s;
+}
+
+@utility animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+@utility animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Tailwind v3 defaults kept for existing markup */
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
   }
 }
 
 html {
   @apply bg-white;
 }
-
-#__nuxt {}
 
 body {
   @apply font-extralight;
@@ -42,7 +74,7 @@ h1 a {
 }
 
 h1 a:hover {
-  @apply no-underline
+  @apply no-underline;
 }
 
 h1 span {

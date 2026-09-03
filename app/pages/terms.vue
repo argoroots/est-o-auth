@@ -24,6 +24,8 @@ useHead({ title: 'Terms & Conditions' })
 </template>
 
 <style scoped>
+@reference "~/assets/tailwind.css";
+
 ol {
   @apply list-decimal;
 }

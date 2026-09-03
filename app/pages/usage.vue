@@ -44,7 +44,7 @@ useHead({ title: client.value.client + ' usage' })
       v-for="p in providers"
       :key="p"
     >
-      <div class="th border-r !text-left font-normal">
+      <div class="th border-r text-left! font-normal">
         {{ p }}
       </div>
       <div class="tr border-r">
@@ -63,26 +63,28 @@ useHead({ title: client.value.client + ' usage' })
         {{ client.usage.year[p] || '' }}
       </div>
     </template>
-    <div class="th !border-0" />
-    <div class="th !border-0">
+    <div class="th border-0!" />
+    <div class="th border-0!">
       {{ sum(client.usage.today) }}
     </div>
-    <div class="th !border-0">
+    <div class="th border-0!">
       {{ sum(client.usage.yesterday) }}
     </div>
-    <div class="th !border-0">
+    <div class="th border-0!">
       {{ sum(client.usage.month) }}
     </div>
-    <div class="th !border-0">
+    <div class="th border-0!">
       {{ sum(client.usage.lastMonth) }}
     </div>
-    <div class="th !border-0">
+    <div class="th border-0!">
       {{ sum(client.usage.year) }}
     </div>
   </div>
 </template>
 
 <style scoped>
+@reference "~/assets/tailwind.css";
+
 .th,
 .tr {
   @apply px-4 py-2;

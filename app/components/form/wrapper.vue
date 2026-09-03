@@ -6,6 +6,8 @@
 </template>
 
 <style scoped>
+@reference "~/assets/tailwind.css";
+
 #form {
   @apply py-8;
   @apply px-6;

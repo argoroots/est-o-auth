@@ -10,6 +10,8 @@ const emit = defineEmits(['click'])
 </template>
 
 <style scoped>
+@reference "~/assets/tailwind.css";
+
 button {
   @apply h-10;
   @apply w-full;

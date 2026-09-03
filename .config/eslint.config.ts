@@ -1,4 +1,5 @@
 // @ts-check
+import { fileURLToPath } from 'node:url'
 import tailwind from 'eslint-plugin-tailwindcss'
 import withNuxt from '../.nuxt/eslint.config.mjs'
 
@@ -10,10 +11,10 @@ export default withNuxt({
     '@stylistic/space-before-function-paren': ['error', 'always']
   }
 }).prepend([
-  ...tailwind.configs['flat/recommended'],
+  tailwind.configs.recommended,
   {
     settings: {
-      tailwindcss: { config: '.config/tailwind.config.ts' }
+      tailwindcss: { cssConfigPath: fileURLToPath(new URL('../app/assets/tailwind.css', import.meta.url)) }
     }
   }
 ])

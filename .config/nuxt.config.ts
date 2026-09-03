@@ -1,9 +1,10 @@
+import tailwindcss from '@tailwindcss/vite'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
-    '@nuxtjs/i18n',
-    '@nuxtjs/tailwindcss'
+    '@nuxtjs/i18n'
   ],
   ssr: false,
   app: {
@@ -21,6 +22,7 @@ export default defineNuxtConfig({
       ]
     }
   },
+  css: ['~/assets/tailwind.css'],
   spaLoadingTemplate: false,
   runtimeConfig: {
     url: '',
@@ -43,6 +45,9 @@ export default defineNuxtConfig({
     compatibilityVersion: 4
   },
   compatibilityDate: '2024-08-05',
+  vite: {
+    plugins: [tailwindcss()]
+  },
   eslint: {
     config: {
       autoInit: false,
@@ -50,10 +55,9 @@ export default defineNuxtConfig({
     }
   },
   i18n: {
-    vueI18n: '~~/.config/i18n.config.ts'
-  },
-  tailwindcss: {
-    cssPath: '~/assets/tailwind.css',
-    configPath: '~~/.config/tailwind.config.ts'
+    vueI18n: '~~/.config/i18n.config.ts',
+    locales: ['en'],
+    defaultLocale: 'en',
+    strategy: 'no_prefix'
   }
 })

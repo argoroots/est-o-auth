@@ -1,5 +1,5 @@
 <script setup>
-import { authenticate, ErrorCode } from '@web-eid/web-eid-library/web-eid.js'
+import { authenticate, ErrorCode } from '@web-eid/web-eid-library/web-eid'
 
 const props = defineProps({
   nonce: { type: String, required: true }

@@ -7,6 +7,8 @@
 </template>
 
 <style scoped>
+@reference "~/assets/tailwind.css";
+
 #blobs {
   @apply relative;
   @apply top-20;

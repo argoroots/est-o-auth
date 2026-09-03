@@ -93,6 +93,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9</pre>
 </template>
 
 <style scoped>
+@reference "~/assets/tailwind.css";
+
 ol {
   @apply list-decimal;
 }

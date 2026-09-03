@@ -19,7 +19,7 @@ export default defineEventHandler((event) => {
       provider: decodedToken.provider
     }
   }
-  catch (e) {
+  catch {
     throw createError({ statusCode: 401, statusMessage: 'Invalid token' })
   }
 })

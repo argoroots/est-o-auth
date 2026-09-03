@@ -36,6 +36,8 @@ const allowedMethods = computed(() => methods.filter((m) => client.value?.provid
 </template>
 
 <style scoped>
+@reference "~/assets/tailwind.css";
+
 nav {
   @apply flex;
   @apply flex-col;
