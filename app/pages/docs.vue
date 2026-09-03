@@ -10,7 +10,7 @@ useHead({ title: 'Documentation' })
         Read our <a href="/terms">Terms & Conditions</a>.
       </li>
       <li>
-        <a href="mailto:argo@roots.ee?subject=How to start with OAuth.ee?">Make request</a> to get <em>client_id</em> and <em>client_secret</em>. You need those on later steps.
+        <a href="/api/signup">Sign up</a> to get <em>client_id</em> and <em>client_secret</em>. You need those on later steps.
       </li>
       <li>
         <p>Redirect user to one of the following url:</p>
@@ -89,6 +89,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9</pre>
 }</pre>
       </li>
     </ol>
+    <p>
+      Questions or problems? Write to <a href="mailto:argo@roots.ee?subject=OAuth.ee">argo@roots.ee</a>.
+    </p>
   </section>
 </template>
 
@@ -103,7 +106,7 @@ ol > li {
   @apply mb-8;
 }
 
-li a {
+section a {
   @apply text-red-900;
 }
 

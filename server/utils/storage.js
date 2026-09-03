@@ -139,6 +139,32 @@ export async function getUsage (client) {
   return result
 }
 
+export async function saveClient ({ id, secret, skidText, providers, redirectUris, stripeId }) {
+  const command = {
+    TableName: 'oauth-clients',
+    Item: {
+      id: { S: id },
+      secret: { S: secret },
+      skidText: { S: skidText },
+      providers: { SS: providers },
+      stripeId: { S: stripeId },
+      created: { S: new Date().toISOString() }
+    },
+    ConditionExpression: 'attribute_not_exists(id)'
+  }
+
+  if (redirectUris?.length) command.Item.redirectUris = { SS: redirectUris }
+
+  try {
+    await dynamodb.send(new PutItemCommand(command))
+  }
+  catch (error) {
+    if (error.name === 'ConditionalCheckFailedException') throw createError({ statusCode: 409, statusMessage: 'Client already created' })
+
+    throw error
+  }
+}
+
 export async function getClientConfig (client) {
   if (!client) return
 

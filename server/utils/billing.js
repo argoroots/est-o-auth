@@ -1,6 +1,81 @@
 import Stripe from 'stripe'
 
-const { stripeKey } = useRuntimeConfig()
+const { stripeKey, url } = useRuntimeConfig()
+
+// Display order of providers in Checkout
+const PROVIDERS = ['id-card', 'mobile-id', 'smart-id', 'e-mail', 'phone', 'google', 'apple']
+
+// Returns { priceId: 'smart-id', ... } for active recurring prices attached to a meter named oauth_<provider>
+async function getProviderPrices () {
+  const { billing, prices } = new Stripe(stripeKey)
+
+  const meters = await billing.meters.list({ status: 'active', limit: 100 })
+  const providerByMeter = Object.fromEntries(
+    meters.data
+      .filter((meter) => meter.event_name.startsWith('oauth_'))
+      .map((meter) => [meter.id, meter.event_name.substring(6)])
+  )
+
+  const allPrices = await prices.list({ active: true, type: 'recurring', limit: 100 })
+
+  return Object.fromEntries(
+    allPrices.data
+      .filter((price) => providerByMeter[price.recurring?.meter])
+      .map((price) => [price.id, providerByMeter[price.recurring.meter]])
+  )
+}
+
+export async function createCheckoutSession () {
+  const { checkout } = new Stripe(stripeKey)
+  const providerByPrice = await getProviderPrices()
+  const order = (priceId) => PROVIDERS.indexOf(providerByPrice[priceId])
+  const priceIds = Object.keys(providerByPrice).sort((a, b) => order(a) - order(b))
+
+  if (priceIds.length === 0) throw createError({ statusCode: 500, statusMessage: 'No OAuth prices found in Stripe' })
+
+  const session = await checkout.sessions.create({
+    mode: 'subscription',
+    line_items: priceIds.map((price) => ({ price })),
+    custom_fields: [
+      {
+        key: 'service_name',
+        label: { type: 'custom', custom: 'Service name (shown to users on login)' },
+        type: 'text',
+        text: { maximum_length: 60 }
+      },
+      {
+        key: 'redirect_uri',
+        label: { type: 'custom', custom: 'OAuth redirect URL' },
+        type: 'text',
+        text: { maximum_length: 255 }
+      }
+    ],
+    success_url: `${url}/signup?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${url}/signup`
+  })
+
+  return session.url
+}
+
+export async function getCheckoutSession (id) {
+  const { checkout } = new Stripe(stripeKey)
+
+  const session = await checkout.sessions.retrieve(id, { expand: ['line_items'] })
+  const field = (key) => session.custom_fields?.find((f) => f.key === key)?.text?.value?.trim()
+
+  const providerByPrice = await getProviderPrices()
+  const providers = (session.line_items?.data ?? [])
+    .map((item) => providerByPrice[item.price?.id])
+    .filter(Boolean)
+
+  return {
+    status: session.status,
+    customer: session.customer,
+    name: field('service_name') || session.customer_details?.name,
+    redirectUri: field('redirect_uri'),
+    providers
+  }
+}
 
 export async function setBillingUsage (stripeId, provider) {
   if (!stripeId) return

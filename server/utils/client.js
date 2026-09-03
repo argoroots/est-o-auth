@@ -9,7 +9,7 @@ export async function checkRequest (data, provider, params = []) {
   const client = await getClientConfig(data.client_id)
 
   if (provider && !client.providers.includes(provider)) throw createError({ statusCode: 400, statusMessage: 'The authentication provider do not match a registered authentication provider!' })
-  // if (!redirectUri) throw createError({ statusCode: 400, statusMessage: 'The redirect URI (redirect_uri) do not match a registered redirect URI!' })
+  if (data.redirect_uri && client.redirectUris?.length && !client.redirectUris.includes(data.redirect_uri)) throw createError({ statusCode: 400, statusMessage: 'The redirect URI (redirect_uri) do not match a registered redirect URI!' })
 }
 
 export async function getClient ({ client_id: clientId }) {
