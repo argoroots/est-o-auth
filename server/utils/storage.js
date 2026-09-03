@@ -11,6 +11,17 @@ const dynamodb = new DynamoDBClient({
   }
 })
 
+// Hard cap of authentications per client per calendar month
+const MONTHLY_LIMITS = {
+  apple: undefined,
+  google: undefined,
+  'smart-id': 1000,
+  'mobile-id': 1000,
+  'id-card': 1000,
+  'e-mail': 100000,
+  phone: 1000
+}
+
 export async function setSessionData (id, data) {
   const command = {
     TableName: 'oauth-session',
@@ -80,6 +91,27 @@ export async function setUsage (client, provider) {
 
   config.Key.date.S = `${provider}-${now}`
   await dynamodb.send(new UpdateItemCommand(config))
+}
+
+export async function checkUsageLimit (client, provider) {
+  const limit = MONTHLY_LIMITS[provider]
+
+  if (!limit) return
+
+  const month = new Date().toISOString().substring(0, 7)
+  const command = {
+    TableName: 'oauth-usage',
+    Key: { client: { S: client }, date: { S: `${provider}-${month}` } }
+  }
+
+  const { Item } = await dynamodb.send(new GetItemCommand(command))
+  const used = parseInt(Item?.requests?.N ?? '0')
+
+  if (used < limit) return
+
+  console.warn(`[limit] client ${client} reached monthly limit of ${limit} ${provider} authentications (${used})`)
+
+  throw createError({ statusCode: 429, statusMessage: 'Something went wrong' })
 }
 
 export async function getUsage (client) {

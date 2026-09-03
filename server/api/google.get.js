@@ -6,6 +6,9 @@ export default defineEventHandler(async (event) => {
   await checkRequest(query, 'google', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state'])
 
   const client = await getClient(query)
+
+  await checkUsageLimit(client.id, 'google')
+
   const config = useRuntimeConfig()
 
   const search = new URLSearchParams({

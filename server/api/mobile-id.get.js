@@ -8,6 +8,8 @@ export default defineEventHandler(async (event) => {
   const client = await getClient(query)
   const session = randomUUID().replaceAll('-', '')
 
+  await checkUsageLimit(client.id, 'mobile-id')
+
   const { skSession, consent } = await startMidSession(query.idcode, query.phone, client.skidText)
 
   await setSessionData(`mobile-id:${query.idcode}:${session}`, {

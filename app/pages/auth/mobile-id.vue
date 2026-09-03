@@ -36,7 +36,16 @@ async function onStartSession () {
 
   if (!idcode.value || !phone.value) return
 
-  const data = await $fetch('/api/mobile-id', { query: { ...query, idcode: idcode.value, phone: phone.value } })
+  let data
+
+  try {
+    data = await $fetch('/api/mobile-id', { query: { ...query, idcode: idcode.value, phone: phone.value } })
+  }
+  catch {
+    isSending.value = false
+    isError.value = true
+    return
+  }
 
   isSending.value = false
 

@@ -17,13 +17,16 @@ async function onStartSession () {
 
   isSending.value = true
 
-  const data = await $fetch('/api/e-mail', { query: { ...query, email: email.value } })
+  try {
+    const data = await $fetch('/api/e-mail', { query: { ...query, email: email.value } })
+
+    if (data.sent) isEmailSent.value = true
+  }
+  catch {
+    isError.value = true
+  }
 
   isSending.value = false
-
-  if (data.sent) {
-    isEmailSent.value = true
-  }
 }
 
 async function onAuthenticate () {
@@ -65,6 +68,12 @@ async function onAuthenticate () {
         autofocus
         @keypress.enter="onStartSession"
       />
+      <p
+        v-if="isError"
+        class="text-red-700"
+      >
+        Something went wrong. Please try again.
+      </p>
       <form-button @click="onStartSession">
         Authenticate
       </form-button>

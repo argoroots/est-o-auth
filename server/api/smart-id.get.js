@@ -11,6 +11,8 @@ export default defineEventHandler(async (event) => {
   const origin = getRequestURL(event).origin
   const initialCallbackUrl = `${origin}/api/smart-id-callback?session=${session}&value=${callbackValue}`
 
+  await checkUsageLimit(client.id, 'smart-id')
+
   const result = await startSidSession(client.skidText, initialCallbackUrl)
 
   await setSessionData(`smart-id:${session}`, {

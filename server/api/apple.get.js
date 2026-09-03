@@ -6,6 +6,9 @@ export default defineEventHandler(async (event) => {
   await checkRequest(query, 'apple', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state'])
 
   const client = await getClient(query)
+
+  await checkUsageLimit(client.id, 'apple')
+
   const config = useRuntimeConfig()
 
   const search = new URLSearchParams({

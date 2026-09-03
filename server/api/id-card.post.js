@@ -7,6 +7,8 @@ export default defineEventHandler(async (event) => {
 
   const client = await getClient(body)
 
+  await checkUsageLimit(client.id, 'id-card')
+
   const certBuffer = Buffer.from(body.unverifiedCertificate, 'base64')
   const cert = new X509Certificate(certBuffer)
   const userInfo = Object.fromEntries(cert.subject.split('\n').map((x) => x.split('=')))

@@ -6,6 +6,9 @@ export default defineEventHandler(async (event) => {
   await checkRequest(query, 'e-mail', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state'])
 
   const client = await getClient(query)
+
+  await checkUsageLimit(client.id, 'e-mail')
+
   const config = useRuntimeConfig()
   const [testEmail, testCode] = config.testUser?.split(':') ?? []
   const isTestUser = testEmail && testCode && query.email === testEmail
