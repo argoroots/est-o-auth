@@ -33,9 +33,14 @@ export async function createCheckoutSession () {
 
   if (priceIds.length === 0) throw createError({ statusCode: 500, statusMessage: 'No OAuth prices found in Stripe' })
 
+  // Align billing periods to calendar months: first invoice on the 1st of next month (UTC)
+  const now = new Date()
+  const billingCycleAnchor = Math.floor(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1) / 1000)
+
   const session = await checkout.sessions.create({
     mode: 'subscription',
     line_items: priceIds.map((price) => ({ price })),
+    subscription_data: { billing_cycle_anchor: billingCycleAnchor },
     custom_fields: [
       {
         key: 'service_name',
