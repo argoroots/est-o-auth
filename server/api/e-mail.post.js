@@ -3,7 +3,7 @@ export default defineEventHandler(async (event) => {
 
   await checkRequest(body, 'e-mail', ['email', 'code'])
 
-  const emailSession = await getSessionData(`email:${body.email}:${body.code}`, true, SESSION_TTL.OTP)
+  const emailSession = isEmail(body.email) ? await verifyOtp(`email:${body.email}`, body.code) : undefined
 
   if (!emailSession) throw createError({ statusCode: 403, statusMessage: 'Invalid e-mail or code' })
 

@@ -22,12 +22,22 @@ const MONTHLY_LIMITS = {
   phone: 1000
 }
 
-export async function setSessionData (id, data) {
+// Per-target rate limit: rejects with 429 if the key was used within windowMs, otherwise records the use.
+export async function checkCooldown (key, windowMs) {
+  if (await getSessionData(`cooldown:${key}`, false, windowMs)) {
+    throw createError({ statusCode: 429, statusMessage: 'Please wait before trying again' })
+  }
+
+  await setSessionData(`cooldown:${key}`, {})
+}
+
+// Stores a session. Pass createdAt (ms) when rewriting an existing session so its expiry is not extended.
+export async function setSessionData (id, data, createdAt = Date.now()) {
   const command = {
     TableName: 'oauth-session',
     Item: {
       id: { S: id },
-      created: { S: new Date().toISOString() },
+      created: { S: new Date(createdAt).toISOString() },
       data: { S: JSON.stringify(data) }
     }
   }

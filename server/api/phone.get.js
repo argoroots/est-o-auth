@@ -5,14 +5,15 @@ export default defineEventHandler(async (event) => {
 
   await checkRequest(query, 'phone', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'phone'])
 
+  if (!isPhone(query.phone)) throw createError({ statusCode: 400, statusMessage: 'Invalid phone number' })
+
   const client = await getClient(query)
 
   await checkUsageLimit(client.id, 'phone')
 
   const config = useRuntimeConfig()
-  const code = String(Math.round(Math.random() * 1000000)).padStart(6, '0')
 
-  await setSessionData(`phone:${query.phone}:${code}`, {
+  const code = await createOtp(`phone:${query.phone}`, {
     client_id: client.id,
     redirect_uri: query.redirect_uri,
     state: query.state,

@@ -3,7 +3,7 @@ export default defineEventHandler(async (event) => {
 
   await checkRequest(body, 'phone', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'phone', 'code'])
 
-  const phoneSession = await getSessionData(`phone:${body.phone}:${body.code}`, true, SESSION_TTL.OTP)
+  const phoneSession = isPhone(body.phone) ? await verifyOtp(`phone:${body.phone}`, body.code) : undefined
 
   if (!phoneSession) throw createError({ statusCode: 403, statusMessage: 'Invalid phone or code' })
 

@@ -10,6 +10,9 @@ export default defineEventHandler(async (event) => {
 
   await checkUsageLimit(client.id, 'mobile-id')
 
+  // Starting a session prompts the phone of the person with this ID code; one prompt per minute per person
+  await checkCooldown(`mobile-id:${query.idcode}`, 60 * 1000)
+
   const { skSession, consent, message } = await startMidSession(query.idcode, query.phone, client.skidText)
 
   await setSessionData(`mobile-id:${query.idcode}:${session}`, {
