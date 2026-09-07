@@ -31,6 +31,10 @@ export async function checkCooldown (key, windowMs) {
   await setSessionData(`cooldown:${key}`, {})
 }
 
+// DynamoDB TTL (epoch seconds in the `ttl` attribute; enable TTL on oauth-session with that attribute name).
+// Logical expiry is enforced on read via SESSION_TTL; this only governs physical cleanup.
+const SESSION_ITEM_TTL_S = 24 * 60 * 60
+
 // Stores a session. Pass createdAt (ms) when rewriting an existing session so its expiry is not extended.
 export async function setSessionData (id, data, createdAt = Date.now()) {
   const command = {
@@ -38,6 +42,7 @@ export async function setSessionData (id, data, createdAt = Date.now()) {
     Item: {
       id: { S: id },
       created: { S: new Date(createdAt).toISOString() },
+      ttl: { N: String(Math.floor(createdAt / 1000) + SESSION_ITEM_TTL_S) },
       data: { S: JSON.stringify(data) }
     }
   }
@@ -95,31 +100,24 @@ export async function getToken (code, clientId, redirectUri, expiresIn) {
   return jwt.sign(user, config.jwtSecret, { expiresIn, notBefore: 0, subject: user.email || user.id })
 }
 
+// Increments the year, month and day counters for the client and provider, and writes one row per
+// request. Usage rows are kept indefinitely (statistics).
 export async function setUsage (client, provider) {
-  const config = {
+  const now = new Date().toISOString()
+  const counter = (date) => new UpdateItemCommand({
     TableName: 'oauth-usage',
-    Key: { client: { S: client }, date: {} },
+    Key: { client: { S: client }, date: { S: `${provider}-${date}` } },
     UpdateExpression: 'SET requests = if_not_exists(requests, :zero) + :one',
     ExpressionAttributeValues: {
       ':zero': { N: '0' },
       ':one': { N: '1' }
-    },
-    ReturnValues: 'UPDATED_NEW'
-  }
+    }
+  })
 
-  const now = new Date().toISOString()
-
-  config.Key.date.S = `${provider}-${now.substring(0, 4)}`
-  await dynamodb.send(new UpdateItemCommand(config))
-
-  config.Key.date.S = `${provider}-${now.substring(0, 7)}`
-  await dynamodb.send(new UpdateItemCommand(config))
-
-  config.Key.date.S = `${provider}-${now.substring(0, 10)}`
-  await dynamodb.send(new UpdateItemCommand(config))
-
-  config.Key.date.S = `${provider}-${now}`
-  await dynamodb.send(new UpdateItemCommand(config))
+  await dynamodb.send(counter(now.substring(0, 4)))
+  await dynamodb.send(counter(now.substring(0, 7)))
+  await dynamodb.send(counter(now.substring(0, 10)))
+  await dynamodb.send(counter(now))
 }
 
 export async function checkUsageLimit (client, provider) {
