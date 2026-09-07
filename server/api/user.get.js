@@ -7,7 +7,8 @@ export default defineEventHandler((event) => {
 
   if (!headers.authorization && !query.access_token) throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
 
-  const token = query.access_token || headers.authorization.replace('Bearer ', '')
+  // Header is the documented preference; the query parameter is kept for existing integrations
+  const token = headers.authorization?.replace(/^Bearer\s+/i, '') || query.access_token
 
   try {
     const decodedToken = jwt.verify(token, config.jwtSecret)

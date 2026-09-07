@@ -20,11 +20,10 @@ export default defineEventHandler(async (event) => {
     }
   })
 
+  // Token in the header, not the URL, so it never lands in a logged request URL
   const profile = await $fetch('https://people.googleapis.com/v1/people/me', {
-    query: {
-      personFields: 'names,emailAddresses',
-      access_token: accessToken
-    }
+    query: { personFields: 'names,emailAddresses' },
+    headers: { Authorization: `Bearer ${accessToken}` }
   })
 
   const code = await saveUser({
