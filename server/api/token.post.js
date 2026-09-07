@@ -7,10 +7,7 @@ export default defineEventHandler(async (event) => {
 
   const client = await getClient(body)
 
-  if (body?.grant_type !== 'authorization_code') throw createError({ statusCode: 400, statusMessage: 'Parameter grant_type must be "authorization_code"' })
-  if (!body?.client_id) throw createError({ statusCode: 400, statusMessage: 'Parameter client_id is required' })
-  if (!body?.client_secret) throw createError({ statusCode: 400, statusMessage: 'Parameter client_secret is required' })
-  if (!body?.code) throw createError({ statusCode: 400, statusMessage: 'Parameter code is required' })
+  if (body.grant_type !== 'authorization_code') throw createError({ statusCode: 400, statusMessage: 'Parameter grant_type must be "authorization_code"' })
 
   const validSecret = await bcrypt.compare(body.client_secret, client.secret)
 
