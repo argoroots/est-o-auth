@@ -2,11 +2,9 @@
 // provider when known, then the message. 4xx are warnings (client mistakes, limits, abuse); 5xx get
 // the stack. Never the whole error object: ofetch errors embed request and response bodies, which for
 // SK calls contain ID codes and phone numbers.
-const PROVIDERS = ['apple', 'google', 'smart-id', 'mobile-id', 'id-card', 'e-mail', 'phone']
-
 async function requestContext (event) {
   const path = event?.path?.split('?')[0] ?? 'unknown'
-  const provider = PROVIDERS.find((p) => path.startsWith(`/api/${p}`) || path.startsWith(`/auth/${p}`))
+  const provider = PROVIDER_IDS.find((p) => path.startsWith(`/api/${p}`) || path.startsWith(`/auth/${p}`))
 
   let clientId = getQuery(event)?.client_id
 

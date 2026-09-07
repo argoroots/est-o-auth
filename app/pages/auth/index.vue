@@ -5,15 +5,17 @@ definePageMeta({ middleware: ['check-query'] })
 
 const { query } = useRoute()
 
-const methods = [
-  { id: 'apple', icon: IconApple },
-  { id: 'google', icon: IconGoogle },
-  { id: 'smart-id', icon: IconSmartId },
-  { id: 'mobile-id', icon: IconMobileId },
-  { id: 'id-card', icon: IconIdCard },
-  { id: 'e-mail', icon: IconEmail },
-  { id: 'phone', icon: IconChat }
-]
+const icons = {
+  apple: IconApple,
+  google: IconGoogle,
+  'smart-id': IconSmartId,
+  'mobile-id': IconMobileId,
+  'id-card': IconIdCard,
+  'e-mail': IconEmail,
+  phone: IconChat
+}
+
+const methods = PROVIDER_IDS.map((id) => ({ id, icon: icons[id] }))
 
 // Loaded by the check-query middleware
 const client = useState('client')

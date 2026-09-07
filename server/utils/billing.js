@@ -2,9 +2,6 @@ import Stripe from 'stripe'
 
 const { stripeKey, url } = useRuntimeConfig()
 
-// Display order of providers in Checkout
-const PROVIDERS = ['id-card', 'mobile-id', 'smart-id', 'e-mail', 'phone', 'google', 'apple']
-
 // Returns { priceId: 'smart-id', ... } for active recurring prices attached to a meter named oauth_<provider>
 async function getProviderPrices () {
   const { billing, prices } = new Stripe(stripeKey)
@@ -28,7 +25,7 @@ async function getProviderPrices () {
 export async function createCheckoutSession () {
   const { checkout } = new Stripe(stripeKey)
   const providerByPrice = await getProviderPrices()
-  const order = (priceId) => PROVIDERS.indexOf(providerByPrice[priceId])
+  const order = (priceId) => PROVIDER_IDS.indexOf(providerByPrice[priceId])
   const priceIds = Object.keys(providerByPrice).sort((a, b) => order(a) - order(b))
 
   if (priceIds.length === 0) throw createError({ statusCode: 500, statusMessage: 'No OAuth prices found in Stripe' })

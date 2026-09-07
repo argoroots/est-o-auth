@@ -1,15 +1,6 @@
 <script setup>
 definePageMeta({ layout: 'text', middleware: ['check-query'] })
 
-const providers = [
-  'apple',
-  'google',
-  'smart-id',
-  'mobile-id',
-  'id-card',
-  'e-mail',
-  'phone'
-]
 // Loaded by the check-query middleware
 const client = useState('client')
 
@@ -39,7 +30,7 @@ useHead({ title: client.value.client + ' usage' })
       this year
     </div>
     <template
-      v-for="p in providers"
+      v-for="p in PROVIDER_IDS"
       :key="p"
     >
       <div class="th border-r text-left! font-normal">

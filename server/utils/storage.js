@@ -11,17 +11,6 @@ const dynamodb = new DynamoDBClient({
   }
 })
 
-// Hard cap of authentications per client per calendar month
-const MONTHLY_LIMITS = {
-  apple: undefined,
-  google: undefined,
-  'smart-id': 1000,
-  'mobile-id': 1000,
-  'id-card': 1000,
-  'e-mail': 100000,
-  phone: 1000
-}
-
 // Per-target rate limit: rejects with 429 if the key was used within windowMs, otherwise records the use.
 export async function checkCooldown (key, windowMs) {
   if (await getSessionData(`cooldown:${key}`, false, windowMs)) {
@@ -123,7 +112,7 @@ export async function setUsage (client, provider) {
 }
 
 export async function checkUsageLimit (client, provider) {
-  const limit = MONTHLY_LIMITS[provider]
+  const limit = PROVIDERS.find((p) => p.id === provider)?.limit
 
   if (!limit) return
 
@@ -144,8 +133,6 @@ export async function checkUsageLimit (client, provider) {
 }
 
 export async function getUsage (client) {
-  const providers = ['apple', 'google', 'smart-id', 'mobile-id', 'id-card', 'e-mail', 'phone']
-
   // Counters are keyed by UTC date (see setUsage), so derive the periods in UTC as well
   const now = new Date()
   const utc = (y, m, d) => new Date(Date.UTC(y, m, d)).toISOString()
@@ -158,7 +145,7 @@ export async function getUsage (client) {
   }
 
   // One batch read for all provider x period counters (35 keys, well under the 100-key limit)
-  const keys = providers.flatMap((provider) => Object.values(periods).map((date) => ({
+  const keys = PROVIDER_IDS.flatMap((provider) => Object.values(periods).map((date) => ({
     client: { S: client },
     date: { S: `${provider}-${date}` }
   })))
@@ -169,7 +156,7 @@ export async function getUsage (client) {
   const result = {}
 
   for (const [period, date] of Object.entries(periods)) {
-    result[period] = Object.fromEntries(providers.map((provider) => [provider, counts[`${provider}-${date}`] ?? 0]))
+    result[period] = Object.fromEntries(PROVIDER_IDS.map((provider) => [provider, counts[`${provider}-${date}`] ?? 0]))
   }
 
   return result
