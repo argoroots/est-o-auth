@@ -3,7 +3,7 @@
     <header>
       <h1>
         <nuxt-link to="/">
-          <h1>OAuth.ee <span>by Argo Roots</span></h1>
+          OAuth.ee <span>by Argo Roots</span>
         </nuxt-link>
       </h1>
     </header>

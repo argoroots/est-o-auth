@@ -9,7 +9,7 @@ const { query } = useRoute()
       <header>
         <h1>
           <nuxt-link :to="query.client_id ? { path: '/auth', query } : '/'">
-            <h1>OAuth.ee <span>by Argo Roots</span></h1>
+            OAuth.ee <span>by Argo Roots</span>
           </nuxt-link>
         </h1>
       </header>
