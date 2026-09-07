@@ -1,4 +1,4 @@
-import { SNSClient, PublishCommand } from '@aws-sdk/client-sns'
+import { PublishCommand } from '@aws-sdk/client-sns'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
@@ -11,8 +11,6 @@ export default defineEventHandler(async (event) => {
 
   await checkUsageLimit(client.id, 'phone')
 
-  const config = useRuntimeConfig()
-
   const code = await createOtp(`phone:${query.phone}`, {
     client_id: client.id,
     redirect_uri: query.redirect_uri,
@@ -20,15 +18,7 @@ export default defineEventHandler(async (event) => {
     phone: query.phone
   })
 
-  const sns = new SNSClient({
-    region: config.awsRegion,
-    credentials: {
-      accessKeyId: config.awsId,
-      secretAccessKey: config.awsSecret
-    }
-  })
-
-  await sns.send(new PublishCommand({
+  await getSns().send(new PublishCommand({
     PhoneNumber: query.phone,
     Message: interpolate(getLocale(query.lang).phone.sms, { code })
   }))

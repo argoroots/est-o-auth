@@ -1,15 +1,8 @@
 import { randomUUID } from 'crypto'
-import { DynamoDBClient, BatchGetItemCommand, DeleteItemCommand, GetItemCommand, PutItemCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb'
+import { BatchGetItemCommand, DeleteItemCommand, GetItemCommand, PutItemCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb'
 import jwt from 'jsonwebtoken'
 
 const config = useRuntimeConfig()
-const dynamodb = new DynamoDBClient({
-  region: config.awsRegion,
-  credentials: {
-    accessKeyId: config.awsId,
-    secretAccessKey: config.awsSecret
-  }
-})
 
 // Per-target rate limit: rejects with 429 if the key was used within windowMs, otherwise records the use.
 export async function checkCooldown (key, windowMs) {
@@ -38,7 +31,7 @@ export async function setSessionData (id, data, createdAt = Date.now(), ttlSecon
     }
   }
 
-  await dynamodb.send(new PutItemCommand(command))
+  await getDynamo().send(new PutItemCommand(command))
 }
 
 // Maximum age of stored sessions, enforced on read regardless of table TTL
@@ -58,8 +51,8 @@ export async function getSessionData (id, deleteItem, maxAgeMs) {
   }
 
   const item = deleteItem
-    ? (await dynamodb.send(new DeleteItemCommand({ ...command, ReturnValues: 'ALL_OLD' }))).Attributes
-    : (await dynamodb.send(new GetItemCommand(command))).Item
+    ? (await getDynamo().send(new DeleteItemCommand({ ...command, ReturnValues: 'ALL_OLD' }))).Attributes
+    : (await getDynamo().send(new GetItemCommand(command))).Item
 
   if (!item) return
 
@@ -105,10 +98,10 @@ export async function setUsage (client, provider) {
     }
   })
 
-  await dynamodb.send(counter(now.substring(0, 4)))
-  await dynamodb.send(counter(now.substring(0, 7)))
-  await dynamodb.send(counter(now.substring(0, 10)))
-  await dynamodb.send(counter(now))
+  await getDynamo().send(counter(now.substring(0, 4)))
+  await getDynamo().send(counter(now.substring(0, 7)))
+  await getDynamo().send(counter(now.substring(0, 10)))
+  await getDynamo().send(counter(now))
 }
 
 export async function checkUsageLimit (client, provider) {
@@ -122,7 +115,7 @@ export async function checkUsageLimit (client, provider) {
     Key: { client: { S: client }, date: { S: `${provider}-${month}` } }
   }
 
-  const { Item } = await dynamodb.send(new GetItemCommand(command))
+  const { Item } = await getDynamo().send(new GetItemCommand(command))
   const used = parseInt(Item?.requests?.N ?? '0')
 
   if (used < limit) return
@@ -150,7 +143,7 @@ export async function getUsage (client) {
     date: { S: `${provider}-${date}` }
   })))
 
-  const { Responses } = await dynamodb.send(new BatchGetItemCommand({ RequestItems: { 'oauth-usage': { Keys: keys } } }))
+  const { Responses } = await getDynamo().send(new BatchGetItemCommand({ RequestItems: { 'oauth-usage': { Keys: keys } } }))
   const counts = Object.fromEntries((Responses?.['oauth-usage'] ?? []).map((item) => [item.date.S, parseInt(item.requests?.N ?? '0')]))
 
   const result = {}
@@ -179,7 +172,7 @@ export async function saveClient ({ id, secret, skidText, providers, redirectUri
   if (redirectUris?.length) command.Item.redirectUris = { SS: redirectUris }
 
   try {
-    await dynamodb.send(new PutItemCommand(command))
+    await getDynamo().send(new PutItemCommand(command))
   }
   catch (error) {
     if (error.name === 'ConditionalCheckFailedException') throw createError({ statusCode: 409, statusMessage: 'Client already created' })
@@ -203,7 +196,7 @@ export async function getClientConfig (client) {
     Key: { id: { S: client } }
   }
 
-  const { Item } = await dynamodb.send(new GetItemCommand(config))
+  const { Item } = await getDynamo().send(new GetItemCommand(config))
 
   if (!Item) return
 

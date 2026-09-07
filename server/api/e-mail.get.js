@@ -1,4 +1,4 @@
-import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses'
+import { SendEmailCommand } from '@aws-sdk/client-ses'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
@@ -26,15 +26,7 @@ export default defineEventHandler(async (event) => {
   const url = `${getOrigin(event)}/auth/e-mail?${search}`
   const { email: text } = getLocale(query.lang)
 
-  const ses = new SESClient({
-    region: config.awsRegion,
-    credentials: {
-      accessKeyId: config.awsId,
-      secretAccessKey: config.awsSecret
-    }
-  })
-
-  await ses.send(new SendEmailCommand({
+  await getSes().send(new SendEmailCommand({
     Source: config.emailFrom,
     Destination: {
       ToAddresses: [query.email]

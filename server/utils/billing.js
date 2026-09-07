@@ -1,10 +1,8 @@
-import Stripe from 'stripe'
-
-const { stripeKey, url } = useRuntimeConfig()
+const { url } = useRuntimeConfig()
 
 // Returns { priceId: 'smart-id', ... } for active recurring prices attached to a meter named oauth_<provider>
 async function getProviderPrices () {
-  const { billing, prices } = new Stripe(stripeKey)
+  const { billing, prices } = getStripe()
 
   const meters = await billing.meters.list({ status: 'active', limit: 100 })
   const providerByMeter = Object.fromEntries(
@@ -23,7 +21,7 @@ async function getProviderPrices () {
 }
 
 export async function createCheckoutSession () {
-  const { checkout } = new Stripe(stripeKey)
+  const { checkout } = getStripe()
   const providerByPrice = await getProviderPrices()
   const order = (priceId) => PROVIDER_IDS.indexOf(providerByPrice[priceId])
   const priceIds = Object.keys(providerByPrice).sort((a, b) => order(a) - order(b))
@@ -60,7 +58,7 @@ export async function createCheckoutSession () {
 }
 
 export async function getCheckoutSession (id) {
-  const { checkout } = new Stripe(stripeKey)
+  const { checkout } = getStripe()
 
   const session = await checkout.sessions.retrieve(id, { expand: ['line_items'] })
   const field = (key) => session.custom_fields?.find((f) => f.key === key)?.text?.value?.trim()
@@ -82,7 +80,7 @@ export async function getCheckoutSession (id) {
 export async function setBillingUsage (stripeId, provider) {
   if (!stripeId) return
 
-  const { billing } = new Stripe(stripeKey)
+  const { billing } = getStripe()
 
   return await billing.meterEvents.create({
     event_name: `oauth_${provider}`,
