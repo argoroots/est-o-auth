@@ -17,5 +17,25 @@ export async function validateRequest (data, provider, requiredParams = []) {
   if (!client) throw createError({ statusCode: 403, statusMessage: 'Invalid client_id' })
   if (provider && !client.providers?.includes(provider)) throw createError({ statusCode: 400, statusMessage: 'The authentication provider do not match a registered authentication provider!' })
 
+  // Not enforced yet: log what each client sends so registered URIs can be filled in first.
+  if (data.redirect_uri) {
+    const hasRegistered = client.redirectUris?.length > 0
+    const isRegistered = hasRegistered && client.redirectUris.some((r) => isRegisteredRedirect(r, data.redirect_uri))
+
+    console.info(`[redirect] client ${client.id} redirect_uri ${data.redirect_uri} registered=${isRegistered}${hasRegistered ? '' : ' (none configured)'}`)
+
+    // Enforcement, once every active client's redirectUris is filled in from the logs:
+    // if (hasRegistered && !isRegistered) throw createError({ statusCode: 400, statusMessage: 'The redirect URI (redirect_uri) do not match a registered redirect URI!' })
+  }
+
   return client
+}
+
+// Simple string comparison as RFC 6749 §3.1.2.3 and RFC 9700 require: the whole URI must equal the
+// registered one. Only a fragment is disregarded, since it never reaches a server and the RFC forbids
+// it in a redirect URI. Per-login data belongs in `state`, not in the redirect URI.
+function isRegisteredRedirect (registered, requested) {
+  const withoutFragment = (uri) => String(uri).split('#')[0]
+
+  return withoutFragment(registered) === withoutFragment(requested)
 }
