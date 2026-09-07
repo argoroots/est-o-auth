@@ -58,5 +58,13 @@
     "noApp": "Web eID rakendus ei ole paigaldatud.",
     "failed": "ID-kaardiga autentimine ebaõnnestus. Palun proovi uuesti.",
     "download": "ID-tarkvara saad alla laadida lehelt {link}."
+  },
+  "usage": {
+    "title": "kasutus",
+    "today": "täna",
+    "yesterday": "eile",
+    "month": "see kuu",
+    "lastMonth": "eelmine kuu",
+    "year": "see aasta"
   }
 }

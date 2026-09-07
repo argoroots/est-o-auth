@@ -58,5 +58,13 @@
     "noApp": "The Web eID application is not installed.",
     "failed": "ID-card authentication failed. Please try again.",
     "download": "You can download the ID-software from {link}."
+  },
+  "usage": {
+    "title": "usage",
+    "today": "today",
+    "yesterday": "yesterday",
+    "month": "this month",
+    "lastMonth": "last month",
+    "year": "this year"
   }
 }

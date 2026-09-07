@@ -8,33 +8,33 @@ function sum (data) {
   return Object.values(data).reduce((a, b) => a + b, 0)
 }
 
-useHead({ title: client.value.client + ' usage' })
+useHead({ title: `${client.value.client} ${useI18n().t('usage.title')}` })
 </script>
 
 <template>
   <div class="grid grid-cols-6">
     <div class="th" />
     <div class="th">
-      today
+      {{ $t('usage.today') }}
     </div>
     <div class="th">
-      yesterday
+      {{ $t('usage.yesterday') }}
     </div>
     <div class="th">
-      this month
+      {{ $t('usage.month') }}
     </div>
     <div class="th">
-      last month
+      {{ $t('usage.lastMonth') }}
     </div>
     <div class="th">
-      this year
+      {{ $t('usage.year') }}
     </div>
     <template
       v-for="p in PROVIDER_IDS"
       :key="p"
     >
       <div class="th border-r text-left! font-normal">
-        {{ p }}
+        {{ $t(`provider.${p}`) }}
       </div>
       <div class="tr border-r">
         {{ client.usage.today[p] || '' }}

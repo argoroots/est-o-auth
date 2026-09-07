@@ -58,5 +58,13 @@
     "noApp": "Web eID -sovellusta ei ole asennettu.",
     "failed": "ID-korttitunnistautuminen epäonnistui. Yritä uudelleen.",
     "download": "Voit ladata ID-ohjelmiston osoitteesta {link}."
+  },
+  "usage": {
+    "title": "käyttö",
+    "today": "tänään",
+    "yesterday": "eilen",
+    "month": "tämä kuukausi",
+    "lastMonth": "viime kuukausi",
+    "year": "tämä vuosi"
   }
 }
