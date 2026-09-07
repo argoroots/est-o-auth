@@ -28,7 +28,7 @@ Copy `.env.example` to `.env`. All values are read through Nuxt runtime config.
 | `NUXT_GOOGLE_ID`, `NUXT_GOOGLE_SECRET` | Google OAuth client. Redirect URI must be `NUXT_URL/api/google`. |
 | `NUXT_APPLE_ID`, `NUXT_APPLE_TEAM`, `NUXT_APPLE_SECRET` | Sign in with Apple service id, team id and private key. Redirect URI must be `NUXT_URL/api/apple`. |
 | `NUXT_STRIPE_KEY` | Stripe restricted key, see below. |
-| `NUXT_TEST_USER` | Optional `email:code` pair that always accepts that code for that e-mail. Leave unset in production. |
+| `NUXT_TEST_USER` | Optional `client_id:email:code`: for that client only, that e-mail always accepts that code. For testing; leave unset in production. |
 
 ## AWS
 

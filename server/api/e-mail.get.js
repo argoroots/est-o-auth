@@ -10,8 +10,9 @@ export default defineEventHandler(async (event) => {
   await checkUsageLimit(client.id, 'e-mail')
 
   const config = useRuntimeConfig()
-  const [testEmail, testCode] = config.testUser?.split(':') ?? []
-  const fixedCode = testEmail && testCode && query.email === testEmail ? testCode : undefined
+  // NUXT_TEST_USER=client_id:email:code fixes the code for that e-mail, on that client only
+  const [testClient, testEmail, testCode] = config.testUser?.split(':') ?? []
+  const fixedCode = testCode && client.id === testClient && query.email === testEmail ? testCode : undefined
 
   const code = await createOtp(`email:${query.email}`, {
     client_id: client.id,
