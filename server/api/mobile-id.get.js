@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
   // Starting a session prompts the phone of the person with this ID code; one prompt per minute per person
   await checkCooldown(`mobile-id:${query.idcode}`, 60 * 1000)
 
-  const { skSession, consent, message } = await startMidSession(query.idcode, query.phone, client.skidText)
+  const { skSession, consent, message } = await startMidSession(query.idcode, query.phone, client.skidText || getLocale(query.lang).common.logIn, getLocale(query.lang).mobileId.language)
 
   await setSessionData(`mobile-id:${query.idcode}:${session}`, {
     client_id: client.id,
@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
 })
 
 // Starts a Mobile-ID authentication session, per https://github.com/SK-EID/MID#authentication
-async function startMidSession (idcode, phone, displayText) {
+async function startMidSession (idcode, phone, displayText, language) {
   const config = useRuntimeConfig()
 
   // Mobile-ID signs the hash we send; keep the message so the signature can be verified later
@@ -48,9 +48,9 @@ async function startMidSession (idcode, phone, displayText) {
       phoneNumber: phone,
       hash: hash.toString('base64'),
       hashType: 'SHA256',
-      language: 'ENG',
+      language,
       // UCS-2 allows any characters (e.g. õ) at up to 50 characters
-      displayText: (displayText || 'Log in').substring(0, 50),
+      displayText: displayText.substring(0, 50),
       displayTextFormat: 'UCS-2'
     }
   })

@@ -24,6 +24,7 @@ export default defineEventHandler(async (event) => {
 
   const search = new URLSearchParams({ ...query, code }).toString()
   const url = `${getOrigin(event)}/auth/e-mail?${search}`
+  const { email: text } = getLocale(query.lang)
 
   const ses = new SESClient({
     region: config.awsRegion,
@@ -41,12 +42,12 @@ export default defineEventHandler(async (event) => {
     Message: {
       Subject: {
         Charset: 'UTF-8',
-        Data: 'Verification Code'
+        Data: text.mailSubject
       },
       Body: {
         Charset: 'UTF-8',
         Html: {
-          Data: `Your verification code is <strong>${code}</strong><br><br>... or just <a href="${url}">open this link</a>.`
+          Data: `${interpolate(text.mailCode, { code: `<strong>${code}</strong>` })}<br><br><a href="${url}">${text.mailLink}</a>`
         }
       }
     }

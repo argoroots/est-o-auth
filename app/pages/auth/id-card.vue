@@ -1,6 +1,6 @@
 <script setup>
 definePageMeta({ middleware: ['check-query', 'check-provider'] })
-useHead({ title: 'ID-Card' })
+useHead({ title: useI18n().t('provider.id-card') })
 
 const { query } = useRoute()
 
@@ -32,7 +32,7 @@ async function onAuthenticate (authResponse) {
       v-if="isError"
       class="text-red-700"
     >
-      Something went wrong. Please try again.
+      {{ $t('common.somethingWrong') }}
     </p>
     <web-eid
       v-else-if="nonceData"

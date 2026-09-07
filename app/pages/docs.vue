@@ -35,6 +35,7 @@ useHead({ title: 'Documentation' })
           <li>idcode - <em>only for <a href="/auth/mobile-id">/auth/mobile-id</a> and <a href="/auth/smart-id">/auth/smart-id</a></em></li>
           <li>phone - <em>only for <a href="/auth/mobile-id">/auth/mobile-id</a> and <a href="/auth/phone">/auth/phone</a></em></li>
           <li>email - <em>only for <a href="/auth/e-mail">/auth/e-mail</a></em></li>
+          <li>lang - <em>user interface language: "en" (default), "et" or "fi"</em></li>
         </ul>
         <pre>https://oauth.ee/auth?response_type=code&client_id=QVnPZGdcXQ8Ev4mx&redirect_uri=https://example.com/auth/callback&scope=openid&state=5600684163565994</pre>
         <p>

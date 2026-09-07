@@ -1,6 +1,6 @@
 <script setup>
 definePageMeta({ middleware: ['check-query', 'check-provider'] })
-useHead({ title: 'E-mail' })
+useHead({ title: useI18n().t('provider.e-mail') })
 
 const { query } = useRoute()
 const email = ref(query.email)
@@ -66,7 +66,7 @@ async function onAuthenticate () {
       <form-input
         id="email"
         v-model="email"
-        label="Email address"
+        :label="$t('email.label')"
         type="email"
         placeholder="jaak-kristjan@jõeorg.ee"
         autofocus
@@ -76,20 +76,20 @@ async function onAuthenticate () {
         v-if="isError"
         class="text-red-700"
       >
-        Something went wrong. Please try again.
+        {{ $t('common.somethingWrong') }}
       </p>
       <form-button @click="onStartSession">
-        Authenticate
+        {{ $t('common.authenticate') }}
       </form-button>
     </template>
 
     <template v-else>
-      <h2>Check Your inbox!</h2>
-      <p>We sent a verification code to e-mail address {{ email }}. Please enter it below or click a link in e-mail.</p>
+      <h2>{{ $t('email.checkInbox') }}</h2>
+      <p>{{ $t('email.sent', { email }) }}</p>
       <form-input
         id="code"
         v-model="code"
-        label="Verification Code"
+        :label="$t('code.label')"
         placeholder="123ABC"
         autofocus
         @keypress.enter="onAuthenticate"
@@ -98,10 +98,10 @@ async function onAuthenticate () {
         v-if="isError"
         class="text-red-700"
       >
-        Invalid verification code!
+        {{ $t('code.invalid') }}
       </p>
       <form-button @click="onAuthenticate">
-        Authenticate
+        {{ $t('common.authenticate') }}
       </form-button>
     </template>
   </form-wrapper>

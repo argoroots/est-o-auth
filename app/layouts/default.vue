@@ -20,7 +20,7 @@ const { query } = useRoute()
         <a
           href="/terms"
           target="_blank"
-        >Terms & Conditions</a>
+        >{{ $t('common.terms') }}</a>
       </footer>
     </section>
   </main>

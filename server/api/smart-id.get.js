@@ -12,12 +12,13 @@ export default defineEventHandler(async (event) => {
 
   await checkUsageLimit(client.id, 'smart-id')
 
-  const result = await startSidSession(client.skidText, initialCallbackUrl)
+  const result = await startSidSession(client.skidText || getLocale(query.lang).common.logIn, initialCallbackUrl)
 
   await setSessionData(`smart-id:${session}`, {
     client_id: client.id,
     redirect_uri: query.redirect_uri,
     state: query.state,
+    lang: getLocale(query.lang).smartId.language,
     skSession: result.skSession,
     sessionToken: result.sessionToken,
     sessionSecret: result.sessionSecret,
@@ -41,7 +42,7 @@ async function startSidSession (displayText60, initialCallbackUrl) {
   const rpChallenge = randomBytes(64).toString('base64')
 
   const interactionsArray = [
-    { type: 'displayTextAndPIN', displayText60: displayText60 || 'Log in' }
+    { type: 'displayTextAndPIN', displayText60 }
   ]
   const interactions = Buffer.from(JSON.stringify(interactionsArray)).toString('base64')
 

@@ -1,6 +1,6 @@
 <script setup>
 definePageMeta({ middleware: ['check-query', 'check-provider'] })
-useHead({ title: 'Google' })
+useHead({ title: useI18n().t('provider.google') })
 
 const { query } = useRoute()
 const { data } = await useFetch('/api/google', { query })
@@ -11,7 +11,7 @@ onMounted(async () => await navigateTo(data.value.url, { external: true }))
 <template>
   <form-wrapper>
     <p class="mt-4 text-center">
-      Redirecting to Google...
+      {{ $t('common.redirecting', { provider: 'Google' }) }}
     </p>
     <div class="pt-10 text-yellow-600">
       <svg

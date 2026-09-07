@@ -6,13 +6,13 @@ definePageMeta({ middleware: ['check-query'] })
 const { query } = useRoute()
 
 const methods = [
-  { id: 'apple', label: 'Apple', icon: IconApple },
-  { id: 'google', label: 'Google', icon: IconGoogle },
-  { id: 'smart-id', label: 'Smart-ID', icon: IconSmartId },
-  { id: 'mobile-id', label: 'Mobile-ID', icon: IconMobileId },
-  { id: 'id-card', label: 'ID-Card', icon: IconIdCard },
-  { id: 'e-mail', label: 'E-mail', icon: IconEmail },
-  { id: 'phone', label: 'Phone', icon: IconChat }
+  { id: 'apple', icon: IconApple },
+  { id: 'google', icon: IconGoogle },
+  { id: 'smart-id', icon: IconSmartId },
+  { id: 'mobile-id', icon: IconMobileId },
+  { id: 'id-card', icon: IconIdCard },
+  { id: 'e-mail', icon: IconEmail },
+  { id: 'phone', icon: IconChat }
 ]
 
 // Loaded by the check-query middleware
@@ -29,7 +29,7 @@ const allowedMethods = computed(() => methods.filter((m) => client.value?.provid
       :to="{ path: `/auth/${method.id}`, query }"
     >
       <component :is="method.icon" />
-      {{ method.label }}
+      {{ $t(`provider.${method.id}`) }}
     </nuxt-link>
   </nav>
 </template>

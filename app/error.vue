@@ -8,7 +8,7 @@ defineProps({
   <NuxtLayout>
     <form-wrapper>
       <h2>
-        Error
+        {{ $t('common.error') }}
       </h2>
       <p>
         {{ error.message }}

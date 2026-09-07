@@ -1,6 +1,6 @@
 <script setup>
 definePageMeta({ middleware: ['check-query', 'check-provider'] })
-useHead({ title: 'Phone' })
+useHead({ title: useI18n().t('provider.phone') })
 
 const { query } = useRoute()
 const phone = ref(query.phone)
@@ -73,7 +73,7 @@ async function onAuthenticate () {
         id="phone"
         v-model="phone"
         type="tel"
-        label="Phone"
+        :label="$t('phone.label')"
         placeholder="+37200000000"
         autofocus
         @keypress.enter="onStartSession"
@@ -82,20 +82,20 @@ async function onAuthenticate () {
         v-if="isError"
         class="text-red-700"
       >
-        Something went wrong. Please try again.
+        {{ $t('common.somethingWrong') }}
       </p>
       <form-button @click="onStartSession">
-        Authenticate
+        {{ $t('common.authenticate') }}
       </form-button>
     </template>
 
     <template v-else>
-      <h2>Check Your phone!</h2>
-      <p>We sent a verification code to phone number {{ phone }}. Please enter it below.</p>
+      <h2>{{ $t('phone.checkPhone') }}</h2>
+      <p>{{ $t('phone.sent', { phone }) }}</p>
       <form-input
         id="code"
         v-model="code"
-        label="Verification Code"
+        :label="$t('code.label')"
         placeholder="123ABC"
         autofocus
         @keypress.enter="onAuthenticate"
@@ -104,10 +104,10 @@ async function onAuthenticate () {
         v-if="isError"
         class="text-red-700"
       >
-        Invalid verification code!
+        {{ $t('code.invalid') }}
       </p>
       <form-button @click="onAuthenticate">
-        Authenticate
+        {{ $t('common.authenticate') }}
       </form-button>
     </template>
   </form-wrapper>

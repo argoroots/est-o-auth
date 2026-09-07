@@ -1,0 +1,62 @@
+{
+  "common": {
+    "authenticate": "Tunnistaudu",
+    "error": "Virhe",
+    "somethingWrong": "Jokin meni pieleen. Yritä uudelleen.",
+    "terms": "Käyttöehdot",
+    "redirecting": "Ohjataan palveluun {provider}...",
+    "logIn": "Kirjaudu sisään"
+  },
+  "provider": {
+    "apple": "Apple",
+    "google": "Google",
+    "smart-id": "Smart-ID",
+    "mobile-id": "Mobile-ID",
+    "id-card": "ID-kortti",
+    "e-mail": "Sähköposti",
+    "phone": "Puhelin"
+  },
+  "code": {
+    "label": "Vahvistuskoodi",
+    "invalid": "Virheellinen vahvistuskoodi!"
+  },
+  "email": {
+    "label": "Sähköpostiosoite",
+    "checkInbox": "Tarkista sähköpostisi!",
+    "sent": "Lähetimme vahvistuskoodin sähköpostiosoitteeseen {email}. Syötä se alle tai napsauta sähköpostissa olevaa linkkiä.",
+    "mailSubject": "Vahvistuskoodi",
+    "mailCode": "Vahvistuskoodisi on {code}",
+    "mailLink": "... tai avaa tämä linkki"
+  },
+  "phone": {
+    "label": "Puhelin",
+    "checkPhone": "Tarkista puhelimesi!",
+    "sent": "Lähetimme vahvistuskoodin puhelinnumeroon {phone}. Syötä se alle.",
+    "sms": "OAuth.ee-vahvistuskoodisi on {code}"
+  },
+  "mobileId": {
+    "idcode": "Henkilötunnus",
+    "checkDetails": "Jokin on vialla! Tarkista henkilötunnus ja puhelinnumero.",
+    "enterPin": "Syötä Mobile-ID PIN1 puhelimessasi, jos puhelimessa näkyvä tarkistuskoodi on sama kuin tässä.",
+    "language": "ENG"
+  },
+  "smartId": {
+    "scan": "Skannaa QR-koodi Smart-ID-sovelluksella tai napauta sitä avataksesi Smart-ID:n tällä laitteella.",
+    "keepOpen": "Pidä tämä sivu auki, kunnes tunnistautuminen on valmis.",
+    "starting": "Aloitetaan Smart-ID-istuntoa…",
+    "language": "eng"
+  },
+  "idCard": {
+    "insert": "Aseta ID-kortti kortinlukijaan ja seuraa näytön ohjeita.",
+    "timeout": "Tunnistautuminen aikakatkaistiin, yritä uudelleen.",
+    "pending": "Toinen Web eID -toiminto on jo käynnissä. Suorita se loppuun ja yritä uudelleen.",
+    "insecure": "ID-korttitunnistautuminen vaatii suojatun (HTTPS) yhteyden.",
+    "updateApp": "Web eID -sovellus on päivitettävä.",
+    "updateExtension": "Web eID -selainlaajennus on päivitettävä.",
+    "updateBoth": "Web eID -laajennuksen ja -sovelluksen versiot eivät täsmää. Päivitä molemmat.",
+    "noExtension": "Web eID -selainlaajennusta ei ole asennettu.",
+    "noApp": "Web eID -sovellusta ei ole asennettu.",
+    "failed": "ID-korttitunnistautuminen epäonnistui. Yritä uudelleen.",
+    "download": "Voit ladata ID-ohjelmiston osoitteesta {link}."
+  }
+}

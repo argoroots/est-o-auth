@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
 
   await sns.send(new PublishCommand({
     PhoneNumber: query.phone,
-    Message: `Your OAuth.ee verification code is ${code}`
+    Message: interpolate(getLocale(query.lang).phone.sms, { code })
   }))
 
   await setBillingUsage(client.stripeId, 'phone')

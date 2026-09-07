@@ -1,6 +1,6 @@
 <script setup>
 definePageMeta({ middleware: ['check-query', 'check-provider'] })
-useHead({ title: 'Smart-ID' })
+useHead({ title: useI18n().t('provider.smart-id') })
 
 const { query } = useRoute()
 const session = ref(null)
@@ -82,13 +82,13 @@ async function pollStatus () {
   <form-wrapper>
     <template v-if="isError">
       <p class="text-red-700">
-        Something went wrong. Please try again.
+        {{ $t('common.somethingWrong') }}
       </p>
     </template>
 
     <template v-else-if="qrUrl">
       <p>
-        Scan the QR code with your Smart-ID app, or tap it to open Smart-ID on this device.
+        {{ $t('smartId.scan') }}
       </p>
       <a
         :href="deviceLinkUrl"
@@ -97,13 +97,13 @@ async function pollStatus () {
         <qr-code :url="qrUrl" />
       </a>
       <p class="text-center text-sm text-gray-500">
-        Keep this page open until authentication is complete.
+        {{ $t('smartId.keepOpen') }}
       </p>
     </template>
 
     <template v-else>
       <p class="text-center text-gray-500">
-        Starting Smart-ID session…
+        {{ $t('smartId.starting') }}
       </p>
     </template>
   </form-wrapper>

@@ -1,6 +1,6 @@
 <script setup>
 definePageMeta({ middleware: ['check-query', 'check-provider'] })
-useHead({ title: 'Mobile-ID' })
+useHead({ title: useI18n().t('provider.mobile-id') })
 
 const { query } = useRoute()
 const idcode = ref(query.idcode)
@@ -92,7 +92,7 @@ async function onAuthenticate () {
         id="idcode"
         v-model="idcode"
         type="tel"
-        label="ID code"
+        :label="$t('mobileId.idcode')"
         placeholder="38001085718"
         autofocus
         @blur="validateIdcode"
@@ -103,7 +103,7 @@ async function onAuthenticate () {
         ref="phoneInput"
         v-model="phone"
         type="tel"
-        label="Phone"
+        :label="$t('phone.label')"
         placeholder="+37200000000"
         @blur="validatePhone"
         @keypress.enter="onStartSession"
@@ -112,16 +112,16 @@ async function onAuthenticate () {
         v-if="isError"
         class="text-red-700"
       >
-        Something is not right! Check ID code and Phone.
+        {{ $t('mobileId.checkDetails') }}
       </p>
       <form-button @click="onStartSession">
-        Authenticate
+        {{ $t('common.authenticate') }}
       </form-button>
     </template>
 
     <template v-else>
       <p>
-        Enter your Mobile-ID PIN1 on your phone, if you are convinced the control code shown on your device matches the one shown here.
+        {{ $t('mobileId.enterPin') }}
       </p>
       <p class="consent">
         {{ consent }}

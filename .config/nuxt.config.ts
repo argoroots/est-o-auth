@@ -9,7 +9,6 @@ export default defineNuxtConfig({
   ssr: false,
   app: {
     head: {
-      htmlAttrs: { lang: 'en' },
       meta: [
         { name: 'description', content: 'Use Estonian ID-card, Mobile-ID, Smart-ID or E-mail as OAuth authentication provider' },
         { name: 'keywords', content: 'oauth, authenticate, id-card, mobile-id, smart-id' }
@@ -56,8 +55,14 @@ export default defineNuxtConfig({
   },
   i18n: {
     vueI18n: '~~/.config/i18n.config.ts',
-    locales: ['en'],
+    locales: [
+      { code: 'en', language: 'en', file: 'en.json' },
+      { code: 'et', language: 'et', file: 'et.json' },
+      { code: 'fi', language: 'fi', file: 'fi.json' }
+    ],
     defaultLocale: 'en',
-    strategy: 'no_prefix'
+    // Language is chosen by the `lang` query parameter (app/middleware/locale.global.js), not by URL or browser
+    strategy: 'no_prefix',
+    detectBrowserLanguage: false
   }
 })

@@ -1,5 +1,7 @@
+// vue-i18n options only; locales, default locale and detection are configured in nuxt.config.ts
 export default defineI18nConfig(() => ({
-  defaultLocale: 'en',
+  legacy: false,
+  fallbackLocale: 'en',
   datetimeFormats: {
     en: {
       date: { year: 'numeric', month: '2-digit', day: '2-digit' },
@@ -8,9 +10,10 @@ export default defineI18nConfig(() => ({
     et: {
       date: { year: 'numeric', month: '2-digit', day: '2-digit' },
       datetime: { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }
+    },
+    fi: {
+      date: { year: 'numeric', month: '2-digit', day: '2-digit' },
+      datetime: { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }
     }
-  },
-  legacy: false,
-  locale: 'en',
-  fallbackLocale: 'en'
+  }
 }))

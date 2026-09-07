@@ -1,0 +1,62 @@
+{
+  "common": {
+    "authenticate": "Authenticate",
+    "error": "Error",
+    "somethingWrong": "Something went wrong. Please try again.",
+    "terms": "Terms & Conditions",
+    "redirecting": "Redirecting to {provider}...",
+    "logIn": "Log in"
+  },
+  "provider": {
+    "apple": "Apple",
+    "google": "Google",
+    "smart-id": "Smart-ID",
+    "mobile-id": "Mobile-ID",
+    "id-card": "ID-Card",
+    "e-mail": "E-mail",
+    "phone": "Phone"
+  },
+  "code": {
+    "label": "Verification Code",
+    "invalid": "Invalid verification code!"
+  },
+  "email": {
+    "label": "Email address",
+    "checkInbox": "Check Your inbox!",
+    "sent": "We sent a verification code to e-mail address {email}. Please enter it below or click a link in e-mail.",
+    "mailSubject": "Verification Code",
+    "mailCode": "Your verification code is {code}",
+    "mailLink": "... or just open this link"
+  },
+  "phone": {
+    "label": "Phone",
+    "checkPhone": "Check Your phone!",
+    "sent": "We sent a verification code to phone number {phone}. Please enter it below.",
+    "sms": "Your OAuth.ee verification code is {code}"
+  },
+  "mobileId": {
+    "idcode": "ID code",
+    "checkDetails": "Something is not right! Check ID code and Phone.",
+    "enterPin": "Enter your Mobile-ID PIN1 on your phone, if you are convinced the control code shown on your device matches the one shown here.",
+    "language": "ENG"
+  },
+  "smartId": {
+    "scan": "Scan the QR code with your Smart-ID app, or tap it to open Smart-ID on this device.",
+    "keepOpen": "Keep this page open until authentication is complete.",
+    "starting": "Starting Smart-ID session…",
+    "language": "eng"
+  },
+  "idCard": {
+    "insert": "Please insert your ID-card into the card reader and follow the instructions on the screen.",
+    "timeout": "Authentication timed out, please try again.",
+    "pending": "Another Web eID operation is already in progress. Please finish it and try again.",
+    "insecure": "ID-card authentication requires a secure (HTTPS) connection.",
+    "updateApp": "The Web eID application needs to be updated.",
+    "updateExtension": "The Web eID browser extension needs to be updated.",
+    "updateBoth": "The Web eID extension and application versions do not match. Please update both.",
+    "noExtension": "The Web eID browser extension is not installed.",
+    "noApp": "The Web eID application is not installed.",
+    "failed": "ID-card authentication failed. Please try again.",
+    "download": "You can download the ID-software from {link}."
+  }
+}

@@ -10,17 +10,17 @@ export default defineEventHandler(async (event) => {
 
   if (!sidSession) throw createError({ statusCode: 403, statusMessage: 'Invalid or expired session' })
 
-  const { sessionToken, sessionSecret, deviceLinkBase, rpChallenge, interactions, initialCallbackUrl, startTime } = sidSession
+  const { sessionToken, sessionSecret, deviceLinkBase, rpChallenge, interactions, initialCallbackUrl, startTime, lang = 'eng' } = sidSession
   const rpNameB64 = Buffer.from(config.skidName).toString('base64')
   const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000)
 
   // QR link — elapsedSeconds changes every second; initialCallbackUrl is always empty for QR authCode per spec
-  const qrBase = `${deviceLinkBase}?deviceLinkType=QR&elapsedSeconds=${elapsedSeconds}&sessionToken=${sessionToken}&sessionType=auth&version=1.0&lang=eng`
+  const qrBase = `${deviceLinkBase}?deviceLinkType=QR&elapsedSeconds=${elapsedSeconds}&sessionToken=${sessionToken}&sessionType=auth&version=1.0&lang=${lang}`
   const qrAuthCode = computeAuthCode(sessionSecret, `smart-id|ACSP_V2|${rpChallenge}|${rpNameB64}||${interactions}||${qrBase}`)
   const qrUrl = `${qrBase}&authCode=${qrAuthCode}`
 
   // Same-device Web2App link — includes initialCallbackUrl in authCode payload per spec
-  const webBase = `${deviceLinkBase}?deviceLinkType=Web2App&sessionToken=${sessionToken}&sessionType=auth&version=1.0&lang=eng`
+  const webBase = `${deviceLinkBase}?deviceLinkType=Web2App&sessionToken=${sessionToken}&sessionType=auth&version=1.0&lang=${lang}`
   const webAuthCode = computeAuthCode(sessionSecret, `smart-id|ACSP_V2|${rpChallenge}|${rpNameB64}||${interactions}|${initialCallbackUrl}|${webBase}`)
   const deviceLinkUrl = `${webBase}&authCode=${webAuthCode}`
 

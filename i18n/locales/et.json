@@ -1,0 +1,62 @@
+{
+  "common": {
+    "authenticate": "Sisene",
+    "error": "Viga",
+    "somethingWrong": "Midagi läks valesti. Palun proovi uuesti.",
+    "terms": "Kasutustingimused",
+    "redirecting": "Suunamine {provider} lehele...",
+    "logIn": "Sisene"
+  },
+  "provider": {
+    "apple": "Apple",
+    "google": "Google",
+    "smart-id": "Smart-ID",
+    "mobile-id": "Mobiil-ID",
+    "id-card": "ID-kaart",
+    "e-mail": "E-post",
+    "phone": "Telefon"
+  },
+  "code": {
+    "label": "Kinnituskood",
+    "invalid": "Vale kinnituskood!"
+  },
+  "email": {
+    "label": "E-posti aadress",
+    "checkInbox": "Vaata oma postkasti!",
+    "sent": "Saatsime kinnituskoodi e-posti aadressile {email}. Sisesta see allpool või klõpsa e-kirjas oleval lingil.",
+    "mailSubject": "Kinnituskood",
+    "mailCode": "Sinu kinnituskood on {code}",
+    "mailLink": "... või ava see link"
+  },
+  "phone": {
+    "label": "Telefon",
+    "checkPhone": "Vaata oma telefoni!",
+    "sent": "Saatsime kinnituskoodi telefoninumbrile {phone}. Sisesta see allpool.",
+    "sms": "Sinu OAuth.ee kinnituskood on {code}"
+  },
+  "mobileId": {
+    "idcode": "Isikukood",
+    "checkDetails": "Midagi on valesti! Kontrolli isikukoodi ja telefoninumbrit.",
+    "enterPin": "Sisesta telefonis Mobiil-ID PIN1, kui telefonis kuvatav kontrollkood on sama, mis siin.",
+    "language": "EST"
+  },
+  "smartId": {
+    "scan": "Skaneeri QR-kood Smart-ID rakendusega või puuduta seda, et avada Smart-ID selles seadmes.",
+    "keepOpen": "Hoia see leht avatuna, kuni autentimine on lõppenud.",
+    "starting": "Smart-ID sessiooni alustamine…",
+    "language": "est"
+  },
+  "idCard": {
+    "insert": "Sisesta ID-kaart kaardilugejasse ja järgi ekraanil kuvatavaid juhiseid.",
+    "timeout": "Autentimine aegus, palun proovi uuesti.",
+    "pending": "Teine Web eID toiming on juba pooleli. Lõpeta see ja proovi uuesti.",
+    "insecure": "ID-kaardiga autentimine nõuab turvalist (HTTPS) ühendust.",
+    "updateApp": "Web eID rakendust tuleb uuendada.",
+    "updateExtension": "Web eID brauserilaiendust tuleb uuendada.",
+    "updateBoth": "Web eID laienduse ja rakenduse versioonid ei ühti. Palun uuenda mõlemad.",
+    "noExtension": "Web eID brauserilaiendus ei ole paigaldatud.",
+    "noApp": "Web eID rakendus ei ole paigaldatud.",
+    "failed": "ID-kaardiga autentimine ebaõnnestus. Palun proovi uuesti.",
+    "download": "ID-tarkvara saad alla laadida lehelt {link}."
+  }
+}
