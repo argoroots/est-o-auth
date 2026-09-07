@@ -67,8 +67,10 @@ async function onAuthenticate () {
 </script>
 
 <template>
-  <form-wrapper v-if="!isSending">
-    <template v-if="!isPhoneSent">
+  <form-wrapper>
+    <form-spinner v-if="isSending" />
+
+    <template v-else-if="!isPhoneSent">
       <form-input
         id="phone"
         v-model="phone"

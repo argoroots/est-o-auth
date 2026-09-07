@@ -61,8 +61,10 @@ async function onAuthenticate () {
 </script>
 
 <template>
-  <form-wrapper v-if="!isSending">
-    <template v-if="!isEmailSent">
+  <form-wrapper>
+    <form-spinner v-if="isSending" />
+
+    <template v-else-if="!isEmailSent">
       <form-input
         id="email"
         v-model="email"

@@ -73,7 +73,8 @@ onMounted(async () => {
       </template>
     </i18n-t>
   </template>
-  <p v-else>
-    {{ $t('idCard.insert') }}
-  </p>
+  <template v-else>
+    <form-spinner />
+    <p>{{ $t('idCard.insert') }}</p>
+  </template>
 </template>

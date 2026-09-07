@@ -86,8 +86,10 @@ async function onAuthenticate () {
 </script>
 
 <template>
-  <form-wrapper v-if="!isSending">
-    <template v-if="!consent">
+  <form-wrapper>
+    <form-spinner v-if="isSending" />
+
+    <template v-else-if="!consent">
       <form-input
         id="idcode"
         v-model="idcode"

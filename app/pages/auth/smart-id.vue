@@ -102,6 +102,7 @@ async function pollStatus () {
     </template>
 
     <template v-else>
+      <form-spinner />
       <p class="text-center text-gray-500">
         {{ $t('smartId.starting') }}
       </p>
