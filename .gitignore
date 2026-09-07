@@ -1,5 +1,6 @@
 .cache
 .certs
+.claude
 .DS_Store
 .env
 .nitro
