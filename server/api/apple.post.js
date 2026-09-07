@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
-  await checkRequest(body, 'apple', ['state'])
+  await validateRequest(body, 'apple', ['state'])
 
   const config = useRuntimeConfig()
   const decodedState = verifyProviderState(body.state, config.jwtSecret)

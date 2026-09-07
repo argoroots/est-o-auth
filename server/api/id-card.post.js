@@ -1,9 +1,7 @@
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
-  await checkRequest(body, 'id-card', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'nonce'])
-
-  const client = await getClient(body)
+  const client = await validateRequest(body, 'id-card', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'nonce'])
 
   await checkUsageLimit(client.id, 'id-card')
 

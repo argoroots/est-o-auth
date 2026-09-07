@@ -1,7 +1,7 @@
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
-  await checkRequest(body, 'google', ['state'])
+  await validateRequest(body, 'google', ['state'])
 
   const config = useRuntimeConfig()
   const decodedState = verifyProviderState(body.state, config.jwtSecret)

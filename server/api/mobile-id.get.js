@@ -3,9 +3,7 @@ import { randomUUID, randomBytes, createHash } from 'crypto'
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
-  await checkRequest(query, 'mobile-id', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'idcode', 'phone'])
-
-  const client = await getClient(query)
+  const client = await validateRequest(query, 'mobile-id', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'idcode', 'phone'])
   const session = randomUUID().replaceAll('-', '')
 
   await checkUsageLimit(client.id, 'mobile-id')

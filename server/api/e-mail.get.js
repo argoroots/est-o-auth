@@ -3,11 +3,9 @@ import { SendEmailCommand } from '@aws-sdk/client-ses'
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
-  await checkRequest(query, 'e-mail', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'email'])
+  const client = await validateRequest(query, 'e-mail', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'email'])
 
   if (!isEmail(query.email)) throw createError({ statusCode: 400, statusMessage: 'Invalid e-mail address' })
-
-  const client = await getClient(query)
 
   await checkUsageLimit(client.id, 'e-mail')
 

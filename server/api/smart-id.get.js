@@ -3,9 +3,7 @@ import { randomUUID, randomBytes } from 'crypto'
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
-  await checkRequest(query, 'smart-id', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state'])
-
-  const client = await getClient(query)
+  const client = await validateRequest(query, 'smart-id', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state'])
   const session = randomUUID().replaceAll('-', '')
   const callbackValue = randomBytes(16).toString('base64url')
   const initialCallbackUrl = `${getOrigin(event)}/api/smart-id-callback?session=${session}&value=${callbackValue}`

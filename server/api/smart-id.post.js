@@ -1,8 +1,7 @@
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
-  await checkRequest(body, 'smart-id', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'session'])
-  await getClient(body)
+  await validateRequest(body, 'smart-id', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'session'])
 
   const sidSession = await getSessionData(`smart-id:${body.session}`, false, SESSION_TTL.SK)
 

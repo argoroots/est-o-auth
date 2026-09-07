@@ -1,9 +1,7 @@
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
-  await checkRequest(body, 'mobile-id', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'idcode', 'session'])
-
-  await getClient(body)
+  await validateRequest(body, 'mobile-id', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'idcode', 'session'])
 
   const midSession = await getSessionData(`mobile-id:${body.idcode}:${body.session}`, false, SESSION_TTL.SK)
 

@@ -3,9 +3,7 @@ import jwt from 'jsonwebtoken'
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
-  await checkRequest(query, 'google', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state'])
-
-  const client = await getClient(query)
+  const client = await validateRequest(query, 'google', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state'])
 
   await checkUsageLimit(client.id, 'google')
 

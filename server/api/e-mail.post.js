@@ -1,7 +1,7 @@
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
-  await checkRequest(body, 'e-mail', ['email', 'code'])
+  await validateRequest(body, 'e-mail', ['email', 'code'])
 
   const emailSession = isEmail(body.email) ? await verifyOtp(`email:${body.email}`, body.code) : undefined
 

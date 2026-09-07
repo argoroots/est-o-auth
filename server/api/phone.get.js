@@ -3,11 +3,9 @@ import { PublishCommand } from '@aws-sdk/client-sns'
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
-  await checkRequest(query, 'phone', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'phone'])
+  const client = await validateRequest(query, 'phone', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'phone'])
 
   if (!isPhone(query.phone)) throw createError({ statusCode: 400, statusMessage: 'Invalid phone number' })
-
-  const client = await getClient(query)
 
   await checkUsageLimit(client.id, 'phone')
 
