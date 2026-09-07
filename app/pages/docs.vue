@@ -70,9 +70,16 @@ Content-Length: 165
         <p>Response contains <em>access_token</em> what You need to get user information.</p>
         <pre>{
   "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
-  "expires_in": 3600,
   "token_type": "Bearer",
-  "state": "5600684163565994"
+  "expires_in": 3600
+}</pre>
+        <p>
+          On failure the response is 400 (or 401 for a wrong <em>client_secret</em>) with the standard OAuth error body,
+          e.g. <em>invalid_client</em>, <em>invalid_grant</em> or <em>invalid_request</em>.
+        </p>
+        <pre>{
+  "error": "invalid_grant",
+  "error_description": "Authorization code is invalid, expired, already used, or was issued to another client or redirect_uri"
 }</pre>
       </li>
       <li>
