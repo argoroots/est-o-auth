@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
   // Web2App flow completes via the callback endpoint, not here
   if (skResponse.signature?.flowType === 'Web2App') return { status: 'RUNNING' }
 
-  const idcode = verifyAndExtractIdentity(skResponse, sidSession)
+  const idcode = await verifyAndExtractIdentity(skResponse, sidSession)
 
   await getSessionData(`smart-id:${body.session}`, true)
 

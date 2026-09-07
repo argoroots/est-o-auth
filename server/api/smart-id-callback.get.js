@@ -42,7 +42,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 403, statusMessage: 'Invalid user challenge verifier' })
   }
 
-  const idcode = verifyAndExtractIdentity(skResponse, sidSession)
+  const idcode = await verifyAndExtractIdentity(skResponse, sidSession)
 
   await getSessionData(`smart-id:${session}`, true)
 

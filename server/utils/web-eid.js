@@ -7,36 +7,11 @@ import * as pkijs from 'pkijs'
 const DISALLOWED_POLICY_PREFIXES = ['1.3.6.1.4.1.10015.1.3']
 const CERTIFICATE_POLICIES_OID = '2.5.29.32'
 
-// Trusted issuers of Estonian ID-card authentication certificates (PEM files in server/assets/certs)
-// with SK's public AIA OCSP responder for each, pinned rather than read from the user certificate
-const TRUSTED_ISSUERS = [
-  { file: 'esteid2018.pem.crt', ocsp: 'http://aia.sk.ee/esteid2018' },
-  { file: 'ESTEID-SK_2015.pem.crt', ocsp: 'http://aia.sk.ee/esteid2015' }
-]
-
 // OID for TLS Web Client Authentication extended key usage
 const CLIENT_AUTH_OID = '1.3.6.1.5.5.7.3.2'
 
 // Nonce validity window
 export const WEB_EID_NONCE_TTL_MS = 5 * 60 * 1000
-
-let issuerCerts
-
-async function getIssuerCerts () {
-  if (issuerCerts) return issuerCerts
-
-  const storage = useStorage('assets:server')
-
-  issuerCerts = await Promise.all(TRUSTED_ISSUERS.map(async ({ file, ocsp }) => {
-    const pem = await storage.getItem(`certs/${file}`)
-
-    if (!pem) throw new Error(`Missing trusted issuer certificate ${file}`)
-
-    return { cert: new X509Certificate(pem), ocsp }
-  }))
-
-  return issuerCerts
-}
 
 function fail (message) {
   return createError({ statusCode: 400, statusMessage: message })
@@ -75,17 +50,11 @@ export async function verifyWebEidToken (token, nonce, origin) {
     throw fail('Invalid certificate')
   }
 
-  const now = new Date()
-
-  if (now < new Date(cert.validFrom)) throw fail('Certificate is not yet valid')
-  if (now > new Date(cert.validTo)) throw fail('Certificate is expired')
   if (!cert.keyUsage?.includes(CLIENT_AUTH_OID)) throw fail('Certificate is not for authentication')
   if (hasDisallowedPolicy(cert)) throw fail('Certificate policy is not allowed for ID-card authentication')
 
-  const issuers = await getIssuerCerts()
-  const issuer = issuers.find(({ cert: ca }) => cert.checkIssued(ca))
-
-  if (!issuer || !cert.verify(issuer.cert.publicKey)) throw fail('Certificate is not issued by a trusted authority')
+  // Validity period and chain to a pinned ID-card CA
+  const issuer = await checkTrustedCertificate(cert, 'id-card')
 
   await checkRevocation(cert, issuer.cert, issuer.ocsp)
 
@@ -115,14 +84,4 @@ export async function verifyWebEidToken (token, nonce, origin) {
   if (!isValid) throw fail('Signature verification failed')
 
   return cert
-}
-
-// Subject validation: extracts the Estonian personal code from the certificate subject (serialNumber=PNOEE-<11 digits>)
-export function getWebEidIdentity (cert) {
-  const subject = Object.fromEntries(cert.subject.split('\n').map((x) => x.split('=')))
-  const match = /^PNOEE-(\d{11})$/.exec(subject.serialNumber ?? '')
-
-  if (!match || !subject.GN || !subject.SN) throw fail('Could not extract identity from certificate')
-
-  return { idcode: match[1], givenName: subject.GN, surname: subject.SN }
 }

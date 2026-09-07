@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
   const origin = getRequestURL(event, { xForwardedHost: true, xForwardedProto: true }).origin
 
   const cert = await verifyWebEidToken(body, body.nonce, origin)
-  const { idcode, givenName, surname } = getWebEidIdentity(cert)
+  const { idcode, givenName, surname } = getCertificateIdentity(cert)
 
   const code = await saveUser({
     id: idcode,

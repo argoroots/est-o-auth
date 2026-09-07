@@ -1,4 +1,4 @@
-import { randomUUID, randomBytes } from 'crypto'
+import { randomUUID, randomBytes, createHash } from 'crypto'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
@@ -10,14 +10,17 @@ export default defineEventHandler(async (event) => {
 
   await checkUsageLimit(client.id, 'mobile-id')
 
-  const { skSession, consent } = await startMidSession(query.idcode, query.phone, client.skidText)
+  const { skSession, consent, message } = await startMidSession(query.idcode, query.phone, client.skidText)
 
   await setSessionData(`mobile-id:${query.idcode}:${session}`, {
     redirect_uri: query.redirect_uri,
     state: query.state,
     idcode: query.idcode,
     phone: query.phone,
-    skSession
+    skSession,
+    // Random message whose SHA-256 was sent to Mobile-ID as the value to sign; kept for signature verification
+    message,
+    hashBits: '256'
   })
 
   await setBillingUsage(client.stripeId, 'mobile-id')
@@ -28,8 +31,8 @@ export default defineEventHandler(async (event) => {
 
 async function startMidSession (idcode, phone, displayText) {
   const config = useRuntimeConfig()
-  const hash = randomBytes(32).toString('hex')
-  const hashBuffer = Buffer.from(hash, 'hex')
+  const message = randomBytes(64)
+  const hashBuffer = createHash('sha256').update(message).digest()
   const binArray = []
 
   for (const v of hashBuffer.values()) {
@@ -59,6 +62,7 @@ async function startMidSession (idcode, phone, displayText) {
 
   return {
     consent,
-    skSession
+    skSession,
+    message: message.toString('base64')
   }
 }

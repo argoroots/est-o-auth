@@ -5,32 +5,40 @@ export default defineEventHandler(async (event) => {
 
   await getClient(body)
 
-  const sidSession = await getSessionData(`mobile-id:${body.idcode}:${body.session}`, false)
+  const midSession = await getSessionData(`mobile-id:${body.idcode}:${body.session}`, false)
 
-  if (!sidSession) throw createError({ statusCode: 403, statusMessage: 'Invalid idcode or session' })
+  if (!midSession) throw createError({ statusCode: 403, statusMessage: 'Invalid idcode or session' })
 
-  const skResponse = await checkMidSession(sidSession.skSession)
+  const skResponse = await checkMidSession(midSession.skSession)
 
-  if (skResponse !== 'OK') return { status: skResponse }
+  if (skResponse.state === 'RUNNING') return { status: 'RUNNING' }
+  if (skResponse.result !== 'OK') return { status: skResponse.result }
+
+  // Verify the signature and certificate ourselves rather than trusting the OK result alone
+  const identity = await verifyMobileIdResponse(skResponse, midSession)
+
+  if (identity.idcode !== midSession.idcode) {
+    throw createError({ statusCode: 400, statusMessage: 'Certificate identity does not match the requested ID code' })
+  }
 
   await getSessionData(`mobile-id:${body.idcode}:${body.session}`, true)
 
   const code = await saveUser({
-    id: sidSession.idcode,
-    email: `${sidSession.idcode}@eesti.ee`,
+    id: identity.idcode,
+    email: `${identity.idcode}@eesti.ee`,
+    name: identity.givenName && identity.surname ? `${identity.givenName} ${identity.surname}` : undefined,
     provider: 'mobile-id'
   })
 
-  const search = new URLSearchParams({ code, state: sidSession.state }).toString()
+  const search = new URLSearchParams({ code, state: midSession.state }).toString()
 
-  return { url: `${sidSession.redirect_uri}?${search}` }
+  return { url: `${midSession.redirect_uri}?${search}` }
 })
 
 async function checkMidSession (sessionId) {
   const skResponse = await $fetch(`https://mid.sk.ee/mid-api/authentication/session/${sessionId}?timeoutMs=2000`)
 
-  if (skResponse.state === 'RUNNING') return 'RUNNING'
-  if (skResponse.state === 'COMPLETE') return skResponse.result
+  if (skResponse.state === 'RUNNING' || skResponse.state === 'COMPLETE') return skResponse
 
   throw createError({ statusCode: 400, statusMessage: skResponse.error || 'Mobile-ID session check failed' })
 }
