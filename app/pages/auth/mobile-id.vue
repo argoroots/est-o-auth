@@ -14,6 +14,9 @@ const session = ref(null)
 
 if (idcode.value && phone.value) onStartSession()
 
+// Stop polling if the user navigates away mid-authentication
+onUnmounted(() => clearInterval(interval.value))
+
 function validateIdcode () {
   if (!idcode.value) return
 
@@ -34,58 +37,51 @@ async function onStartSession () {
   validateIdcode()
   validatePhone()
 
-  if (!idcode.value || !phone.value) return
+  if (!idcode.value || !phone.value || isSending.value) return
 
-  let data
+  isSending.value = true
+  isError.value = false
 
   try {
-    data = await $fetch('/api/mobile-id', { query: { ...query, idcode: idcode.value, phone: phone.value } })
+    const data = await $fetch('/api/mobile-id', { query: { ...query, idcode: idcode.value, phone: phone.value } })
+
+    consent.value = data.consent
+    session.value = data.session
+    interval.value = setInterval(onAuthenticate, 5000)
   }
   catch {
+    isError.value = true
+  }
+  finally {
     isSending.value = false
-    isError.value = true
-    return
   }
-
-  isSending.value = false
-
-  if (!data.consent || !data.session) {
-    isError.value = true
-    return
-  }
-
-  consent.value = data.consent
-  session.value = data.session
-
-  interval.value = setInterval(async () => {
-    await onAuthenticate()
-  }, 5000)
 }
 
 async function onAuthenticate () {
-  const data = await $fetch('/api/mobile-id', {
-    method: 'POST',
-    body: {
-      ...query,
-      idcode: idcode.value,
-      session: session.value
-    }
-  })
+  try {
+    const data = await $fetch('/api/mobile-id', {
+      method: 'POST',
+      body: {
+        ...query,
+        idcode: idcode.value,
+        session: session.value
+      }
+    })
 
-  if (data.status === 'RUNNING') return
+    if (data.status === 'RUNNING') return
 
-  clearInterval(interval.value)
+    clearInterval(interval.value)
 
-  if (data.url) {
-    await navigateTo(data.url, { external: true })
+    if (data.url) return navigateTo(data.url, { external: true })
   }
-  else {
-    consent.value = null
-    session.value = null
-
-    isSending.value = false
-    isError.value = true
+  catch {
+    clearInterval(interval.value)
   }
+
+  // Cancelled, timed out, or failed: back to the form with an error
+  consent.value = null
+  session.value = null
+  isError.value = true
 }
 </script>
 
@@ -100,7 +96,7 @@ async function onAuthenticate () {
         placeholder="38001085718"
         autofocus
         @blur="validateIdcode"
-        @keypress.enter="() => phoneInput.focus()"
+        @keypress.enter="phoneInput?.focus()"
       />
       <form-input
         id="phone"

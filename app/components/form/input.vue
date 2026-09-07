@@ -23,12 +23,26 @@ const text = computed({
     emit('update:modelValue', val)
   }
 })
+
+const inputEl = ref()
+
+function focus () {
+  inputEl.value?.focus()
+}
+
+// The autofocus attribute only works at page load; focus explicitly so inputs on later steps get it too
+onMounted(() => {
+  if (props.autofocus) focus()
+})
+
+defineExpose({ focus })
 </script>
 
 <template>
   <div class="form-input">
     <input
       :id="id"
+      ref="inputEl"
       v-model="text"
       :type="type"
       :placeholder="placeholder"
