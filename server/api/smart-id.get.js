@@ -8,8 +8,7 @@ export default defineEventHandler(async (event) => {
   const client = await getClient(query)
   const session = randomUUID().replaceAll('-', '')
   const callbackValue = randomBytes(16).toString('base64url')
-  const origin = getRequestURL(event).origin
-  const initialCallbackUrl = `${origin}/api/smart-id-callback?session=${session}&value=${callbackValue}`
+  const initialCallbackUrl = `${getOrigin(event)}/api/smart-id-callback?session=${session}&value=${callbackValue}`
 
   await checkUsageLimit(client.id, 'smart-id')
 

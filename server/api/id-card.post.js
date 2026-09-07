@@ -12,10 +12,8 @@ export default defineEventHandler(async (event) => {
 
   if (!nonceSession || nonceSession.client_id !== client.id) throw authError('Unknown, used or expired nonce')
 
-  // Origin the browser saw, which is what the Web eID extension signed
-  const origin = getRequestURL(event, { xForwardedHost: true, xForwardedProto: true }).origin
-
-  const cert = await verifyWebEidToken(body, body.nonce, origin)
+  // The Web eID extension signs the page origin; ours comes from config in production
+  const cert = await verifyWebEidToken(body, body.nonce, getOrigin(event))
   const { idcode, givenName, surname } = getCertificateIdentity(cert)
 
   const code = await saveUser({
