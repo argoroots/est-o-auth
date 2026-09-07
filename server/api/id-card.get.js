@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   // 32 random bytes -> 44 base64 chars, as required by the Web eID spec
   const nonce = randomBytes(32).toString('base64')
 
-  await setSessionData(`id-card:${nonce}`, { issued: Date.now() })
+  await setSessionData(`id-card:${nonce}`, {})
 
   return { nonce }
 })

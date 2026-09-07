@@ -10,9 +10,6 @@ const DISALLOWED_POLICY_PREFIX = '1.3.6.1.4.1.10015.1.3'
 const CERTIFICATE_POLICIES_OID = '2.5.29.32'
 const CLIENT_AUTH_OID = '1.3.6.1.5.5.7.3.2'
 
-// Recommended challenge nonce lifetime
-export const WEB_EID_NONCE_TTL_MS = 5 * 60 * 1000
-
 function hasDisallowedPolicy (x509) {
   const cert = pkijs.Certificate.fromBER(new Uint8Array(x509.raw).buffer)
   const extension = cert.extensions?.find((ext) => ext.extnID === CERTIFICATE_POLICIES_OID)

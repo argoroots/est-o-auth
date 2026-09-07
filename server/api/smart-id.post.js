@@ -4,9 +4,9 @@ export default defineEventHandler(async (event) => {
   await checkRequest(body, 'smart-id', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'session'])
   await getClient(body)
 
-  const sidSession = await getSessionData(`smart-id:${body.session}`, false)
+  const sidSession = await getSessionData(`smart-id:${body.session}`, false, SESSION_TTL.SK)
 
-  if (!sidSession) throw createError({ statusCode: 403, statusMessage: 'Invalid session' })
+  if (!sidSession) throw createError({ statusCode: 403, statusMessage: 'Invalid or expired session' })
 
   const skResponse = await $fetch(`https://rp-api.smart-id.com/v3/session/${sidSession.skSession}?timeoutMs=2000`)
 
@@ -21,7 +21,8 @@ export default defineEventHandler(async (event) => {
 
   const idcode = await verifyAndExtractIdentity(skResponse, sidSession)
 
-  await getSessionData(`smart-id:${body.session}`, true)
+  // Consume the session exactly once; a concurrent completion loses here
+  if (!await getSessionData(`smart-id:${body.session}`, true)) throw createError({ statusCode: 403, statusMessage: 'Session already used' })
 
   const code = await saveUser({
     id: idcode,

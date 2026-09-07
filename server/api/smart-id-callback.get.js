@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Missing callback parameters' })
   }
 
-  const sidSession = await getSessionData(`smart-id:${session}`, false)
+  const sidSession = await getSessionData(`smart-id:${session}`, false, SESSION_TTL.SK)
 
   if (!sidSession) throw createError({ statusCode: 403, statusMessage: 'Invalid or expired session' })
 
@@ -44,7 +44,8 @@ export default defineEventHandler(async (event) => {
 
   const idcode = await verifyAndExtractIdentity(skResponse, sidSession)
 
-  await getSessionData(`smart-id:${session}`, true)
+  // Consume the session exactly once; a concurrent completion loses here
+  if (!await getSessionData(`smart-id:${session}`, true)) throw createError({ statusCode: 403, statusMessage: 'Session already used' })
 
   const code = await saveUser({
     id: idcode,

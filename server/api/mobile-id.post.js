@@ -5,9 +5,9 @@ export default defineEventHandler(async (event) => {
 
   await getClient(body)
 
-  const midSession = await getSessionData(`mobile-id:${body.idcode}:${body.session}`, false)
+  const midSession = await getSessionData(`mobile-id:${body.idcode}:${body.session}`, false, SESSION_TTL.SK)
 
-  if (!midSession) throw createError({ statusCode: 403, statusMessage: 'Invalid idcode or session' })
+  if (!midSession) throw createError({ statusCode: 403, statusMessage: 'Invalid or expired session' })
 
   const skResponse = await checkMidSession(midSession.skSession)
 
@@ -21,7 +21,8 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Certificate identity does not match the requested ID code' })
   }
 
-  await getSessionData(`mobile-id:${body.idcode}:${body.session}`, true)
+  // Consume the session exactly once; a concurrent completion loses here
+  if (!await getSessionData(`mobile-id:${body.idcode}:${body.session}`, true)) throw createError({ statusCode: 403, statusMessage: 'Session already used' })
 
   const code = await saveUser({
     id: identity.idcode,

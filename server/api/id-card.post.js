@@ -7,11 +7,8 @@ export default defineEventHandler(async (event) => {
 
   await checkUsageLimit(client.id, 'id-card')
 
-  // Nonce is single-use: consumed on lookup
-  const nonceSession = await getSessionData(`id-card:${body.nonce}`, true)
-
-  if (!nonceSession) throw createError({ statusCode: 400, statusMessage: 'Unknown or already used nonce' })
-  if (Date.now() - nonceSession.issued > WEB_EID_NONCE_TTL_MS) throw createError({ statusCode: 400, statusMessage: 'Nonce has expired' })
+  // Nonce is single-use and short-lived: consumed atomically on lookup
+  if (!await getSessionData(`id-card:${body.nonce}`, true, SESSION_TTL.NONCE)) throw authError('Unknown, used or expired nonce')
 
   // Origin the browser saw, which is what the Web eID extension signed
   const origin = getRequestURL(event, { xForwardedHost: true, xForwardedProto: true }).origin

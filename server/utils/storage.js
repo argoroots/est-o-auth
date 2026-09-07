@@ -35,17 +35,29 @@ export async function setSessionData (id, data) {
   await dynamodb.send(new PutItemCommand(command))
 }
 
-export async function getSessionData (id, deleteItem) {
+// Maximum age of stored sessions, enforced on read regardless of table TTL
+export const SESSION_TTL = {
+  NONCE: 5 * 60 * 1000, // Web eID challenge nonce (recommended lifetime 5 min)
+  OTP: 10 * 60 * 1000, // e-mail / phone verification codes
+  SK: 10 * 60 * 1000, // Smart-ID / Mobile-ID sessions (SK expires them sooner)
+  AUTH_CODE: 10 * 60 * 1000 // OAuth authorization codes (RFC 6749 recommends max 10 min)
+}
+
+// Reads a session. With deleteItem the read and delete are one atomic DynamoDB call, so a session
+// can be consumed exactly once even under concurrent requests. Expired sessions are treated as absent.
+export async function getSessionData (id, deleteItem, maxAgeMs) {
   const command = {
     TableName: 'oauth-session',
     Key: { id: { S: id } }
   }
 
-  const { Item: item } = await dynamodb.send(new GetItemCommand(command))
+  const item = deleteItem
+    ? (await dynamodb.send(new DeleteItemCommand({ ...command, ReturnValues: 'ALL_OLD' }))).Attributes
+    : (await dynamodb.send(new GetItemCommand(command))).Item
 
   if (!item) return
 
-  if (deleteItem) await dynamodb.send(new DeleteItemCommand(command))
+  if (maxAgeMs && Date.now() - Date.parse(item.created.S) > maxAgeMs) return
 
   return JSON.parse(item.data.S)
 }
@@ -59,7 +71,7 @@ export async function saveUser (data) {
 }
 
 export async function getToken (code, expiresIn) {
-  const user = await getSessionData(`user:${code}`, true)
+  const user = await getSessionData(`user:${code}`, true, SESSION_TTL.AUTH_CODE)
 
   if (!user) return
 

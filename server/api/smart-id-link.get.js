@@ -6,9 +6,9 @@ export default defineEventHandler(async (event) => {
   if (!query.session) throw createError({ statusCode: 400, statusMessage: 'Missing session' })
 
   const config = useRuntimeConfig()
-  const sidSession = await getSessionData(`smart-id:${query.session}`, false)
+  const sidSession = await getSessionData(`smart-id:${query.session}`, false, SESSION_TTL.SK)
 
-  if (!sidSession) throw createError({ statusCode: 403, statusMessage: 'Invalid session' })
+  if (!sidSession) throw createError({ statusCode: 403, statusMessage: 'Invalid or expired session' })
 
   const { sessionToken, sessionSecret, deviceLinkBase, rpChallenge, interactions, initialCallbackUrl, startTime } = sidSession
   const rpNameB64 = Buffer.from(config.skidName).toString('base64')
