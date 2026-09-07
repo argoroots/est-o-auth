@@ -4,8 +4,8 @@ useHead({ title: 'ID-Card' })
 
 const { query } = useRoute()
 
-const isError = ref(false)
-const { data: nonceData } = await useFetch('/api/id-card', { query })
+const { data: nonceData, error: nonceError } = await useFetch('/api/id-card', { query })
+const isError = ref(!!nonceError.value)
 
 async function onAuthenticate (authResponse) {
   try {

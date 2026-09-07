@@ -226,6 +226,8 @@ export async function getClientConfig (client) {
 
   const { Item } = await dynamodb.send(new GetItemCommand(config))
 
+  if (!Item) return
+
   return {
     id: Item?.id?.S,
     secret: Item?.secret?.S,

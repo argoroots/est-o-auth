@@ -8,7 +8,8 @@ export async function checkRequest (data, provider, params = []) {
 
   const client = await getClientConfig(data.client_id)
 
-  if (provider && !client.providers.includes(provider)) throw createError({ statusCode: 400, statusMessage: 'The authentication provider do not match a registered authentication provider!' })
+  if (!client) throw createError({ statusCode: 403, statusMessage: 'Invalid client_id' })
+  if (provider && !client.providers?.includes(provider)) throw createError({ statusCode: 400, statusMessage: 'The authentication provider do not match a registered authentication provider!' })
   // if (!redirectUri) throw createError({ statusCode: 400, statusMessage: 'The redirect URI (redirect_uri) do not match a registered redirect URI!' })
 }
 

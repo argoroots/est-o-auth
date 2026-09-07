@@ -11,7 +11,7 @@ if (!query.session_id && !isMock) await navigateTo('/api/signup', { external: tr
 
 const { data, error } = isMock
   ? { data: ref({ client_id: 'QVnPZGdcXQ8Ev4mx', client_secret: 'aLs6BLQfhd3dX8rUDnvQzmhZcVMNPnwy' }), error: ref(null) }
-  : await useFetch('/api/signup', { query: { session_id: query.session_id } })
+  : await useFetch('/api/signup', { query: { session_id: query.session_id }, immediate: !!query.session_id })
 
 const copied = ref(null)
 

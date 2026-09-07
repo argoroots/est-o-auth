@@ -1,54 +1,18 @@
+// Validates the OAuth query and loads the client once per navigation. The server checks the
+// parameters and the client id; its message is shown as-is so a failure explains itself.
+// The client is kept in useState('client') for the page.
 export default defineNuxtRouteMiddleware(async (to) => {
-  const { query } = to
+  const client = useState('client')
 
-  if (!query.client_id) {
-    return showError({
-      statusCode: 400,
-      statusMessage: 'Required parameter client_id is missing!'
-    })
+  try {
+    client.value = await $fetch('/api/client', { query: to.query })
   }
+  catch (error) {
+    client.value = null
 
-  if (!query.redirect_uri) {
     return showError({
-      statusCode: 400,
-      statusMessage: 'Required parameter redirect_uri is missing!'
-    })
-  }
-
-  if (!query.state) {
-    return showError({
-      statusCode: 400,
-      statusMessage: 'Required parameter state is missing!'
-    })
-  }
-
-  if (query.response_type !== 'code') {
-    return showError({
-      statusCode: 400,
-      statusMessage: 'The response_type in the request do not match required value "code"!'
-    })
-  }
-
-  if (query.scope !== 'openid') {
-    return showError({
-      statusCode: 400,
-      statusMessage: 'The scope in the request do not match required value "openid"!'
-    })
-  }
-
-  const { data: client } = await useFetch('/api/client', { query })
-
-  if (!client.value) {
-    return showError({
-      statusCode: 400,
-      statusMessage: 'The client ID (client_id) in the request do not match a registered client ID!'
-    })
-  }
-
-  if (!client.value.redirect_uri) {
-    return showError({
-      statusCode: 400,
-      statusMessage: 'The redirect URI (redirect_uri) in the request do not match a registered redirect URI!'
+      statusCode: error.statusCode || 502,
+      statusMessage: error.data?.statusMessage || error.statusMessage || 'Could not verify client'
     })
   }
 })

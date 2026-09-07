@@ -42,22 +42,26 @@ async function onAuthenticate () {
   isSending.value = true
   isError.value = false
 
-  const data = await $fetch('/api/phone', {
-    method: 'POST',
-    body: {
-      ...query,
-      phone: phone.value,
-      code: code.value
-    }
-  })
+  try {
+    const data = await $fetch('/api/phone', {
+      method: 'POST',
+      body: {
+        ...query,
+        phone: phone.value,
+        code: code.value
+      }
+    })
 
-  if (data.url) {
-    await navigateTo(data.url, { external: true })
-  }
-  else {
-    isSending.value = false
-    isPhoneSent.value = true
+    if (data.url) return navigateTo(data.url, { external: true })
+
     isError.value = true
+  }
+  catch {
+    // Wrong or expired code is a 403 from the server
+    isError.value = true
+  }
+  finally {
+    isSending.value = false
   }
 }
 </script>

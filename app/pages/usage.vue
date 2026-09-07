@@ -10,10 +10,8 @@ const providers = [
   'e-mail',
   'phone'
 ]
-const { query } = useRoute()
-const { data: client } = await useFetch('/api/client', { query })
-
-if (!client.value) throw createError({ statusCode: 400, statusMessage: 'The client ID (client_id) in the request do not match a registered client ID!' })
+// Loaded by the check-query middleware
+const client = useState('client')
 
 function sum (data) {
   return Object.values(data).reduce((a, b) => a + b, 0)

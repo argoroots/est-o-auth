@@ -1,7 +1,5 @@
 <script setup>
 const { query } = useRoute()
-
-const { data: client } = await useFetch('/api/client', { query, immediate: !!query.client_id })
 </script>
 
 <template>
@@ -10,16 +8,10 @@ const { data: client } = await useFetch('/api/client', { query, immediate: !!que
     <section>
       <header>
         <h1>
-          <nuxt-link :to="{ path: '/auth', query }">
+          <nuxt-link :to="query.client_id ? { path: '/auth', query } : '/'">
             <h1>OAuth.ee <span>by Argo Roots</span></h1>
           </nuxt-link>
         </h1>
-        <p
-          v-if="client?.description"
-          class="mt-8"
-        >
-          {{ client?.description }}
-        </p>
       </header>
 
       <slot />
