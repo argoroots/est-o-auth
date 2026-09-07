@@ -51,7 +51,7 @@ export default defineEventHandler(async (event) => {
     id: idcode,
     email: `${idcode}@eesti.ee`,
     provider: 'smart-id'
-  })
+  }, sidSession)
 
   const search = new URLSearchParams({ code, state: sidSession.state }).toString()
 

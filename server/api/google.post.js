@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
     email: profile.emailAddresses?.at(0)?.value,
     name: profile.names?.at(0)?.displayName,
     provider: 'google'
-  })
+  }, { client_id: decodedState.client, redirect_uri: decodedState.uri })
 
   const search = new URLSearchParams({ code, state: decodedState.state }).toString()
 

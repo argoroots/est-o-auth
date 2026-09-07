@@ -13,6 +13,7 @@ export default defineEventHandler(async (event) => {
   const { skSession, consent, message } = await startMidSession(query.idcode, query.phone, client.skidText)
 
   await setSessionData(`mobile-id:${query.idcode}:${session}`, {
+    client_id: client.id,
     redirect_uri: query.redirect_uri,
     state: query.state,
     idcode: query.idcode,

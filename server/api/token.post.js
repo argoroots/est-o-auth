@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
 
   if (!validSecret) throw createError({ statusCode: 403, statusMessage: 'Invalid client_secret' })
 
-  const token = await getToken(body.code, 3600)
+  const token = await getToken(body.code, client.id, body.redirect_uri, 3600)
 
   if (!token) throw createError({ statusCode: 403, statusMessage: 'Invalid code' })
 

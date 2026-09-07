@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
     email: `${identity.idcode}@eesti.ee`,
     name: identity.givenName && identity.surname ? `${identity.givenName} ${identity.surname}` : undefined,
     provider: 'mobile-id'
-  })
+  }, midSession)
 
   const search = new URLSearchParams({ code, state: midSession.state }).toString()
 

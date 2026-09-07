@@ -15,6 +15,7 @@ export default defineEventHandler(async (event) => {
   const code = isTestUser ? testCode : String(Math.round(Math.random() * 1000000)).padStart(6, '0')
 
   await setSessionData(`email:${query.email}:${code}`, {
+    client_id: client.id,
     redirect_uri: query.redirect_uri,
     state: query.state,
     email: query.email

@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
     id: profile.sub,
     email: profile.email,
     provider: 'apple'
-  })
+  }, { client_id: decodedState.client, redirect_uri: decodedState.uri })
 
   const search = new URLSearchParams({ code, state: decodedState.state }).toString()
 

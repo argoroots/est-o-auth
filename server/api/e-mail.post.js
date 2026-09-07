@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
     id: emailSession.email,
     email: emailSession.email,
     provider: 'e-mail'
-  })
+  }, emailSession)
 
   const search = new URLSearchParams({ code, state: emailSession.state }).toString()
 

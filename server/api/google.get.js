@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
     response_type: 'code',
     response_mode: 'form_post',
     scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
-    state: jwt.sign({ uri: query.redirect_uri, state: query.state }, config.jwtSecret, { expiresIn: '5m' })
+    state: jwt.sign({ client: client.id, uri: query.redirect_uri, state: query.state }, config.jwtSecret, { expiresIn: '5m' })
   }).toString()
 
   await setBillingUsage(client.stripeId, 'google')

@@ -16,6 +16,7 @@ export default defineEventHandler(async (event) => {
   const result = await startSidSession(client.skidText, initialCallbackUrl)
 
   await setSessionData(`smart-id:${session}`, {
+    client_id: client.id,
     redirect_uri: query.redirect_uri,
     state: query.state,
     skSession: result.skSession,

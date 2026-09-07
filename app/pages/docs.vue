@@ -52,7 +52,8 @@ useHead({ title: 'Documentation' })
         <p>
           Make POST request to <a href="/api/token">/api/token</a> sending <em>client_id</em>, <em>client_secret</em>,
           <em>grant_type</em> and <em>code</em> (got from previous step). Parameter grant_type must always be
-          "authorization_code".
+          "authorization_code". The code can only be exchanged by the client that started the authentication.
+          Optionally send <em>redirect_uri</em> too; if present it must equal the one used in step 3.
         </p>
         <pre>POST /api/token HTTP/1.1
 Host: oauth.ee

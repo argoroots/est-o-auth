@@ -13,6 +13,7 @@ export default defineEventHandler(async (event) => {
   const code = String(Math.round(Math.random() * 1000000)).padStart(6, '0')
 
   await setSessionData(`phone:${query.phone}:${code}`, {
+    client_id: client.id,
     redirect_uri: query.redirect_uri,
     state: query.state,
     phone: query.phone

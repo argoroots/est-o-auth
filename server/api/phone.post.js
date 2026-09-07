@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
     id: phoneSession.phone,
     phone: phoneSession.phone,
     provider: 'phone'
-  })
+  }, phoneSession)
 
   const search = new URLSearchParams({ code, state: phoneSession.state }).toString()
 

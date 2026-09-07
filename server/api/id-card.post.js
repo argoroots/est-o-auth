@@ -7,8 +7,10 @@ export default defineEventHandler(async (event) => {
 
   await checkUsageLimit(client.id, 'id-card')
 
-  // Nonce is single-use and short-lived: consumed atomically on lookup
-  if (!await getSessionData(`id-card:${body.nonce}`, true, SESSION_TTL.NONCE)) throw authError('Unknown, used or expired nonce')
+  // Nonce is single-use and short-lived: consumed atomically on lookup, and must belong to this client
+  const nonceSession = await getSessionData(`id-card:${body.nonce}`, true, SESSION_TTL.NONCE)
+
+  if (!nonceSession || nonceSession.client_id !== client.id) throw authError('Unknown, used or expired nonce')
 
   // Origin the browser saw, which is what the Web eID extension signed
   const origin = getRequestURL(event, { xForwardedHost: true, xForwardedProto: true }).origin
@@ -21,12 +23,12 @@ export default defineEventHandler(async (event) => {
     email: `${idcode}@eesti.ee`,
     name: `${givenName} ${surname}`,
     provider: 'id-card'
-  })
+  }, nonceSession)
 
-  const search = new URLSearchParams({ code, state: body.state }).toString()
+  const search = new URLSearchParams({ code, state: nonceSession.state }).toString()
 
   await setBillingUsage(client.stripeId, 'id-card')
   await setUsage(client.id, 'id-card')
 
-  return { url: `${body.redirect_uri}?${search}` }
+  return { url: `${nonceSession.redirect_uri}?${search}` }
 })

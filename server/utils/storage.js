@@ -62,18 +62,25 @@ export async function getSessionData (id, deleteItem, maxAgeMs) {
   return JSON.parse(item.data.S)
 }
 
-export async function saveUser (data) {
+// Issues an authorization code bound to the client and redirect URI that started the flow (RFC 6749 §4.1.3)
+export async function saveUser (user, { client_id: clientId, redirect_uri: redirectUri }) {
   const code = randomUUID().replaceAll('-', '').toUpperCase()
 
-  await setSessionData(`user:${code}`, data)
+  await setSessionData(`user:${code}`, { user, clientId, redirectUri })
 
   return code
 }
 
-export async function getToken (code, expiresIn) {
-  const user = await getSessionData(`user:${code}`, true, SESSION_TTL.AUTH_CODE)
+// Exchanges a code for an access token. The code is single-use and must be redeemed by the same
+// client it was issued to; if the client sends redirect_uri it must match the one used at authorization.
+export async function getToken (code, clientId, redirectUri, expiresIn) {
+  const session = await getSessionData(`user:${code}`, true, SESSION_TTL.AUTH_CODE)
 
-  if (!user) return
+  if (!session) return
+  if (session.clientId !== clientId) return
+  if (redirectUri && session.redirectUri !== redirectUri) return
+
+  const { user } = session
 
   return jwt.sign(user, config.jwtSecret, { expiresIn, notBefore: 0, subject: user.email || user.id })
 }
