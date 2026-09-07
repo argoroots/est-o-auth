@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto'
-import { DynamoDBClient, DeleteItemCommand, GetItemCommand, PutItemCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb' // ES
+import { DynamoDBClient, BatchGetItemCommand, DeleteItemCommand, GetItemCommand, PutItemCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb'
 import jwt from 'jsonwebtoken'
 
 const config = useRuntimeConfig()
@@ -142,57 +142,32 @@ export async function checkUsageLimit (client, provider) {
 }
 
 export async function getUsage (client) {
-  const providers = [
-    'apple',
-    'google',
-    'smart-id',
-    'mobile-id',
-    'id-card',
-    'e-mail',
-    'phone'
-  ]
+  const providers = ['apple', 'google', 'smart-id', 'mobile-id', 'id-card', 'e-mail', 'phone']
 
-  const result = {
-    today: {},
-    yesterday: {},
-    month: {},
-    lastMonth: {},
-    year: {}
+  // Counters are keyed by UTC date (see setUsage), so derive the periods in UTC as well
+  const now = new Date()
+  const utc = (y, m, d) => new Date(Date.UTC(y, m, d)).toISOString()
+  const periods = {
+    today: now.toISOString().substring(0, 10),
+    yesterday: utc(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - 1).substring(0, 10),
+    month: now.toISOString().substring(0, 7),
+    lastMonth: utc(now.getUTCFullYear(), now.getUTCMonth() - 1, 1).substring(0, 7),
+    year: now.toISOString().substring(0, 4)
   }
 
-  const config = {
-    TableName: 'oauth-usage',
-    Key: { client: { S: client }, date: {} }
-  }
+  // One batch read for all provider x period counters (35 keys, well under the 100-key limit)
+  const keys = providers.flatMap((provider) => Object.values(periods).map((date) => ({
+    client: { S: client },
+    date: { S: `${provider}-${date}` }
+  })))
 
-  for await (const provider of providers) {
-    const now = new Date()
-    const nowStr = now.toISOString()
-    const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1)
-    const yesterdayStr = yesterday.toISOString()
-    const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1)
-    const lastMonthStr = lastMonth.toISOString()
+  const { Responses } = await dynamodb.send(new BatchGetItemCommand({ RequestItems: { 'oauth-usage': { Keys: keys } } }))
+  const counts = Object.fromEntries((Responses?.['oauth-usage'] ?? []).map((item) => [item.date.S, parseInt(item.requests?.N ?? '0')]))
 
-    config.Key.date.S = `${provider}-${nowStr.substring(0, 10)}`
-    const { Item: todayItem } = await dynamodb.send(new GetItemCommand(config))
+  const result = {}
 
-    config.Key.date.S = `${provider}-${yesterdayStr.substring(0, 10)}`
-    const { Item: yesterdayItem } = await dynamodb.send(new GetItemCommand(config))
-
-    config.Key.date.S = `${provider}-${lastMonthStr.substring(0, 7)}`
-    const { Item: lastMonthItem } = await dynamodb.send(new GetItemCommand(config))
-
-    config.Key.date.S = `${provider}-${nowStr.substring(0, 7)}`
-    const { Item: monthItem } = await dynamodb.send(new GetItemCommand(config))
-
-    config.Key.date.S = `${provider}-${nowStr.substring(0, 4)}`
-    const { Item: yearItem } = await dynamodb.send(new GetItemCommand(config))
-
-    result.today[provider] = parseInt(todayItem?.requests?.N ?? '0')
-    result.yesterday[provider] = parseInt(yesterdayItem?.requests?.N ?? '0')
-    result.lastMonth[provider] = parseInt(lastMonthItem?.requests?.N ?? '0')
-    result.month[provider] = parseInt(monthItem?.requests?.N ?? '0')
-    result.year[provider] = parseInt(yearItem?.requests?.N ?? '0')
+  for (const [period, date] of Object.entries(periods)) {
+    result[period] = Object.fromEntries(providers.map((provider) => [provider, counts[`${provider}-${date}`] ?? 0]))
   }
 
   return result
