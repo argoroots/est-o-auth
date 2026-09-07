@@ -1,108 +1,130 @@
 # OAuth.ee
 
-Use Estonian ID-card, Mobile-ID, Smart-ID, E-mail or Phone as OAuth authentication provider.
+Use Estonian ID-card, Mobile-ID, Smart-ID, e-mail, phone, Google or Apple as an OAuth 2.0
+authentication provider.
 
-## Usage
-1. Redirect user to one of the following url:
-    - [/auth/id-card]()
-    - [/auth/mobile-id]()
-    - [/auth/smart-id]()
-    - [/auth/e-mail]()
-    - [/auth/phone]()
-    - [/auth]() - *will ask user the preferred auth method*
+Integration documentation for service providers is at [oauth.ee/docs](https://oauth.ee/docs).
+This file covers running and operating the service.
 
-    Required query parameters:
-    - response_type - *always equals to "code"*
-    - client_id
-    - redirect_uri
-    - scope - *always equals to "openid"*
-    - state
+## Requirements
 
-    Optional parameters - if not set, user must input required ones (depends of auth method):
-    - idcode - *only for [/auth/mobile-id]() and [/auth/smart-id]()*
-    - phone - *only for [/auth/mobile-id]() and [/auth/phone]()*
-    - email - *only for [/auth/e-mail]()*
+- Node.js 24
+- AWS account: DynamoDB, SES (e-mail codes), SNS (SMS codes)
+- SK ID Solutions relying-party account for Smart-ID and Mobile-ID
+- Google and Apple developer apps for social login
+- Stripe account for self-service sign-up and usage billing
 
-    ```bash
-    https://oauth.ee/auth?response_type=code&client_id=QVnPZGdcXQ8Ev4mx&redirect_uri=https://example.com/auth/callback&scope=openid&state=5600684163565994
-    ```
+## Configuration
 
-    After authentication user is redirected back to url set in *redirect_uri* parameter. Query parameter *code* contains the authorization code which Your service will exchange for an access token.
+Copy `.env.example` to `.env`. All values are read through Nuxt runtime config.
 
-    If the initial request contained a *state* parameter, the response also includes the exact value from the request. Your service must check if it matches one from initial request.
+| Variable | Purpose |
+|---|---|
+| `NUXT_URL` | Public origin, e.g. `https://oauth.ee`. Used for Google/Apple redirect URIs, Smart-ID callbacks, e-mail links and the Web eID signed origin. |
+| `NUXT_JWT_SECRET` | Signs access tokens and the Google/Apple state. Also used to derive client ids at sign-up. |
+| `NUXT_EMAIL_FROM` | SES verified sender for e-mail codes. |
+| `NUXT_AWS_ID`, `NUXT_AWS_SECRET`, `NUXT_AWS_REGION` | AWS credentials with DynamoDB, SES and SNS access. |
+| `NUXT_SKID_NAME`, `NUXT_SKID_UUID` | Relying party name and UUID from SK, shared by Smart-ID and Mobile-ID. |
+| `NUXT_GOOGLE_ID`, `NUXT_GOOGLE_SECRET` | Google OAuth client. Redirect URI must be `NUXT_URL/api/google`. |
+| `NUXT_APPLE_ID`, `NUXT_APPLE_TEAM`, `NUXT_APPLE_SECRET` | Sign in with Apple service id, team id and private key. Redirect URI must be `NUXT_URL/api/apple`. |
+| `NUXT_STRIPE_KEY` | Stripe restricted key, see below. |
+| `NUXT_TEST_USER` | Optional `email:code` pair that always accepts that code for that e-mail. Leave unset in production. |
 
-    ```bash
-    https://example.com/auth/callback?code=CYD9MDm8gY2F8EhV&state=5600684163565994
-    ```
+## AWS
 
-3. Make POST request to [/api/token]() sending *client_id*, *client_secret*, *grant_type* and *code* (got from previous step). Parameter grant_type must always be "authorization_code".
+### DynamoDB tables
 
-    ```http
-    POST /api/token HTTP/1.1
-    Host: oauth.ee
-    Content-Type: application/json; charset=utf-8
-    Content-Length: 165
+| Table | Key | Contents |
+|---|---|---|
+| `oauth-clients` | `id` (S) | One row per client, see below. |
+| `oauth-session` | `id` (S) | Short-lived state: verification codes, SK sessions, Web eID nonces, authorization codes, cooldown markers. Enable **Time to Live** on attribute `ttl`. |
+| `oauth-usage` | `client` (S), `date` (S) | Per-client counters keyed `<provider>-<YYYY>`, `-<YYYY-MM>`, `-<YYYY-MM-DD>` and one row per request. Kept indefinitely. |
 
-    {
-      "client_id": "QVnPZGdcXQ8Ev4mx",
-      "client_secret": "aLs6BLQfhd3dX8rUDnvQzmhZcVMNPnwy",
-      "code": "CYD9MDm8gY2F8EhV",
-      "grant_type": "authorization_code"
-    }
-    ```
+Sessions also expire logically on read (5 to 10 minutes depending on type), so table TTL only
+governs physical cleanup.
 
-    Response contains *access_token* what You need to get user information.
-    ```json
-    {
-      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
-      "expires_in": 3600,
-      "token_type": "Bearer",
-      "state": "5600684163565994"
-    }
-    ```
+### Client rows (`oauth-clients`)
 
+| Attribute | Type | Meaning |
+|---|---|---|
+| `id` | S | `client_id`, 16 characters |
+| `secret` | S | bcrypt hash of `client_secret` |
+| `providers` | SS | Enabled providers: `smart-id`, `mobile-id`, `id-card`, `e-mail`, `phone`, `google`, `apple` |
+| `skidText` | S | Service name shown in the Smart-ID and Mobile-ID apps (max 60 characters) |
+| `description` | S or M | Text shown above the login options. Either one string or a map keyed by language, e.g. `{ "en": {"S": "..."}, "et": {"S": "..."} }`; the UI language (`lang` parameter) selects, falling back to `en`. |
+| `redirectUris` | SS | Registered redirect URIs. Stored but not enforced. |
+| `stripeId` | S | Stripe customer id. Usage is metered to it; clients without one are not billed. |
 
+Self-service sign-up at `/api/signup` creates rows through Stripe Checkout. Rows can also be
+created by hand; generate the secret with e.g. `openssl rand -base64 24` and store its bcrypt hash.
 
-4. To get user information make GET request to [/api/user]() with *access_token* (got from previous step) as query parameter or as Bearer authorization header (preferred!).
+## SK ID Solutions
 
-    ```http
-    GET /api/user HTTP/1.1
-    Host: oauth.ee
-    Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-    ```
+Smart-ID uses RP API v3 (`rp-api.smart-id.com`), Mobile-ID the REST API (`mid.sk.ee`), ID-card the
+Web eID browser extension. All three verify the returned signature and certificate against pinned
+issuing CAs in `server/assets/certs/`:
 
-    Response contains user information as JSON object.
-    ```json
-    {
-      "id": "38001085718",
-      "email": "38001085718@eesti.ee",
-      "name": "JAAK-KRISTJAN JÕEORG"
-    }
-    ```
+| File | CA | Used by |
+|---|---|---|
+| `esteid2018.pem.crt` | ESTEID2018 | ID-card |
+| `ESTEID-SK_2015.pem.crt` | ESTEID-SK 2015 | ID-card, Mobile-ID |
+| `EID-SK_2016.pem.crt` | EID-SK 2016 | Mobile-ID |
+| `EID_Q_2021E.pem.crt`, `EID_Q_2021R.pem.crt` | SK ID Solutions EID-Q 2021E / 2021R | Smart-ID, Mobile-ID |
+| `EID_Q_2024E.pem.crt`, `EID_Q_2024R.pem.crt` | SK ID Solutions EID-Q 2024E / 2024R | Smart-ID |
 
-## Setup & Run
-1. Clone this repository and go to it's folder:
-    ```shell
-    git clone https://github.com/argoroots/est-o-auth.git ./est-o-auth
-    cd est-o-auth
-    ```
-1. Rename _env.example_ to _.env_:
-    ```shell
-    cp .env.example .env
-    ```
-1. In _.env_ file, set correct domains for authentication and id-card services (Nginx needs separate domain for ID-Card authentication); e-mail address (to get Let's Encrypt cert expiration notifications) and some random string for JWT token signing.
-    ```
-    DOMAIN=auth.example.com
-    EMAIL=auth@example.com
-    JWT_SECRET=Iel0jrC7fKFMjK2OBI4VYp2ygtrDQZBV
-    ```
-1. Generate SSL certificates for local development:
-    ```shell
-    mkdir ./certs
-    cd ./certs
-    openssl req -x509 -out localhost.crt -keyout localhost.key -newkey rsa:2048 -nodes -subj '/CN=localhost' -extensions EXT -config <(printf "[req]\ndistinguished_name = dn\n[dn]\nCN=localhost\n[EXT]\nsubjectAltName=DNS:localhost\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
-    ```
-1. Start service:
-    ```shell
-    docker-compose up -d --build --remove-orphans --force-recreate
-    ```
+Download them from the Intermediate CAs tab at
+[skidsolutions.eu/resources/certificates](https://www.skidsolutions.eu/resources/certificates/) and
+check the SHA-1 fingerprint against the page:
+
+```bash
+openssl x509 -in server/assets/certs/esteid2018.pem.crt -noout -fingerprint -sha1
+```
+
+When SK adds a new issuing CA, add its file here and to `TRUSTED_ISSUERS` in
+`server/utils/eid-certificate.js`. ID-card certificates are also checked for revocation against
+SK's public OCSP responders.
+
+## Stripe
+
+Usage is billed with Stripe meters. In the Stripe dashboard create:
+
+1. One meter per provider with event name `oauth_<provider>`, e.g. `oauth_smart-id`, aggregation sum.
+2. One metered recurring monthly price per meter, on any product.
+3. A restricted API key with: Checkout Sessions write, Customers write, Subscriptions write,
+   Products and Prices read, Meters read, Meter Events write.
+
+Sign-up finds the prices by walking meters whose event name starts with `oauth_`; keep exactly one
+active price per meter. Subscriptions are anchored to the first of the month.
+
+## Running
+
+```bash
+npm install
+npm run dev
+```
+
+`npm run dev:ssl` serves HTTPS on localhost using `.certs/localhost.crt` and `.certs/localhost.key`,
+which the Web eID extension requires. Generate them once:
+
+```bash
+mkdir .certs && openssl req -x509 -out .certs/localhost.crt -keyout .certs/localhost.key -newkey rsa:2048 -nodes -subj '/CN=localhost' -addext 'subjectAltName=DNS:localhost'
+```
+
+Production:
+
+```bash
+npm run build
+npm run start
+```
+
+`npm run lint` runs ESLint. `/signup?mock=true` previews the sign-up result page in development.
+
+## Operations
+
+- Monthly caps per client and provider are in `shared/utils/providers.js`; over the cap the start
+  request answers 429 and a `[limit]` line is logged.
+- E-mail and phone codes: one live code per target, 60 second resend cooldown, five attempts,
+  10 minute expiry. Mobile-ID starts are limited to one per minute per ID code.
+- Request failures are logged as one line: status, method, path, `client=`, `provider=` and the
+  message. 5xx add the stack.
+- UI language: `lang=en|et|fi` on any auth URL; translations in `i18n/locales/`.
