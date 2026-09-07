@@ -28,21 +28,23 @@ export async function checkCooldown (key, windowMs) {
     throw createError({ statusCode: 429, statusMessage: 'Please wait before trying again' })
   }
 
-  await setSessionData(`cooldown:${key}`, {})
+  // Marker only needs to outlive its window; expire it soon after rather than the default day
+  await setSessionData(`cooldown:${key}`, {}, Date.now(), Math.ceil(windowMs / 1000) + 60)
 }
 
 // DynamoDB TTL (epoch seconds in the `ttl` attribute; enable TTL on oauth-session with that attribute name).
 // Logical expiry is enforced on read via SESSION_TTL; this only governs physical cleanup.
 const SESSION_ITEM_TTL_S = 24 * 60 * 60
 
-// Stores a session. Pass createdAt (ms) when rewriting an existing session so its expiry is not extended.
-export async function setSessionData (id, data, createdAt = Date.now()) {
+// Stores a session. Pass createdAt (ms) when rewriting an existing session so its expiry is not extended;
+// ttlSeconds overrides how long DynamoDB keeps the row.
+export async function setSessionData (id, data, createdAt = Date.now(), ttlSeconds = SESSION_ITEM_TTL_S) {
   const command = {
     TableName: 'oauth-session',
     Item: {
       id: { S: id },
       created: { S: new Date(createdAt).toISOString() },
-      ttl: { N: String(Math.floor(createdAt / 1000) + SESSION_ITEM_TTL_S) },
+      ttl: { N: String(Math.floor(createdAt / 1000) + ttlSeconds) },
       data: { S: JSON.stringify(data) }
     }
   }
