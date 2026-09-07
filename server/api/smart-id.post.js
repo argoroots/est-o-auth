@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
 
   if (!sidSession) throw createError({ statusCode: 403, statusMessage: 'Invalid or expired session' })
 
-  const skResponse = await $fetch(`https://rp-api.smart-id.com/v3/session/${sidSession.skSession}?timeoutMs=2000`)
+  const skResponse = await skFetch(`https://rp-api.smart-id.com/v3/session/${sidSession.skSession}?timeoutMs=2000`)
 
   if (skResponse.state === 'RUNNING') return { status: 'RUNNING' }
 

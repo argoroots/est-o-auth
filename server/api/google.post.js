@@ -1,16 +1,13 @@
-import jwt from 'jsonwebtoken'
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
-  await checkRequest(body, 'google', ['code', 'state'])
-
-  if (!body.state) throw createError({ statusCode: 400, statusMessage: 'Parameter state is required' })
-  if (!body.code) throw createError({ statusCode: 400, statusMessage: 'Parameter code is required' })
-  if (body.error) throw createError({ statusCode: 500, statusMessage: body.error })
+  await checkRequest(body, 'google', ['state'])
 
   const config = useRuntimeConfig()
-  const decodedState = jwt.verify(body.state, config.jwtSecret)
+  const decodedState = verifyProviderState(body.state, config.jwtSecret)
+
+  // User declined (or the provider failed): send them back to the client per RFC 6749 §4.1.2.1
+  if (body.error || !body.code) return sendRedirect(event, providerErrorUrl(decodedState, body.error))
 
   const { access_token: accessToken } = await $fetch('https://www.googleapis.com/oauth2/v4/token', {
     method: 'POST',

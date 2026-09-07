@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
 })
 
 async function checkMidSession (sessionId) {
-  const skResponse = await $fetch(`https://mid.sk.ee/mid-api/authentication/session/${sessionId}?timeoutMs=2000`)
+  const skResponse = await skFetch(`https://mid.sk.ee/mid-api/authentication/session/${sessionId}?timeoutMs=2000`)
 
   if (skResponse.state === 'RUNNING' || skResponse.state === 'COMPLETE') return skResponse
 

@@ -46,7 +46,7 @@ async function startSidSession (displayText60, initialCallbackUrl) {
   ]
   const interactions = Buffer.from(JSON.stringify(interactionsArray)).toString('base64')
 
-  const response = await $fetch('https://rp-api.smart-id.com/v3/authentication/device-link/anonymous', {
+  const response = await skFetch('https://rp-api.smart-id.com/v3/authentication/device-link/anonymous', {
     method: 'POST',
     body: {
       relyingPartyName: config.skidName,

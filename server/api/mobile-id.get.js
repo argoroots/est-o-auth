@@ -39,7 +39,7 @@ async function startMidSession (idcode, phone, displayText) {
   const message = randomBytes(64)
   const hash = createHash('sha256').update(message).digest()
 
-  const { sessionID: skSession, error } = await $fetch('https://mid.sk.ee/mid-api/authentication', {
+  const { sessionID: skSession, error } = await skFetch('https://mid.sk.ee/mid-api/authentication', {
     method: 'POST',
     body: {
       relyingPartyName: config.skidName,
