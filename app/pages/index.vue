@@ -12,24 +12,6 @@
 <style scoped>
 @reference "~/assets/tailwind.css";
 
-main {
-  @apply min-h-screen;
-  @apply w-screen;
-  @apply flex;
-  @apply justify-center;
-  @apply overflow-hidden;
-}
-
-section {
-  @apply relative;
-  @apply w-full;
-  @apply md:w-80;
-  @apply mx-6;
-  @apply flex;
-  @apply flex-col;
-  @apply justify-start;
-}
-
 a {
   @apply w-36;
   @apply mx-auto;

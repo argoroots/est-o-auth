@@ -39,6 +39,7 @@ main {
 
 section {
   @apply relative;
+  @apply w-full;
   @apply md:w-80;
   @apply mx-6;
   @apply flex;
