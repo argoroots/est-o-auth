@@ -1,42 +1,37 @@
 import { X509Certificate, createHash, verify, constants } from 'crypto'
 import * as pkijs from 'pkijs'
 
-// Certificate policies that must not be accepted for ID-card authentication: Estonian Mobile-ID
-// certificates (1.3.6.1.4.1.10015.1.3 and its versioned sub-policies) were issued by the same CA
-// as ID-cards, so they chain fine but are not smart cards. Mirrors the Web eID reference validator.
-const DISALLOWED_POLICY_PREFIXES = ['1.3.6.1.4.1.10015.1.3']
-const CERTIFICATE_POLICIES_OID = '2.5.29.32'
+// Web eID authentication token validation, per
+// https://github.com/web-eid/web-eid-system-architecture-doc#authentication-token-validation
 
-// OID for TLS Web Client Authentication extended key usage
+// Certificate policies not accepted for ID-card login: Estonian Mobile-ID certificates
+// (1.3.6.1.4.1.10015.1.3.*) chain to the same CA but are not smart cards
+const DISALLOWED_POLICY_PREFIX = '1.3.6.1.4.1.10015.1.3'
+const CERTIFICATE_POLICIES_OID = '2.5.29.32'
 const CLIENT_AUTH_OID = '1.3.6.1.5.5.7.3.2'
 
-// Nonce validity window
+// Recommended challenge nonce lifetime
 export const WEB_EID_NONCE_TTL_MS = 5 * 60 * 1000
-
-function fail (message) {
-  return createError({ statusCode: 400, statusMessage: message })
-}
 
 function hasDisallowedPolicy (x509) {
   const cert = pkijs.Certificate.fromBER(new Uint8Array(x509.raw).buffer)
   const extension = cert.extensions?.find((ext) => ext.extnID === CERTIFICATE_POLICIES_OID)
   const policies = extension?.parsedValue?.certificatePolicies?.map((p) => p.policyIdentifier) ?? []
 
-  return policies.some((oid) => DISALLOWED_POLICY_PREFIXES.some((prefix) => oid === prefix || oid.startsWith(`${prefix}.`)))
+  return policies.some((oid) => oid === DISALLOWED_POLICY_PREFIX || oid.startsWith(`${DISALLOWED_POLICY_PREFIX}.`))
 }
 
-// Verifies a Web eID authentication token (format web-eid:1.0) and returns the user certificate.
-// Signed data is hash(origin) || hash(nonce), hash taken from the algorithm suffix (ES384 -> SHA-384).
+// Returns the verified user certificate. Signed data is hash(origin) || hash(nonce) where the hash
+// is the one named by the algorithm (ES384 -> SHA-384); EC signatures are raw R||S.
 export async function verifyWebEidToken (token, nonce, origin) {
   const { unverifiedCertificate, algorithm, signature, format } = token ?? {}
 
-  // Minor versions within web-eid:1 are backwards compatible (1.1 adds optional fields we do not use)
-  if (!/^web-eid:1(\.\d+)?$/.test(format ?? '')) throw fail('Unsupported authentication token format')
-  if (!unverifiedCertificate || !algorithm || !signature) throw fail('Incomplete authentication token')
+  // Minor versions within web-eid:1 are backwards compatible
+  if (!/^web-eid:1(\.\d+)?$/.test(format ?? '')) throw authError('Unsupported authentication token format')
 
-  const match = /^(ES|PS|RS)(256|384|512)$/.exec(algorithm)
+  const match = /^(ES|PS|RS)(256|384|512)$/.exec(algorithm ?? '')
 
-  if (!match) throw fail('Unsupported signature algorithm')
+  if (!match || !unverifiedCertificate || !signature) throw authError('Invalid authentication token')
 
   const [, family, bits] = match
   const hashAlg = `sha${bits}`
@@ -47,13 +42,12 @@ export async function verifyWebEidToken (token, nonce, origin) {
     cert = new X509Certificate(Buffer.from(unverifiedCertificate, 'base64'))
   }
   catch {
-    throw fail('Invalid certificate')
+    throw authError('Invalid certificate')
   }
 
-  if (!cert.keyUsage?.includes(CLIENT_AUTH_OID)) throw fail('Certificate is not for authentication')
-  if (hasDisallowedPolicy(cert)) throw fail('Certificate policy is not allowed for ID-card authentication')
+  if (!cert.keyUsage?.includes(CLIENT_AUTH_OID)) throw authError('Certificate is not for authentication')
+  if (hasDisallowedPolicy(cert)) throw authError('Certificate policy is not allowed for ID-card authentication')
 
-  // Validity period and chain to a pinned ID-card CA
   const issuer = await checkTrustedCertificate(cert, 'id-card')
 
   await checkRevocation(cert, issuer.cert, issuer.ocsp)
@@ -66,22 +60,20 @@ export async function verifyWebEidToken (token, nonce, origin) {
   const keyOptions = { key: cert.publicKey }
 
   if (family === 'ES') keyOptions.dsaEncoding = 'ieee-p1363'
-  if (family === 'PS') {
-    keyOptions.padding = constants.RSA_PKCS1_PSS_PADDING
-    keyOptions.saltLength = constants.RSA_PSS_SALTLEN_DIGEST
-  }
+  if (family === 'PS') Object.assign(keyOptions, { padding: constants.RSA_PKCS1_PSS_PADDING, saltLength: constants.RSA_PSS_SALTLEN_DIGEST })
   if (family === 'RS') keyOptions.padding = constants.RSA_PKCS1_PADDING
 
-  let isValid
-
-  try {
-    isValid = verify(hashAlg, data, keyOptions, Buffer.from(signature, 'base64'))
-  }
-  catch {
-    isValid = false
-  }
-
-  if (!isValid) throw fail('Signature verification failed')
+  if (!safeVerify(hashAlg, data, keyOptions, Buffer.from(signature, 'base64'))) throw authError('Signature verification failed')
 
   return cert
+}
+
+// crypto.verify throws on malformed input; treat that the same as a bad signature
+export function safeVerify (hashAlg, data, keyOptions, signature) {
+  try {
+    return verify(hashAlg, data, keyOptions, signature)
+  }
+  catch {
+    return false
+  }
 }
