@@ -188,6 +188,13 @@ export async function saveClient ({ id, secret, skidText, providers, redirectUri
   }
 }
 
+// `description` on oauth-clients is either a string (one language) or a Map keyed by language code,
+// e.g. { en: '...', et: '...' }. Always returned as an object keyed by language.
+function readDescription (attr) {
+  if (attr?.S) return { en: attr.S }
+  if (attr?.M) return Object.fromEntries(Object.entries(attr.M).map(([lang, v]) => [lang, v.S]))
+}
+
 export async function getClientConfig (client) {
   if (!client) return
 
@@ -204,6 +211,7 @@ export async function getClientConfig (client) {
     id: Item?.id?.S,
     secret: Item?.secret?.S,
     skidText: Item?.skidText?.S,
+    description: readDescription(Item?.description),
     redirectUris: Item?.redirectUris?.SS,
     providers: Item?.providers?.SS,
     stripeId: Item?.stripeId?.S

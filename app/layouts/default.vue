@@ -1,5 +1,8 @@
 <script setup>
 const { query } = useRoute()
+
+// Loaded by the check-query middleware on auth pages; absent elsewhere
+const client = useState('client')
 </script>
 
 <template>
@@ -12,6 +15,12 @@ const { query } = useRoute()
             OAuth.ee <span>by Argo Roots</span>
           </nuxt-link>
         </h1>
+        <p
+          v-if="client?.description"
+          class="mt-8"
+        >
+          {{ client.description }}
+        </p>
       </header>
 
       <slot />
