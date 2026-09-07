@@ -1,12 +1,13 @@
-export default defineNuxtRouteMiddleware(async () => {
-  // const { path, query } = to
+// Runs after check-query on /auth/<provider> pages: the provider in the path must be one the
+// client has enabled, otherwise the page would start a request the server rejects anyway.
+export default defineNuxtRouteMiddleware((to) => {
+  const client = useState('client')
+  const provider = to.path.split('/').pop()
 
-  // const { data: client } = await useFetch('/api/client', query)
-
-  // if (!client.value.providers.some(x => path === `/auth/${x}`)) {
-  //   return showError({
-  //     statusCode: 422,
-  //     statusMessage: 'The authentication provider in the request do not match a registered authentication provider!'
-  //   })
-  // }
+  if (!client.value?.providers?.includes(provider)) {
+    return showError({
+      statusCode: 400,
+      statusMessage: `The authentication provider "${provider}" is not enabled for this client`
+    })
+  }
 })
