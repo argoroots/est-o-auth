@@ -13,7 +13,8 @@ async function onAuthenticate (authResponse) {
       method: 'POST',
       body: {
         ...query,
-        ...authResponse
+        ...authResponse,
+        nonce: nonceData.value.nonce
       }
     })
 

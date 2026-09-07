@@ -33,6 +33,7 @@
     "eslint-plugin-tailwindcss": "4.4.0",
     "jsonwebtoken": "9.0.3",
     "nuxt": "4.5.2",
+    "pkijs": "3.4.0",
     "qrcode": "1.5.4",
     "stripe": "22.6.1",
     "tailwindcss": "4.3.3"

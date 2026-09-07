@@ -7,6 +7,7 @@ const props = defineProps({
 
 const emit = defineEmits(['authenticate'])
 const errorMessage = ref()
+const showInstallLink = ref(false)
 
 onMounted(async () => {
   try {
@@ -20,26 +21,33 @@ onMounted(async () => {
         history.back()
         break
       case ErrorCode.ERR_WEBEID_ACTION_TIMEOUT:
-        errorMessage.value = 'Authentication timed out, please try again'
-        break
       case ErrorCode.ERR_WEBEID_USER_TIMEOUT:
-        errorMessage.value = 'Authentication timed out, please try again'
+        errorMessage.value = 'Authentication timed out, please try again.'
+        break
+      case ErrorCode.ERR_WEBEID_ACTION_PENDING:
+        errorMessage.value = 'Another Web eID operation is already in progress. Please finish it and try again.'
+        break
+      case ErrorCode.ERR_WEBEID_CONTEXT_INSECURE:
+        errorMessage.value = 'ID-card authentication requires a secure (HTTPS) connection.'
         break
       case ErrorCode.ERR_WEBEID_VERSION_MISMATCH:
-        if (error.requiresUpdate?.extension) errorMessage.value = 'Web eID browser extension needs to be updated'
-        if (error.requiresUpdate?.nativeApp) errorMessage.value = 'Web eID application needs to be updated'
+        if (error.requiresUpdate?.nativeApp) errorMessage.value = 'The Web eID application needs to be updated.'
+        else if (error.requiresUpdate?.extension) errorMessage.value = 'The Web eID browser extension needs to be updated.'
+        else errorMessage.value = 'The Web eID extension and application versions do not match. Please update both.'
 
-        errorMessage.value = 'Authentication timed out, please try again!'
+        showInstallLink.value = true
         break
       case ErrorCode.ERR_WEBEID_EXTENSION_UNAVAILABLE:
-        errorMessage.value = 'Web eID browser extension is not installed. You can download it from <a href="https://www.id.ee/en/article/install-id-software/" target="_blank">ID.ee</a>.'
+        errorMessage.value = 'The Web eID browser extension is not installed.'
+        showInstallLink.value = true
         break
       case ErrorCode.ERR_WEBEID_NATIVE_UNAVAILABLE:
-        errorMessage.value = 'Web eID application is not installed. You can download it from <a href="https://www.id.ee/en/article/install-id-software/" target="_blank">ID.ee</a>.'
+        errorMessage.value = 'The Web eID application is not installed.'
+        showInstallLink.value = true
         break
       default:
         console.error(error)
-        errorMessage.value = error.message || error
+        errorMessage.value = 'ID-card authentication failed. Please try again.'
         break
     }
   }
@@ -49,7 +57,14 @@ onMounted(async () => {
 <template>
   <template v-if="errorMessage">
     <h2>Error</h2>
-    <p v-html="errorMessage" />
+    <p>{{ errorMessage }}</p>
+    <p v-if="showInstallLink">
+      You can download the ID-software from
+      <a
+        href="https://www.id.ee/en/article/install-id-software/"
+        target="_blank"
+      >ID.ee</a>.
+    </p>
   </template>
   <p v-else>
     Please insert your ID-card into the card reader and follow the instructions on the screen.
