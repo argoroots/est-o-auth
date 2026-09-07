@@ -40,10 +40,7 @@ export default defineNuxtConfig({
     stripeKey: '',
     testUser: ''
   },
-  future: {
-    compatibilityVersion: 4
-  },
-  compatibilityDate: '2024-08-05',
+  compatibilityDate: '2026-09-07',
   vite: {
     plugins: [tailwindcss()]
   },
