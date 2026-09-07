@@ -8,7 +8,11 @@ export default withNuxt({
     '@stylistic/arrow-parens': ['error', 'always'],
     '@stylistic/comma-dangle': ['error', 'never'],
     '@stylistic/quote-props': ['error', 'as-needed'],
-    '@stylistic/space-before-function-paren': ['error', 'always']
+    '@stylistic/space-before-function-paren': ['error', 'always'],
+    // Nuxt namespaces components by directory (form-button, icon-apple), so single-word files are fine
+    'vue/multi-word-component-names': 'off',
+    // Hooks for scoped @apply rules, not Tailwind utilities
+    'tailwindcss/no-custom-classname': ['warn', { whitelist: ['th', 'tr', 'consent', 'blob', 'yellow', 'red', 'orange', 'form-input'] }]
   }
 }).prepend([
   tailwind.configs.recommended,

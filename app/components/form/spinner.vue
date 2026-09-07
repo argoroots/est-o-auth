@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="py-10 text-yellow-600">
     <svg

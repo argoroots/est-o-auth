@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <svg
     xmlns="http://www.w3.org/2000/svg"
