@@ -6,6 +6,7 @@ export default defineEventHandler(async (event) => {
   const sidSession = await getSessionData(`smart-id:${body.session}`, false, SESSION_TTL.SK)
 
   if (!sidSession) throw createError({ statusCode: 403, statusMessage: 'Invalid or expired session' })
+  if (sidSession.client_id !== body.client_id) throw createError({ statusCode: 403, statusMessage: 'Session belongs to another client' })
 
   const skResponse = await skFetch(`https://rp-api.smart-id.com/v3/session/${sidSession.skSession}?timeoutMs=2000`)
 

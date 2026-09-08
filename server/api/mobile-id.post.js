@@ -6,6 +6,7 @@ export default defineEventHandler(async (event) => {
   const midSession = await getSessionData(`mobile-id:${body.session}`, false, SESSION_TTL.SK)
 
   if (!midSession) throw createError({ statusCode: 403, statusMessage: 'Invalid or expired session' })
+  if (midSession.client_id !== body.client_id) throw createError({ statusCode: 403, statusMessage: 'Session belongs to another client' })
 
   const skResponse = await checkMidSession(midSession.skSession)
 
