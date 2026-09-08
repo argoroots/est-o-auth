@@ -15,8 +15,8 @@ export default defineEventHandler(async (event) => {
   if (session.status !== 'complete' || !session.customer) throw createError({ statusCode: 402, statusMessage: 'Payment is not completed' })
   if (session.providers.length === 0) throw createError({ statusCode: 400, statusMessage: 'No authentication providers were selected' })
 
-  const clientId = toBase62(createHash('sha256').update(sessionId + config.jwtSecret).digest()).substring(0, 16)
-  const clientSecret = toBase62(randomBytes(48)).substring(0, 32)
+  const clientId = toBase62(createHash('sha256').update(sessionId + config.jwtSecret).digest(), 16)
+  const clientSecret = toBase62(randomBytes(48), 32)
   const redirectUri = validRedirectUri(session.redirectUri)
 
   // The payment is done, so a bad URL must not fail the signup; it is left empty and filled in by hand
@@ -37,8 +37,19 @@ export default defineEventHandler(async (event) => {
   }
 })
 
-function toBase62 (buffer) {
-  return Array.from(buffer, (byte) => BASE62[byte % 62]).join('')
+// The buffer as a big-endian integer, written in base 62 and cut to `length` characters. Dividing
+// the whole number keeps every character uniformly distributed (a per-byte `% 62` would favour
+// the first eight characters of the alphabet). The buffer has far more bits than the output uses.
+function toBase62 (buffer, length) {
+  let value = BigInt(`0x${buffer.toString('hex')}`)
+  let result = ''
+
+  for (let i = 0; i < length; i++) {
+    result = BASE62[Number(value % 62n)] + result
+    value /= 62n
+  }
+
+  return result
 }
 
 // A usable redirect URI is absolute https (http only for localhost, for development clients) and
