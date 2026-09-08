@@ -24,7 +24,7 @@ export function targetKey (prefix, target) {
 export async function checkCooldown (type, target, windowMs) {
   const recorded = await setSessionDataUnlessRecent(targetKey(`cooldown:${type}`, target), {}, windowMs)
 
-  if (!recorded) throw createError({ statusCode: 429, statusMessage: 'Please wait before trying again' })
+  if (!recorded) throw apiError(429, 'limit.cooldown')
 }
 
 // DynamoDB item for a session created at createdAt (ms) and valid for maxAgeMs
@@ -118,15 +118,15 @@ export async function getSessionData (id, deleteItem, maxAgeMs) {
 export async function requireSession (id, maxAgeMs, clientId) {
   const session = await getSessionData(id, false, maxAgeMs)
 
-  if (!session) throw createError({ statusCode: 403, statusMessage: 'Invalid or expired session' })
-  if (clientId && session.client_id !== clientId) throw createError({ statusCode: 403, statusMessage: 'Session belongs to another client' })
+  if (!session) throw apiError(403, 'session.invalid')
+  if (clientId && session.client_id !== clientId) throw apiError(403, 'session.otherClient')
 
   return session
 }
 
 // Deletes a session so it completes exactly once; a concurrent completion gets 403
 export async function consumeSession (id) {
-  if (!await getSessionData(id, true)) throw createError({ statusCode: 403, statusMessage: 'Session already used' })
+  if (!await getSessionData(id, true)) throw apiError(403, 'session.used')
 }
 
 // Issues an authorization code bound to the client and redirect URI that started the flow (RFC 6749 §4.1.3)
@@ -191,7 +191,7 @@ export async function checkUsageLimit (client, provider) {
 
   console.warn(`[limit] client ${client} reached monthly limit of ${limit} ${provider} authentications (${used})`)
 
-  throw createError({ statusCode: 429, statusMessage: 'Monthly limit reached' })
+  throw apiError(429, 'limit.monthly')
 }
 
 // Per-provider counters for today, yesterday, this month, last month and this year (UTC, like setUsage)
@@ -245,7 +245,7 @@ export async function saveClient ({ id, secret, skidText, providers, redirectUri
     await getDynamo().send(new PutItemCommand(command))
   }
   catch (error) {
-    if (error.name === 'ConditionalCheckFailedException') throw createError({ statusCode: 409, statusMessage: 'Client already created' })
+    if (error.name === 'ConditionalCheckFailedException') throw apiError(409, 'signup.clientExists')
 
     throw error
   }

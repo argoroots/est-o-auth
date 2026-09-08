@@ -45,7 +45,7 @@ export async function createOtp (type, target, data, fixedCode) {
   const code = fixedCode ?? String(randomInt(0, 1_000_000)).padStart(6, '0')
   const stored = await setSessionDataUnlessRecent(targetKey(type, target), { ...data, code }, RESEND_COOLDOWN_MS, SESSION_TTL.OTP)
 
-  if (!stored) throw createError({ statusCode: 429, statusMessage: 'Please wait before requesting a new code' })
+  if (!stored) throw apiError(429, 'limit.resend')
 
   return code
 }

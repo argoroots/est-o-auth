@@ -6,7 +6,7 @@ export default defineEventHandler((event) => {
 
   setResponseHeaders(event, { 'Cache-Control': 'no-store', Pragma: 'no-cache' })
 
-  if (!match) throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
+  if (!match) throw apiError(401, 'auth.unauthorized')
 
   try {
     const { id, email, phone, name, provider } = jwt.verify(match[1], useRuntimeConfig().jwtSecret, { algorithms: ['HS256'] })
@@ -14,6 +14,6 @@ export default defineEventHandler((event) => {
     return { id, email, phone, name, provider }
   }
   catch {
-    throw createError({ statusCode: 401, statusMessage: 'Invalid token' })
+    throw apiError(401, 'auth.invalidToken')
   }
 })

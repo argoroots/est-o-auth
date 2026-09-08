@@ -6,8 +6,8 @@ export default defineEventHandler(async (event) => {
 
   const client = await validateRequest(query, 'mobile-id', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'idcode', 'phone'])
 
-  if (!isIdcode(query.idcode)) throw createError({ statusCode: 400, statusMessage: 'Invalid ID code' })
-  if (!isPhone(query.phone)) throw createError({ statusCode: 400, statusMessage: 'Invalid phone number' })
+  if (!isIdcode(query.idcode)) throw apiError(400, 'invalid.idcode')
+  if (!isPhone(query.phone)) throw apiError(400, 'invalid.phone')
 
   await checkUsageLimit(client.id, 'mobile-id')
 
@@ -57,7 +57,11 @@ async function startMidSession (idcode, phone, displayText, language) {
     }
   })
 
-  if (!skSession) throw createError({ statusCode: 400, statusMessage: error || 'Mobile-ID session start failed' })
+  if (!skSession) {
+    console.warn(`[sk] Mobile-ID start: ${logSafe(error)}`)
+
+    throw apiError(400, 'mid.startFailed')
+  }
 
   return { skSession, consent: verificationCode(hash), message: message.toString('base64') }
 }

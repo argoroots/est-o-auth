@@ -1,11 +1,12 @@
 <script setup>
 definePageMeta({ middleware: ['check-query', 'check-provider'] })
 const { t } = useI18n()
+const message = useErrorMessage()
 useHead({ title: t('provider.id-card') })
 
 const { query } = useRoute()
 const { data: nonceData, error: nonceError, refresh } = await useFetch('/api/id-card', { query })
-const isError = ref(!!nonceError.value)
+const errorText = ref(nonceError.value ? message(nonceError.value) : '')
 
 // Sends the signed Web eID token for verification; success leaves for the client's redirect_uri
 async function onAuthenticate (authResponse) {
@@ -17,9 +18,9 @@ async function onAuthenticate (authResponse) {
 
     if (data.url) await navigateTo(data.url, { external: true })
   }
-  catch {
+  catch (error) {
     // Signature rejected, or the nonce expired while the card dialog was open
-    isError.value = true
+    errorText.value = message(error)
   }
 }
 
@@ -27,18 +28,18 @@ async function onAuthenticate (authResponse) {
 async function onRetry () {
   await refresh()
 
-  isError.value = !!nonceError.value
+  errorText.value = nonceError.value ? message(nonceError.value) : ''
 }
 </script>
 
 <template>
   <form-wrapper class="text-center">
-    <template v-if="isError">
+    <template v-if="errorText">
       <p
         class="text-red-700"
         aria-live="polite"
       >
-        {{ $t('common.somethingWrong') }}
+        {{ errorText }}
       </p>
       <form-button @click="onRetry">
         {{ $t('common.tryAgain') }}

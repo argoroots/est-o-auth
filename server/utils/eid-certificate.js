@@ -24,11 +24,6 @@ const TRUSTED_ISSUERS = {
 
 const cache = {}
 
-// Authentication failure reported to the client as 400 with a short reason
-export function authError (message) {
-  return createError({ statusCode: 400, statusMessage: message })
-}
-
 // Loads and caches the trusted issuer certificates for a method
 async function getTrustedIssuers (method) {
   if (cache[method]) return cache[method]
@@ -53,13 +48,13 @@ async function getTrustedIssuers (method) {
 export async function checkTrustedCertificate (cert, method) {
   const now = new Date()
 
-  if (now < new Date(cert.validFrom)) throw authError('Certificate is not yet valid')
-  if (now > new Date(cert.validTo)) throw authError('Certificate is expired')
+  if (now < new Date(cert.validFrom)) throw authError('cert.notYetValid')
+  if (now > new Date(cert.validTo)) throw authError('cert.expired')
 
   const issuers = await getTrustedIssuers(method)
   const issuer = issuers.find(({ cert: ca }) => cert.checkIssued(ca))
 
-  if (!issuer || !cert.verify(issuer.cert.publicKey)) throw authError('Certificate is not issued by a trusted authority')
+  if (!issuer || !cert.verify(issuer.cert.publicKey)) throw authError('cert.untrusted')
 
   return issuer
 }
@@ -69,7 +64,7 @@ export function getCertificateIdentity (cert) {
   const subject = Object.fromEntries(cert.subject.split('\n').map((x) => x.split('=')))
   const match = /^PNOEE-(\d{11})$/.exec(subject.serialNumber ?? '')
 
-  if (!match) throw authError('Could not extract identity from certificate')
+  if (!match) throw authError('cert.identity')
 
   return { idcode: match[1], givenName: subject.GN, surname: subject.SN }
 }

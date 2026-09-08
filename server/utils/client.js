@@ -2,16 +2,16 @@
 export async function validateRequest (data, provider, requiredParams = []) {
   const missing = requiredParams.find((name) => !data[name])
 
-  if (missing) throw createError({ statusCode: 400, statusMessage: `Required parameter "${missing}" is missing` })
-  if (requiredParams.includes('response_type') && data.response_type !== 'code') throw createError({ statusCode: 400, statusMessage: 'The response_type must be "code"' })
-  if (requiredParams.includes('scope') && data.scope !== 'openid') throw createError({ statusCode: 400, statusMessage: 'The scope must be "openid"' })
+  if (missing) throw missingParamError(missing)
+  if (requiredParams.includes('response_type') && data.response_type !== 'code') throw apiError(400, 'invalid.responseType')
+  if (requiredParams.includes('scope') && data.scope !== 'openid') throw apiError(400, 'invalid.scope')
 
   if (!data.client_id) return
 
   const client = await getClientConfig(data.client_id)
 
-  if (!client) throw createError({ statusCode: 403, statusMessage: 'Invalid client_id' })
-  if (provider && !client.providers?.includes(provider)) throw createError({ statusCode: 400, statusMessage: 'The authentication provider is not enabled for this client' })
+  if (!client) throw apiError(403, 'client.invalid')
+  if (provider && !client.providers?.includes(provider)) throw apiError(400, 'client.providerNotEnabled')
 
   // Not enforced yet: log what each client sends so registered URIs can be filled in first
   if (data.redirect_uri) {
@@ -20,7 +20,7 @@ export async function validateRequest (data, provider, requiredParams = []) {
 
     console.info(`[redirect] client ${client.id} redirect_uri ${logSafe(data.redirect_uri)} registered=${isRegistered}${hasRegistered ? '' : ' (none configured)'}`)
 
-    // Once every active client's redirectUris is filled in from the logs, enforce with: if (hasRegistered && !isRegistered) throw createError({ statusCode: 400, statusMessage: 'The redirect_uri does not match a registered redirect URI' })
+    // Once every active client's redirectUris is filled in from the logs, enforce with: if (hasRegistered && !isRegistered) throw apiError(400, 'client.redirectNotRegistered')
   }
 
   return client

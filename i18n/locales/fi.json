@@ -1,94 +1,195 @@
 {
-  "common": {
-    "authenticate": "Tunnistaudu",
-    "error": "Virhe",
-    "somethingWrong": "Jokin meni pieleen. Yritä uudelleen.",
-    "terms": "Käyttöehdot",
-    "redirecting": "Ohjataan palveluun {provider}...",
-    "logIn": "Kirjaudu sisään",
-    "tryAgain": "Yritä uudelleen",
-    "cancel": "Peruuta",
-    "loading": "Ladataan"
-  },
-  "provider": {
-    "apple": "Apple",
-    "google": "Google",
-    "smart-id": "Smart-ID",
-    "mobile-id": "Mobile-ID",
-    "id-card": "ID-kortti",
-    "e-mail": "Sähköposti",
-    "phone": "Puhelin"
-  },
   "code": {
-    "label": "Vahvistuskoodi",
     "invalid": "Virheellinen vahvistuskoodi!",
+    "label": "Vahvistuskoodi",
     "wait": "Odota {seconds} sekuntia ennen uuden koodin pyytämistä."
   },
+  "common": {
+    "authenticate": "Tunnistaudu",
+    "cancel": "Peruuta",
+    "error": "Virhe",
+    "loading": "Ladataan",
+    "logIn": "Kirjaudu sisään",
+    "redirecting": "Ohjataan palveluun {provider}...",
+    "somethingWrong": "Jokin meni pieleen. Yritä uudelleen.",
+    "terms": "Käyttöehdot",
+    "tryAgain": "Yritä uudelleen"
+  },
   "email": {
-    "label": "Sähköpostiosoite",
     "checkInbox": "Tarkista sähköpostisi!",
-    "sent": "Lähetimme vahvistuskoodin sähköpostiosoitteeseen {email}. Syötä se alle tai napsauta sähköpostissa olevaa linkkiä.",
-    "mailSubject": "Vahvistuskoodi",
+    "label": "Sähköpostiosoite",
     "mailCode": "Vahvistuskoodisi on {code}",
-    "mailLink": "... tai avaa tämä linkki"
+    "mailLink": "... tai avaa tämä linkki",
+    "mailSubject": "Vahvistuskoodi",
+    "sent": "Lähetimme vahvistuskoodin sähköpostiosoitteeseen {email}. Syötä se alle tai napsauta sähköpostissa olevaa linkkiä."
+  },
+  "errors": {
+    "auth": {
+      "invalidToken": "Virheellinen token",
+      "unauthorized": "Ei käyttöoikeutta"
+    },
+    "cert": {
+      "expired": "Varmenne on vanhentunut",
+      "identity": "Henkilöä ei voitu lukea varmenteesta",
+      "identityMismatch": "Varmenteen henkilö ei vastaa annettua henkilötunnusta",
+      "invalid": "Virheellinen varmenne",
+      "level": "Varmenteen taso on vaadittua alempi",
+      "notAuth": "Varmenne ei ole tarkoitettu tunnistautumiseen",
+      "notYetValid": "Varmenne ei ole vielä voimassa",
+      "policy": "Varmenteen käytäntö ei ole sallittu ID-korttitunnistautumiseen",
+      "revoked": "Varmenne on peruutettu",
+      "unknown": "Varmenteen tila on tuntematon",
+      "untrusted": "Varmennetta ei ole myöntänyt luotettu taho"
+    },
+    "client": {
+      "invalid": "Virheellinen client_id",
+      "providerNotEnabled": "Tämä tunnistautumistapa ei ole käytössä tälle asiakkaalle",
+      "redirectNotRegistered": "redirect_uri ei vastaa rekisteröityä paluuosoitetta"
+    },
+    "invalid": {
+      "authToken": "Virheellinen tunnistautumistoken",
+      "authTokenFormat": "Tunnistautumistokenin muotoa ei tueta",
+      "callbackValue": "Virheellinen paluukutsun arvo",
+      "email": "Virheellinen sähköpostiosoite",
+      "emailOrCode": "Virheellinen sähköpostiosoite tai koodi",
+      "idcode": "Virheellinen henkilötunnus",
+      "idToken": "Virheellinen id_token",
+      "idTokenKey": "Tuntematon id_token-allekirjoitusavain",
+      "phone": "Virheellinen puhelinnumero",
+      "phoneOrCode": "Virheellinen puhelinnumero tai koodi",
+      "responseType": "response_type-arvon on oltava \"code\"",
+      "scope": "scope-arvon on oltava \"openid\"",
+      "sessionSecretDigest": "Virheellinen istuntosalaisuuden tiiviste",
+      "state": "Virheellinen tai vanhentunut state",
+      "userChallenge": "Virheellinen käyttäjän tarkistusarvo"
+    },
+    "limit": {
+      "cooldown": "Odota ennen uutta yritystä",
+      "monthly": "Kuukausiraja on täynnä",
+      "resend": "Odota ennen uuden koodin pyytämistä"
+    },
+    "mid": {
+      "checkFailed": "Mobiili-ID-istunnon tarkistus epäonnistui",
+      "startFailed": "Mobiili-ID-istunnon aloitus epäonnistui",
+      "unexpectedResponse": "Odottamaton Mobiili-ID-vastaus"
+    },
+    "missing": {
+      "callbackParams": "Paluukutsun parametrit puuttuvat",
+      "clientId": "Parametri client_id puuttuu",
+      "code": "Parametri code puuttuu",
+      "email": "Parametri email puuttuu",
+      "idcode": "Parametri idcode puuttuu",
+      "nonce": "Parametri nonce puuttuu",
+      "phone": "Parametri phone puuttuu",
+      "redirectUri": "Parametri redirect_uri puuttuu",
+      "responseType": "Parametri response_type puuttuu",
+      "scope": "Parametri scope puuttuu",
+      "session": "Istunto puuttuu",
+      "state": "Parametri state puuttuu"
+    },
+    "ocsp": {
+      "error": "OCSP-palvelu palautti virheen",
+      "mismatch": "OCSP-vastaus koskee toista varmennetta",
+      "signature": "OCSP-vastauksen allekirjoitus on virheellinen",
+      "stale": "OCSP-vastaus on vanhentunut",
+      "unavailable": "Varmenteen tilaa ei voitu tarkistaa"
+    },
+    "session": {
+      "codeOtherClient": "Koodi kuuluu toiselle asiakkaalle",
+      "invalid": "Virheellinen tai vanhentunut istunto",
+      "nonceInvalid": "Tuntematon, käytetty tai vanhentunut nonce",
+      "otherClient": "Istunto kuuluu toiselle asiakkaalle",
+      "used": "Istunto on jo käytetty"
+    },
+    "sid": {
+      "failed": "Smart-ID-tunnistautuminen epäonnistui",
+      "refused": "Smart-ID-tunnistautuminen peruutettiin",
+      "startFailed": "Smart-ID-istunnon aloitus epäonnistui",
+      "timeout": "Smart-ID-tunnistautuminen aikakatkaistiin",
+      "wrongVc": "Smart-ID-sovelluksessa valittiin väärä tarkistuskoodi"
+    },
+    "signature": {
+      "failed": "Allekirjoituksen tarkistus epäonnistui",
+      "hash": "Allekirjoituksen tiivistealgoritmia ei tueta",
+      "interaction": "Odottamaton vuorovaikutustyyppi",
+      "protocol": "Odottamaton allekirjoitusprotokolla"
+    },
+    "signup": {
+      "clientExists": "Asiakas on jo luotu",
+      "noPrices": "Stripestä ei löytynyt OAuth-hintoja",
+      "noProviders": "Yhtään tunnistautumistapaa ei valittu",
+      "paymentNotCompleted": "Maksua ei ole suoritettu loppuun"
+    },
+    "sk": {
+      "failed": "SK-pyyntö epäonnistui"
+    }
+  },
+  "home": {
+    "getStarted": "Aloita",
+    "intro": "Käytä virolaista ID-korttia, Mobiili-ID:tä, Smart-ID:tä, sähköpostia tai puhelinta OAuth-tunnistautumispalveluna."
+  },
+  "idCard": {
+    "download": "Voit ladata ID-ohjelmiston osoitteesta {link}.",
+    "failed": "ID-korttitunnistautuminen epäonnistui. Yritä uudelleen.",
+    "insecure": "ID-korttitunnistautuminen vaatii suojatun (HTTPS) yhteyden.",
+    "insert": "Aseta ID-kortti kortinlukijaan ja seuraa näytön ohjeita.",
+    "noApp": "Web eID -sovellusta ei ole asennettu.",
+    "noExtension": "Web eID -selainlaajennusta ei ole asennettu.",
+    "pending": "Toinen Web eID -toiminto on jo käynnissä. Suorita se loppuun ja yritä uudelleen.",
+    "timeout": "Tunnistautuminen aikakatkaistiin, yritä uudelleen.",
+    "updateApp": "Web eID -sovellus on päivitettävä.",
+    "updateBoth": "Web eID -laajennuksen ja -sovelluksen versiot eivät täsmää. Päivitä molemmat.",
+    "updateExtension": "Web eID -selainlaajennus on päivitettävä."
+  },
+  "mobileId": {
+    "checkDetails": "Jokin on vialla! Tarkista henkilötunnus ja puhelinnumero.",
+    "enterPin": "Syötä Mobile-ID PIN1 puhelimessasi, jos puhelimessa näkyvä tarkistuskoodi on sama kuin tässä.",
+    "idcode": "Henkilötunnus",
+    "language": "ENG"
   },
   "phone": {
-    "label": "Puhelin",
     "checkPhone": "Tarkista puhelimesi!",
+    "label": "Puhelin",
     "sent": "Lähetimme vahvistuskoodin puhelinnumeroon {phone}. Syötä se alle.",
     "sms": "OAuth.ee-vahvistuskoodisi on {code}"
   },
-  "mobileId": {
-    "idcode": "Henkilötunnus",
-    "checkDetails": "Jokin on vialla! Tarkista henkilötunnus ja puhelinnumero.",
-    "enterPin": "Syötä Mobile-ID PIN1 puhelimessasi, jos puhelimessa näkyvä tarkistuskoodi on sama kuin tässä.",
-    "language": "ENG"
-  },
-  "smartId": {
-    "scan": "Skannaa QR-koodi Smart-ID-sovelluksella tai napauta sitä avataksesi Smart-ID:n tällä laitteella.",
-    "keepOpen": "Pidä tämä sivu auki, kunnes tunnistautuminen on valmis.",
-    "starting": "Aloitetaan Smart-ID-istuntoa…",
-    "language": "eng",
-    "qrLabel": "Smart-ID QR-koodi"
-  },
-  "idCard": {
-    "insert": "Aseta ID-kortti kortinlukijaan ja seuraa näytön ohjeita.",
-    "timeout": "Tunnistautuminen aikakatkaistiin, yritä uudelleen.",
-    "pending": "Toinen Web eID -toiminto on jo käynnissä. Suorita se loppuun ja yritä uudelleen.",
-    "insecure": "ID-korttitunnistautuminen vaatii suojatun (HTTPS) yhteyden.",
-    "updateApp": "Web eID -sovellus on päivitettävä.",
-    "updateExtension": "Web eID -selainlaajennus on päivitettävä.",
-    "updateBoth": "Web eID -laajennuksen ja -sovelluksen versiot eivät täsmää. Päivitä molemmat.",
-    "noExtension": "Web eID -selainlaajennusta ei ole asennettu.",
-    "noApp": "Web eID -sovellusta ei ole asennettu.",
-    "failed": "ID-korttitunnistautuminen epäonnistui. Yritä uudelleen.",
-    "download": "Voit ladata ID-ohjelmiston osoitteesta {link}."
-  },
-  "usage": {
-    "title": "käyttö",
-    "today": "tänään",
-    "yesterday": "eilen",
-    "month": "tämä kuukausi",
-    "lastMonth": "viime kuukausi",
-    "year": "tämä vuosi"
-  },
-  "home": {
-    "intro": "Käytä virolaista ID-korttia, Mobiili-ID:tä, Smart-ID:tä, sähköpostia tai puhelinta OAuth-tunnistautumispalveluna.",
-    "getStarted": "Aloita"
+  "provider": {
+    "apple": "Apple",
+    "e-mail": "Sähköposti",
+    "google": "Google",
+    "id-card": "ID-kortti",
+    "mobile-id": "Mobile-ID",
+    "phone": "Puhelin",
+    "smart-id": "Smart-ID"
   },
   "signup": {
-    "title": "Rekisteröityminen",
-    "welcome": "Tervetuloa!",
-    "secretOnce": "client_secret näytetään vain kerran - tallenna se heti turvalliseen paikkaan.",
-    "copy": "kopioi",
-    "copied": "kopioitu",
+    "alreadyIssued": "Tämän maksun client_id ja client_secret näytettiin kerran, eikä niitä voi näyttää uudelleen. Jos et tallentanut niitä, {link}.",
+    "alreadyIssuedTitle": "Tunnukset on jo myönnetty",
+    "contact": "ota meihin yhteyttä",
+    "contactWithError": "{link} ja liitä yllä oleva viesti mukaan.",
     "continue": "Jatka {link}.",
+    "copied": "kopioitu",
+    "copy": "kopioi",
     "docs": "dokumentaatioon",
     "failed": "Rekisteröityminen epäonnistui",
+    "secretOnce": "client_secret näytetään vain kerran - tallenna se heti turvalliseen paikkaan.",
+    "title": "Rekisteröityminen",
     "unknownError": "Tuntematon virhe",
-    "alreadyIssued": "Tämän maksun client_id ja client_secret näytettiin kerran, eikä niitä voi näyttää uudelleen. Jos et tallentanut niitä, {link}.",
-    "contact": "ota meihin yhteyttä",
-    "alreadyIssuedTitle": "Tunnukset on jo myönnetty",
-    "contactWithError": "{link} ja liitä yllä oleva viesti mukaan."
+    "welcome": "Tervetuloa!"
+  },
+  "smartId": {
+    "keepOpen": "Pidä tämä sivu auki, kunnes tunnistautuminen on valmis.",
+    "language": "eng",
+    "qrLabel": "Smart-ID QR-koodi",
+    "scan": "Skannaa QR-koodi Smart-ID-sovelluksella tai napauta sitä avataksesi Smart-ID:n tällä laitteella.",
+    "starting": "Aloitetaan Smart-ID-istuntoa…"
+  },
+  "usage": {
+    "lastMonth": "viime kuukausi",
+    "month": "tämä kuukausi",
+    "title": "käyttö",
+    "today": "tänään",
+    "year": "tämä vuosi",
+    "yesterday": "eilen"
   }
 }

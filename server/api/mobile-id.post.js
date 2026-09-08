@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
   // Verify the signature and certificate ourselves rather than trusting the OK result alone
   const identity = await verifyMobileIdResponse(skResponse, session)
 
-  if (identity.idcode !== session.idcode) throw authError('Certificate identity does not match the requested ID code')
+  if (identity.idcode !== session.idcode) throw authError('cert.identityMismatch')
 
   await consumeSession(key)
 
@@ -29,5 +29,7 @@ async function checkMidSession (sessionId) {
 
   if (skResponse.state === 'RUNNING' || skResponse.state === 'COMPLETE') return skResponse
 
-  throw createError({ statusCode: 400, statusMessage: skResponse.error || 'Mobile-ID session check failed' })
+  console.warn(`[sk] Mobile-ID check: ${logSafe(skResponse.error)}`)
+
+  throw apiError(400, 'mid.checkFailed')
 }

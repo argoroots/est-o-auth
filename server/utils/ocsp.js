@@ -36,12 +36,12 @@ export async function checkRevocation (certX509, issuerX509, url) {
   }
   catch (error) {
     console.warn(`[ocsp] ${url} unreachable: ${error.message}`)
-    throw authError('Certificate status could not be verified')
+    throw authError('ocsp.unavailable')
   }
 
   const response = pkijs.OCSPResponse.fromBER(raw)
 
-  if (response.responseStatus.valueBlock.valueDec !== 0 || !response.responseBytes) throw authError('OCSP responder returned an error')
+  if (response.responseStatus.valueBlock.valueDec !== 0 || !response.responseBytes) throw authError('ocsp.error')
 
   const basic = pkijs.BasicOCSPResponse.fromBER(response.responseBytes.response.valueBlock.valueHexView)
 
@@ -55,11 +55,11 @@ export async function checkRevocation (certX509, issuerX509, url) {
     console.warn(`[ocsp] ${url} response rejected: ${error.message}`)
   }
 
-  if (!signatureValid) throw authError('OCSP response signature is invalid')
+  if (!signatureValid) throw authError('ocsp.signature')
 
   const { isForCertificate, status } = await basic.getCertificateStatus(cert, issuer)
 
-  if (!isForCertificate) throw authError('OCSP response is for a different certificate')
+  if (!isForCertificate) throw authError('ocsp.mismatch')
 
   const single = basic.tbsResponseData.responses[0]
   const now = Date.now()
@@ -70,10 +70,10 @@ export async function checkRevocation (certX509, issuerX509, url) {
   const fromFuture = thisUpdate - now > OCSP_CLOCK_SKEW_MS
   const expired = nextUpdate && now - nextUpdate > OCSP_CLOCK_SKEW_MS
 
-  if (tooOld || fromFuture || expired) throw authError('OCSP response is stale')
+  if (tooOld || fromFuture || expired) throw authError('ocsp.stale')
 
   if (status !== 0) {
     console.warn(`[ocsp] certificate ${certX509.serialNumber} status ${STATUS[status] ?? status}`)
-    throw authError(status === 1 ? 'Certificate is revoked' : 'Certificate status is unknown')
+    throw authError(status === 1 ? 'cert.revoked' : 'cert.unknown')
   }
 }

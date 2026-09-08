@@ -4,6 +4,8 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
+const message = useErrorMessage()
+
 useHead({ title: `${props.error.statusCode ?? ''} ${t('common.error')}`.trim() })
 </script>
 
@@ -14,7 +16,7 @@ useHead({ title: `${props.error.statusCode ?? ''} ${t('common.error')}`.trim() }
         {{ error.statusCode }} {{ $t('common.error') }}
       </h2>
       <p aria-live="polite">
-        {{ error.statusMessage || error.message }}
+        {{ message(error) }}
       </p>
       <p class="text-center">
         <a href="/">OAuth.ee</a>

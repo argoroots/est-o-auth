@@ -1,14 +1,15 @@
 <script setup>
 definePageMeta({ middleware: ['check-query', 'check-provider'] })
 const { t } = useI18n()
+const message = useErrorMessage()
 useHead({ title: t('provider.phone') })
 
 const { query } = useRoute()
 const phone = ref(query.phone)
 const code = ref(query.code)
 const isSending = ref(false)
-const isError = ref(false)
 const isSent = ref(false)
+const errorText = ref('')
 const wait = useCountdown()
 
 // Opened with a prefilled number (and possibly a code)
@@ -22,7 +23,7 @@ async function onStartSession () {
   if (!phone.value || wait.seconds.value > 0) return
 
   isSending.value = true
-  isError.value = false
+  errorText.value = ''
 
   try {
     const data = await $fetch('/api/phone', { query: { ...query, phone: phone.value } })
@@ -31,7 +32,7 @@ async function onStartSession () {
   }
   catch (error) {
     if (error.statusCode === 429) wait.start(60)
-    else isError.value = true
+    else errorText.value = message(error)
   }
   finally {
     isSending.value = false
@@ -43,7 +44,7 @@ async function onAuthenticate () {
   if (!phone.value?.trim() || !code.value?.trim()) return
 
   isSending.value = true
-  isError.value = false
+  errorText.value = ''
 
   try {
     const data = await $fetch('/api/phone', {
@@ -53,10 +54,10 @@ async function onAuthenticate () {
 
     if (data.url) return navigateTo(data.url, { external: true })
 
-    isError.value = true
+    errorText.value = t('common.somethingWrong')
   }
-  catch {
-    isError.value = true
+  catch (error) {
+    errorText.value = message(error, 'code.invalid')
   }
   finally {
     isSending.value = false
@@ -80,11 +81,11 @@ async function onAuthenticate () {
         @keydown.enter="onStartSession"
       />
       <p
-        v-if="isError"
+        v-if="errorText"
         class="text-red-700"
         aria-live="polite"
       >
-        {{ $t('common.somethingWrong') }}
+        {{ errorText }}
       </p>
       <p
         v-else-if="wait.seconds.value > 0"
@@ -116,11 +117,11 @@ async function onAuthenticate () {
         @keydown.enter="onAuthenticate"
       />
       <p
-        v-if="isError"
+        v-if="errorText"
         class="text-red-700"
         aria-live="polite"
       >
-        {{ $t('code.invalid') }}
+        {{ errorText }}
       </p>
       <form-button @click="onAuthenticate">
         {{ $t('common.authenticate') }}

@@ -16,7 +16,7 @@ export function verifyProviderState (state) {
     return jwt.verify(state, useRuntimeConfig().jwtSecret, { algorithms: ['HS256'] })
   }
   catch {
-    throw createError({ statusCode: 400, statusMessage: 'Invalid or expired state' })
+    throw apiError(400, 'invalid.state')
   }
 }
 

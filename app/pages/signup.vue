@@ -1,5 +1,6 @@
 <script setup>
 const { t } = useI18n()
+const message = useErrorMessage()
 useHead({ title: t('signup.title') })
 
 const { query } = useRoute()
@@ -84,7 +85,7 @@ async function onCopy (key) {
         class="text-red-700"
         aria-live="polite"
       >
-        {{ error?.statusMessage || $t('signup.unknownError') }}
+        {{ message(error, 'signup.unknownError') }}
       </p>
       <i18n-t
         keypath="signup.contactWithError"

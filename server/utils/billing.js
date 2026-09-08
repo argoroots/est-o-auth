@@ -27,7 +27,7 @@ export async function createCheckoutSession () {
   const order = (priceId) => PROVIDER_IDS.indexOf(providerByPrice[priceId])
   const priceIds = Object.keys(providerByPrice).sort((a, b) => order(a) - order(b))
 
-  if (priceIds.length === 0) throw createError({ statusCode: 500, statusMessage: 'No OAuth prices found in Stripe' })
+  if (priceIds.length === 0) throw apiError(500, 'signup.noPrices')
 
   // First invoice on the 1st of next month (UTC), so billing periods are calendar months
   const now = new Date()

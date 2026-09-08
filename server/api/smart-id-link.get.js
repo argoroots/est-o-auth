@@ -7,7 +7,7 @@ const QR_BATCH_SECONDS = 30
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
-  if (!query.session) throw createError({ statusCode: 400, statusMessage: 'Missing session' })
+  if (!query.session) throw apiError(400, 'missing.session')
 
   const session = await requireSession(`smart-id:${query.session}`, SESSION_TTL.SK)
   const { sessionToken, sessionSecret, deviceLinkBase, rpChallenge, interactions, initialCallbackUrl, startTime, lang = 'eng' } = session

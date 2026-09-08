@@ -1,13 +1,14 @@
 <script setup>
 definePageMeta({ middleware: ['check-query', 'check-provider'] })
 const { t } = useI18n()
+const message = useErrorMessage()
 useHead({ title: t('provider.smart-id') })
 
 const { query } = useRoute()
 const session = ref(null)
 const qrUrl = ref(null)
 const deviceLinkUrl = ref(null)
-const isError = ref(false)
+const errorText = ref('')
 
 // QR links come in batches of one per second; the page steps through them locally
 let qrUrls = []
@@ -41,7 +42,7 @@ function stopLoops () {
 
 // Nobody scans a QR code in a background tab: pause there, resume when the tab returns
 function onVisibilityChange () {
-  if (!session.value || isError.value) return
+  if (!session.value || errorText.value) return
 
   if (document.hidden) stopLoops()
   else startLoops()
@@ -53,7 +54,7 @@ async function startSession () {
     const data = await $fetch('/api/smart-id', { query })
 
     if (!data.session) {
-      isError.value = true
+      errorText.value = t('common.somethingWrong')
       return
     }
 
@@ -61,8 +62,8 @@ async function startSession () {
 
     startLoops()
   }
-  catch {
-    isError.value = true
+  catch (error) {
+    errorText.value = message(error)
   }
 }
 
@@ -98,11 +99,11 @@ async function pollStatus () {
 
     if (data.url) return navigateTo(data.url, { external: true })
 
-    isError.value = true
+    errorText.value = t('common.somethingWrong')
   }
-  catch {
+  catch (error) {
     stopLoops()
-    isError.value = true
+    errorText.value = message(error)
   }
 }
 
@@ -116,12 +117,12 @@ async function onCancel () {
 
 <template>
   <form-wrapper>
-    <template v-if="isError">
+    <template v-if="errorText">
       <p
         class="text-red-700"
         aria-live="polite"
       >
-        {{ $t('common.somethingWrong') }}
+        {{ errorText }}
       </p>
     </template>
 

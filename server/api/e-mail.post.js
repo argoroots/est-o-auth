@@ -6,8 +6,8 @@ export default defineEventHandler(async (event) => {
 
   const session = isEmail(body.email) ? await verifyOtp('email', body.email, body.code) : undefined
 
-  if (!session) throw createError({ statusCode: 403, statusMessage: 'Invalid e-mail or code' })
-  if (session.client_id !== body.client_id) throw createError({ statusCode: 403, statusMessage: 'Code belongs to another client' })
+  if (!session) throw apiError(403, 'invalid.emailOrCode')
+  if (session.client_id !== body.client_id) throw apiError(403, 'session.codeOtherClient')
 
   const code = await saveUser({
     id: session.email,

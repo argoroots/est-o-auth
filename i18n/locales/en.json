@@ -1,94 +1,195 @@
 {
-  "common": {
-    "authenticate": "Authenticate",
-    "error": "Error",
-    "somethingWrong": "Something went wrong. Please try again.",
-    "terms": "Terms & Conditions",
-    "redirecting": "Redirecting to {provider}...",
-    "logIn": "Log in",
-    "tryAgain": "Try again",
-    "cancel": "Cancel",
-    "loading": "Loading"
-  },
-  "provider": {
-    "apple": "Apple",
-    "google": "Google",
-    "smart-id": "Smart-ID",
-    "mobile-id": "Mobile-ID",
-    "id-card": "ID-Card",
-    "e-mail": "E-mail",
-    "phone": "Phone"
-  },
   "code": {
-    "label": "Verification Code",
     "invalid": "Invalid verification code!",
+    "label": "Verification Code",
     "wait": "Please wait {seconds} seconds before requesting a new code."
   },
+  "common": {
+    "authenticate": "Authenticate",
+    "cancel": "Cancel",
+    "error": "Error",
+    "loading": "Loading",
+    "logIn": "Log in",
+    "redirecting": "Redirecting to {provider}...",
+    "somethingWrong": "Something went wrong. Please try again.",
+    "terms": "Terms & Conditions",
+    "tryAgain": "Try again"
+  },
   "email": {
-    "label": "Email address",
     "checkInbox": "Check Your inbox!",
-    "sent": "We sent a verification code to e-mail address {email}. Please enter it below or click a link in e-mail.",
-    "mailSubject": "Verification Code",
+    "label": "Email address",
     "mailCode": "Your verification code is {code}",
-    "mailLink": "... or just open this link"
+    "mailLink": "... or just open this link",
+    "mailSubject": "Verification Code",
+    "sent": "We sent a verification code to e-mail address {email}. Please enter it below or click a link in e-mail."
+  },
+  "errors": {
+    "auth": {
+      "invalidToken": "Invalid token",
+      "unauthorized": "Unauthorized"
+    },
+    "cert": {
+      "expired": "Certificate is expired",
+      "identity": "Could not extract identity from certificate",
+      "identityMismatch": "Certificate identity does not match the requested ID code",
+      "invalid": "Invalid certificate",
+      "level": "Certificate level is below the required level",
+      "notAuth": "Certificate is not for authentication",
+      "notYetValid": "Certificate is not yet valid",
+      "policy": "Certificate policy is not allowed for ID-card authentication",
+      "revoked": "Certificate is revoked",
+      "unknown": "Certificate status is unknown",
+      "untrusted": "Certificate is not issued by a trusted authority"
+    },
+    "client": {
+      "invalid": "Invalid client_id",
+      "providerNotEnabled": "The authentication provider is not enabled for this client",
+      "redirectNotRegistered": "The redirect_uri does not match a registered redirect URI"
+    },
+    "invalid": {
+      "authToken": "Invalid authentication token",
+      "authTokenFormat": "Unsupported authentication token format",
+      "callbackValue": "Invalid callback value",
+      "email": "Invalid e-mail address",
+      "emailOrCode": "Invalid e-mail or code",
+      "idcode": "Invalid ID code",
+      "idToken": "Invalid id_token",
+      "idTokenKey": "Unknown id_token signing key",
+      "phone": "Invalid phone number",
+      "phoneOrCode": "Invalid phone or code",
+      "responseType": "The response_type must be \"code\"",
+      "scope": "The scope must be \"openid\"",
+      "sessionSecretDigest": "Invalid session secret digest",
+      "state": "Invalid or expired state",
+      "userChallenge": "Invalid user challenge verifier"
+    },
+    "limit": {
+      "cooldown": "Please wait before trying again",
+      "monthly": "Monthly limit reached",
+      "resend": "Please wait before requesting a new code"
+    },
+    "mid": {
+      "checkFailed": "Mobile-ID session check failed",
+      "startFailed": "Mobile-ID session start failed",
+      "unexpectedResponse": "Unexpected Mobile-ID response"
+    },
+    "missing": {
+      "callbackParams": "Missing callback parameters",
+      "clientId": "Parameter client_id is missing",
+      "code": "Parameter code is missing",
+      "email": "Parameter email is missing",
+      "idcode": "Parameter idcode is missing",
+      "nonce": "Parameter nonce is missing",
+      "phone": "Parameter phone is missing",
+      "redirectUri": "Parameter redirect_uri is missing",
+      "responseType": "Parameter response_type is missing",
+      "scope": "Parameter scope is missing",
+      "session": "Missing session",
+      "state": "Parameter state is missing"
+    },
+    "ocsp": {
+      "error": "OCSP responder returned an error",
+      "mismatch": "OCSP response is for a different certificate",
+      "signature": "OCSP response signature is invalid",
+      "stale": "OCSP response is stale",
+      "unavailable": "Certificate status could not be verified"
+    },
+    "session": {
+      "codeOtherClient": "Code belongs to another client",
+      "invalid": "Invalid or expired session",
+      "nonceInvalid": "Unknown, used or expired nonce",
+      "otherClient": "Session belongs to another client",
+      "used": "Session already used"
+    },
+    "sid": {
+      "failed": "Smart-ID authentication failed",
+      "refused": "Smart-ID authentication was cancelled",
+      "startFailed": "Smart-ID session start failed",
+      "timeout": "Smart-ID authentication timed out",
+      "wrongVc": "Wrong verification code was chosen in the Smart-ID app"
+    },
+    "signature": {
+      "failed": "Signature verification failed",
+      "hash": "Unsupported signature hash algorithm",
+      "interaction": "Unexpected interaction type",
+      "protocol": "Unexpected signature protocol"
+    },
+    "signup": {
+      "clientExists": "Client already created",
+      "noPrices": "No OAuth prices found in Stripe",
+      "noProviders": "No authentication providers were selected",
+      "paymentNotCompleted": "Payment is not completed"
+    },
+    "sk": {
+      "failed": "SK request failed"
+    }
+  },
+  "home": {
+    "getStarted": "Get Started",
+    "intro": "Use Estonian ID-card, Mobile-ID, Smart-ID, E-mail or Phone as OAuth authentication provider."
+  },
+  "idCard": {
+    "download": "You can download the ID-software from {link}.",
+    "failed": "ID-card authentication failed. Please try again.",
+    "insecure": "ID-card authentication requires a secure (HTTPS) connection.",
+    "insert": "Please insert your ID-card into the card reader and follow the instructions on the screen.",
+    "noApp": "The Web eID application is not installed.",
+    "noExtension": "The Web eID browser extension is not installed.",
+    "pending": "Another Web eID operation is already in progress. Please finish it and try again.",
+    "timeout": "Authentication timed out, please try again.",
+    "updateApp": "The Web eID application needs to be updated.",
+    "updateBoth": "The Web eID extension and application versions do not match. Please update both.",
+    "updateExtension": "The Web eID browser extension needs to be updated."
+  },
+  "mobileId": {
+    "checkDetails": "Something is not right! Check ID code and Phone.",
+    "enterPin": "Enter your Mobile-ID PIN1 on your phone, if you are convinced the control code shown on your device matches the one shown here.",
+    "idcode": "ID code",
+    "language": "ENG"
   },
   "phone": {
-    "label": "Phone",
     "checkPhone": "Check Your phone!",
+    "label": "Phone",
     "sent": "We sent a verification code to phone number {phone}. Please enter it below.",
     "sms": "Your OAuth.ee verification code is {code}"
   },
-  "mobileId": {
-    "idcode": "ID code",
-    "checkDetails": "Something is not right! Check ID code and Phone.",
-    "enterPin": "Enter your Mobile-ID PIN1 on your phone, if you are convinced the control code shown on your device matches the one shown here.",
-    "language": "ENG"
-  },
-  "smartId": {
-    "scan": "Scan the QR code with your Smart-ID app, or tap it to open Smart-ID on this device.",
-    "keepOpen": "Keep this page open until authentication is complete.",
-    "starting": "Starting Smart-ID session…",
-    "language": "eng",
-    "qrLabel": "Smart-ID QR code"
-  },
-  "idCard": {
-    "insert": "Please insert your ID-card into the card reader and follow the instructions on the screen.",
-    "timeout": "Authentication timed out, please try again.",
-    "pending": "Another Web eID operation is already in progress. Please finish it and try again.",
-    "insecure": "ID-card authentication requires a secure (HTTPS) connection.",
-    "updateApp": "The Web eID application needs to be updated.",
-    "updateExtension": "The Web eID browser extension needs to be updated.",
-    "updateBoth": "The Web eID extension and application versions do not match. Please update both.",
-    "noExtension": "The Web eID browser extension is not installed.",
-    "noApp": "The Web eID application is not installed.",
-    "failed": "ID-card authentication failed. Please try again.",
-    "download": "You can download the ID-software from {link}."
-  },
-  "usage": {
-    "title": "usage",
-    "today": "today",
-    "yesterday": "yesterday",
-    "month": "this month",
-    "lastMonth": "last month",
-    "year": "this year"
-  },
-  "home": {
-    "intro": "Use Estonian ID-card, Mobile-ID, Smart-ID, E-mail or Phone as OAuth authentication provider.",
-    "getStarted": "Get Started"
+  "provider": {
+    "apple": "Apple",
+    "e-mail": "E-mail",
+    "google": "Google",
+    "id-card": "ID-Card",
+    "mobile-id": "Mobile-ID",
+    "phone": "Phone",
+    "smart-id": "Smart-ID"
   },
   "signup": {
-    "title": "Sign up",
-    "welcome": "Welcome!",
-    "secretOnce": "The client_secret is shown only once - store it in a safe place now.",
-    "copy": "copy",
-    "copied": "copied",
+    "alreadyIssued": "The client_id and client_secret for this payment were shown once and can not be shown again. If you did not save them, please {link}.",
+    "alreadyIssuedTitle": "Credentials already issued",
+    "contact": "contact us",
+    "contactWithError": "Please {link} and include the message above.",
     "continue": "Continue with the {link}.",
+    "copied": "copied",
+    "copy": "copy",
     "docs": "documentation",
     "failed": "Sign up failed",
+    "secretOnce": "The client_secret is shown only once - store it in a safe place now.",
+    "title": "Sign up",
     "unknownError": "Unknown error",
-    "alreadyIssued": "The client_id and client_secret for this payment were shown once and can not be shown again. If you did not save them, please {link}.",
-    "contact": "contact us",
-    "alreadyIssuedTitle": "Credentials already issued",
-    "contactWithError": "Please {link} and include the message above."
+    "welcome": "Welcome!"
+  },
+  "smartId": {
+    "keepOpen": "Keep this page open until authentication is complete.",
+    "language": "eng",
+    "qrLabel": "Smart-ID QR code",
+    "scan": "Scan the QR code with your Smart-ID app, or tap it to open Smart-ID on this device.",
+    "starting": "Starting Smart-ID session…"
+  },
+  "usage": {
+    "lastMonth": "last month",
+    "month": "this month",
+    "title": "usage",
+    "today": "today",
+    "year": "this year",
+    "yesterday": "yesterday"
   }
 }

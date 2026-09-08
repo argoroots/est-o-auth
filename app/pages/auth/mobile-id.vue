@@ -1,6 +1,7 @@
 <script setup>
 definePageMeta({ middleware: ['check-query', 'check-provider'] })
 const { t } = useI18n()
+const message = useErrorMessage()
 useHead({ title: t('provider.mobile-id') })
 
 const { query } = useRoute()
@@ -8,7 +9,7 @@ const idcode = ref(query.idcode)
 const phone = ref(query.phone)
 const phoneInput = ref()
 const isSending = ref(false)
-const isError = ref(false)
+const errorText = ref('')
 const consent = ref(null)
 const session = ref(null)
 
@@ -43,7 +44,7 @@ async function onStartSession () {
   if (!idcode.value || !phone.value || isSending.value) return
 
   isSending.value = true
-  isError.value = false
+  errorText.value = ''
 
   try {
     const data = await $fetch('/api/mobile-id', { query: { ...query, idcode: idcode.value, phone: phone.value } })
@@ -52,8 +53,8 @@ async function onStartSession () {
     session.value = data.session
     stopPoll = startPolling(onAuthenticate, 5000)
   }
-  catch {
-    isError.value = true
+  catch (error) {
+    errorText.value = message(error, 'mobileId.checkDetails')
   }
   finally {
     isSending.value = false
@@ -73,14 +74,16 @@ async function onAuthenticate () {
     stopPolling()
 
     if (data.url) return navigateTo(data.url, { external: true })
+
+    errorText.value = t('mobileId.checkDetails')
   }
-  catch {
+  catch (error) {
     stopPolling()
+    errorText.value = message(error, 'mobileId.checkDetails')
   }
 
   consent.value = null
   session.value = null
-  isError.value = true
 }
 
 // Stops waiting for the phone and returns to the form; the SK session expires on its own
@@ -120,11 +123,11 @@ function onCancel () {
         @keydown.enter="onStartSession"
       />
       <p
-        v-if="isError"
+        v-if="errorText"
         class="text-red-700"
         aria-live="polite"
       >
-        {{ $t('mobileId.checkDetails') }}
+        {{ errorText }}
       </p>
       <form-button @click="onStartSession">
         {{ $t('common.authenticate') }}

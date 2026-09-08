@@ -12,8 +12,8 @@ export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
   const session = await getCheckoutSession(sessionId)
 
-  if (session.status !== 'complete' || !session.customer) throw createError({ statusCode: 402, statusMessage: 'Payment is not completed' })
-  if (session.providers.length === 0) throw createError({ statusCode: 400, statusMessage: 'No authentication providers were selected' })
+  if (session.status !== 'complete' || !session.customer) throw apiError(402, 'signup.paymentNotCompleted')
+  if (session.providers.length === 0) throw apiError(400, 'signup.noProviders')
 
   // Client id is derived from the Checkout session, so a reload yields the same id (and a 409), never a second client
   const clientId = toBase62(createHash('sha256').update(sessionId + config.jwtSecret).digest(), 16)

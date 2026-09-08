@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
 
   const client = await validateRequest(query, 'e-mail', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'email'])
 
-  if (!isEmail(query.email)) throw createError({ statusCode: 400, statusMessage: 'Invalid e-mail address' })
+  if (!isEmail(query.email)) throw apiError(400, 'invalid.email')
 
   await checkUsageLimit(client.id, 'e-mail')
 

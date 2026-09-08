@@ -5,7 +5,7 @@ export async function verifyMobileIdResponse (skResponse, midSession) {
   const { signature, cert } = skResponse
   const match = /^SHA256With(EC|RSA)Encryption$/i.exec(signature?.algorithm ?? '')
 
-  if (!match || !signature.value || !cert) throw authError('Unexpected Mobile-ID response')
+  if (!match || !signature.value || !cert) throw authError('mid.unexpectedResponse')
 
   const x509 = new X509Certificate(Buffer.from(cert, 'base64'))
 
@@ -17,7 +17,7 @@ export async function verifyMobileIdResponse (skResponse, midSession) {
     : { key: x509.publicKey, padding: constants.RSA_PKCS1_PADDING }
 
   if (!safeVerify('sha256', Buffer.from(midSession.message, 'base64'), keyOptions, Buffer.from(signature.value, 'base64'))) {
-    throw authError('Signature verification failed')
+    throw authError('signature.failed')
   }
 
   return getCertificateIdentity(x509)

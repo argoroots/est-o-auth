@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
   // Nonce is single-use: consumed atomically on lookup, and must belong to this client
   const session = await getSessionData(`id-card:${body.nonce}`, true, SESSION_TTL.NONCE)
 
-  if (!session || session.client_id !== client.id) throw authError('Unknown, used or expired nonce')
+  if (!session || session.client_id !== client.id) throw authError('session.nonceInvalid')
 
   // The Web eID extension signs the page origin; ours comes from config in production
   const cert = await verifyWebEidToken(body, body.nonce, getOrigin(event))

@@ -54,7 +54,11 @@ async function startSidSession (displayText60, initialCallbackUrl) {
 
   const { sessionID: skSession, sessionToken, sessionSecret, deviceLinkBase, error } = response
 
-  if (!skSession) throw createError({ statusCode: 400, statusMessage: error || 'Smart-ID session start failed' })
+  if (!skSession) {
+    console.warn(`[sk] Smart-ID start: ${logSafe(error)}`)
+
+    throw apiError(400, 'sid.startFailed')
+  }
 
   return { skSession, sessionToken, sessionSecret, deviceLinkBase, rpChallenge, interactions, startTime: Date.now() }
 }

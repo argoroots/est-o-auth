@@ -23,12 +23,12 @@ export async function verifyIdToken (idToken, { jwksUrl, issuer, audience }) {
   const kid = jwt.decode(idToken, { complete: true })?.header?.kid
   const key = kid && await getKey(jwksUrl, kid)
 
-  if (!key) throw createError({ statusCode: 400, statusMessage: 'Unknown id_token signing key' })
+  if (!key) throw apiError(400, 'invalid.idTokenKey')
 
   try {
     return jwt.verify(idToken, key, { algorithms: ['RS256'], issuer, audience })
   }
   catch {
-    throw createError({ statusCode: 400, statusMessage: 'Invalid id_token' })
+    throw apiError(400, 'invalid.idToken')
   }
 }

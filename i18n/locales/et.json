@@ -1,94 +1,195 @@
 {
-  "common": {
-    "authenticate": "Sisene",
-    "error": "Viga",
-    "somethingWrong": "Midagi läks valesti. Palun proovi uuesti.",
-    "terms": "Kasutustingimused",
-    "redirecting": "Suunamine {provider} lehele...",
-    "logIn": "Sisene",
-    "tryAgain": "Proovi uuesti",
-    "cancel": "Tühista",
-    "loading": "Laadimine"
-  },
-  "provider": {
-    "apple": "Apple",
-    "google": "Google",
-    "smart-id": "Smart-ID",
-    "mobile-id": "Mobiil-ID",
-    "id-card": "ID-kaart",
-    "e-mail": "E-post",
-    "phone": "Telefon"
-  },
   "code": {
-    "label": "Kinnituskood",
     "invalid": "Vale kinnituskood!",
+    "label": "Kinnituskood",
     "wait": "Palun oota {seconds} sekundit enne uue koodi küsimist."
   },
+  "common": {
+    "authenticate": "Sisene",
+    "cancel": "Tühista",
+    "error": "Viga",
+    "loading": "Laadimine",
+    "logIn": "Sisene",
+    "redirecting": "Suunamine {provider} lehele...",
+    "somethingWrong": "Midagi läks valesti. Palun proovi uuesti.",
+    "terms": "Kasutustingimused",
+    "tryAgain": "Proovi uuesti"
+  },
   "email": {
-    "label": "E-posti aadress",
     "checkInbox": "Vaata oma postkasti!",
-    "sent": "Saatsime kinnituskoodi e-posti aadressile {email}. Sisesta see allpool või klõpsa e-kirjas oleval lingil.",
-    "mailSubject": "Kinnituskood",
+    "label": "E-posti aadress",
     "mailCode": "Sinu kinnituskood on {code}",
-    "mailLink": "... või ava see link"
+    "mailLink": "... või ava see link",
+    "mailSubject": "Kinnituskood",
+    "sent": "Saatsime kinnituskoodi e-posti aadressile {email}. Sisesta see allpool või klõpsa e-kirjas oleval lingil."
+  },
+  "errors": {
+    "auth": {
+      "invalidToken": "Vigane token",
+      "unauthorized": "Puudub ligipääs"
+    },
+    "cert": {
+      "expired": "Sertifikaat on aegunud",
+      "identity": "Sertifikaadist ei õnnestunud isikut tuvastada",
+      "identityMismatch": "Sertifikaadi isik ei vasta sisestatud isikukoodile",
+      "invalid": "Vigane sertifikaat",
+      "level": "Sertifikaadi tase on nõutavast madalam",
+      "notAuth": "Sertifikaat ei ole mõeldud autentimiseks",
+      "notYetValid": "Sertifikaat ei ole veel kehtiv",
+      "policy": "Sertifikaadi poliitika ei ole ID-kaardiga autentimiseks lubatud",
+      "revoked": "Sertifikaat on tühistatud",
+      "unknown": "Sertifikaadi staatus on teadmata",
+      "untrusted": "Sertifikaati ei ole väljastanud usaldusväärne asutus"
+    },
+    "client": {
+      "invalid": "Vigane client_id",
+      "providerNotEnabled": "See autentimisviis ei ole selle kliendi jaoks lubatud",
+      "redirectNotRegistered": "redirect_uri ei vasta registreeritud tagasisuunamise aadressile"
+    },
+    "invalid": {
+      "authToken": "Vigane autentimistoken",
+      "authTokenFormat": "Toetamata autentimistokeni vorming",
+      "callbackValue": "Vigane tagasikutse väärtus",
+      "email": "Vigane e-posti aadress",
+      "emailOrCode": "Vigane e-posti aadress või kood",
+      "idcode": "Vigane isikukood",
+      "idToken": "Vigane id_token",
+      "idTokenKey": "Tundmatu id_token allkirjavõti",
+      "phone": "Vigane telefoninumber",
+      "phoneOrCode": "Vigane telefoninumber või kood",
+      "responseType": "response_type peab olema \"code\"",
+      "scope": "scope peab olema \"openid\"",
+      "sessionSecretDigest": "Vigane seansisaladuse räsi",
+      "state": "Vigane või aegunud state",
+      "userChallenge": "Vigane kasutaja kontrollväärtus"
+    },
+    "limit": {
+      "cooldown": "Palun oota enne uuesti proovimist",
+      "monthly": "Kuu limiit on täis",
+      "resend": "Palun oota enne uue koodi küsimist"
+    },
+    "mid": {
+      "checkFailed": "Mobiil-ID seansi kontroll ebaõnnestus",
+      "startFailed": "Mobiil-ID seansi alustamine ebaõnnestus",
+      "unexpectedResponse": "Ootamatu Mobiil-ID vastus"
+    },
+    "missing": {
+      "callbackParams": "Tagasikutse parameetrid puuduvad",
+      "clientId": "Parameeter client_id puudub",
+      "code": "Parameeter code puudub",
+      "email": "Parameeter email puudub",
+      "idcode": "Parameeter idcode puudub",
+      "nonce": "Parameeter nonce puudub",
+      "phone": "Parameeter phone puudub",
+      "redirectUri": "Parameeter redirect_uri puudub",
+      "responseType": "Parameeter response_type puudub",
+      "scope": "Parameeter scope puudub",
+      "session": "Seanss puudub",
+      "state": "Parameeter state puudub"
+    },
+    "ocsp": {
+      "error": "OCSP teenus tagastas vea",
+      "mismatch": "OCSP vastus käib teise sertifikaadi kohta",
+      "signature": "OCSP vastuse allkiri on vigane",
+      "stale": "OCSP vastus on aegunud",
+      "unavailable": "Sertifikaadi staatust ei õnnestunud kontrollida"
+    },
+    "session": {
+      "codeOtherClient": "Kood kuulub teisele kliendile",
+      "invalid": "Vigane või aegunud seanss",
+      "nonceInvalid": "Tundmatu, kasutatud või aegunud nonce",
+      "otherClient": "Seanss kuulub teisele kliendile",
+      "used": "Seanss on juba kasutatud"
+    },
+    "sid": {
+      "failed": "Smart-ID autentimine ebaõnnestus",
+      "refused": "Smart-ID autentimine katkestati",
+      "startFailed": "Smart-ID seansi alustamine ebaõnnestus",
+      "timeout": "Smart-ID autentimine aegus",
+      "wrongVc": "Smart-ID rakenduses valiti vale kontrollkood"
+    },
+    "signature": {
+      "failed": "Allkirja kontroll ebaõnnestus",
+      "hash": "Toetamata allkirja räsialgoritm",
+      "interaction": "Ootamatu suhtlusviis",
+      "protocol": "Ootamatu allkirjaprotokoll"
+    },
+    "signup": {
+      "clientExists": "Klient on juba loodud",
+      "noPrices": "Stripe'is ei leitud OAuth hindu",
+      "noProviders": "Ühtegi autentimisviisi ei valitud",
+      "paymentNotCompleted": "Makse ei ole lõpetatud"
+    },
+    "sk": {
+      "failed": "SK päring ebaõnnestus"
+    }
+  },
+  "home": {
+    "getStarted": "Alusta",
+    "intro": "Kasuta Eesti ID-kaarti, Mobiil-ID-d, Smart-ID-d, e-posti või telefoni OAuth autentimisteenusena."
+  },
+  "idCard": {
+    "download": "ID-tarkvara saad alla laadida lehelt {link}.",
+    "failed": "ID-kaardiga autentimine ebaõnnestus. Palun proovi uuesti.",
+    "insecure": "ID-kaardiga autentimine nõuab turvalist (HTTPS) ühendust.",
+    "insert": "Sisesta ID-kaart kaardilugejasse ja järgi ekraanil kuvatavaid juhiseid.",
+    "noApp": "Web eID rakendus ei ole paigaldatud.",
+    "noExtension": "Web eID brauserilaiendus ei ole paigaldatud.",
+    "pending": "Teine Web eID toiming on juba pooleli. Lõpeta see ja proovi uuesti.",
+    "timeout": "Autentimine aegus, palun proovi uuesti.",
+    "updateApp": "Web eID rakendust tuleb uuendada.",
+    "updateBoth": "Web eID laienduse ja rakenduse versioonid ei ühti. Palun uuenda mõlemad.",
+    "updateExtension": "Web eID brauserilaiendust tuleb uuendada."
+  },
+  "mobileId": {
+    "checkDetails": "Midagi on valesti! Kontrolli isikukoodi ja telefoninumbrit.",
+    "enterPin": "Sisesta telefonis Mobiil-ID PIN1, kui telefonis kuvatav kontrollkood on sama, mis siin.",
+    "idcode": "Isikukood",
+    "language": "EST"
   },
   "phone": {
-    "label": "Telefon",
     "checkPhone": "Vaata oma telefoni!",
+    "label": "Telefon",
     "sent": "Saatsime kinnituskoodi telefoninumbrile {phone}. Sisesta see allpool.",
     "sms": "Sinu OAuth.ee kinnituskood on {code}"
   },
-  "mobileId": {
-    "idcode": "Isikukood",
-    "checkDetails": "Midagi on valesti! Kontrolli isikukoodi ja telefoninumbrit.",
-    "enterPin": "Sisesta telefonis Mobiil-ID PIN1, kui telefonis kuvatav kontrollkood on sama, mis siin.",
-    "language": "EST"
-  },
-  "smartId": {
-    "scan": "Skaneeri QR-kood Smart-ID rakendusega või puuduta seda, et avada Smart-ID selles seadmes.",
-    "keepOpen": "Hoia see leht avatuna, kuni autentimine on lõppenud.",
-    "starting": "Smart-ID sessiooni alustamine…",
-    "language": "est",
-    "qrLabel": "Smart-ID QR-kood"
-  },
-  "idCard": {
-    "insert": "Sisesta ID-kaart kaardilugejasse ja järgi ekraanil kuvatavaid juhiseid.",
-    "timeout": "Autentimine aegus, palun proovi uuesti.",
-    "pending": "Teine Web eID toiming on juba pooleli. Lõpeta see ja proovi uuesti.",
-    "insecure": "ID-kaardiga autentimine nõuab turvalist (HTTPS) ühendust.",
-    "updateApp": "Web eID rakendust tuleb uuendada.",
-    "updateExtension": "Web eID brauserilaiendust tuleb uuendada.",
-    "updateBoth": "Web eID laienduse ja rakenduse versioonid ei ühti. Palun uuenda mõlemad.",
-    "noExtension": "Web eID brauserilaiendus ei ole paigaldatud.",
-    "noApp": "Web eID rakendus ei ole paigaldatud.",
-    "failed": "ID-kaardiga autentimine ebaõnnestus. Palun proovi uuesti.",
-    "download": "ID-tarkvara saad alla laadida lehelt {link}."
-  },
-  "usage": {
-    "title": "kasutus",
-    "today": "täna",
-    "yesterday": "eile",
-    "month": "see kuu",
-    "lastMonth": "eelmine kuu",
-    "year": "see aasta"
-  },
-  "home": {
-    "intro": "Kasuta Eesti ID-kaarti, Mobiil-ID-d, Smart-ID-d, e-posti või telefoni OAuth autentimisteenusena.",
-    "getStarted": "Alusta"
+  "provider": {
+    "apple": "Apple",
+    "e-mail": "E-post",
+    "google": "Google",
+    "id-card": "ID-kaart",
+    "mobile-id": "Mobiil-ID",
+    "phone": "Telefon",
+    "smart-id": "Smart-ID"
   },
   "signup": {
-    "title": "Registreerumine",
-    "welcome": "Tere tulemast!",
-    "secretOnce": "client_secret kuvatakse ainult üks kord - salvesta see kohe turvalisse kohta.",
-    "copy": "kopeeri",
-    "copied": "kopeeritud",
+    "alreadyIssued": "Selle makse client_id ja client_secret kuvati ühe korra ja neid ei saa uuesti näidata. Kui sa neid ei salvestanud, palun {link}.",
+    "alreadyIssuedTitle": "Tunnused on juba väljastatud",
+    "contact": "võta meiega ühendust",
+    "contactWithError": "Palun {link} ja lisa ülaltoodud teade.",
     "continue": "Jätka {link}.",
+    "copied": "kopeeritud",
+    "copy": "kopeeri",
     "docs": "dokumentatsiooniga",
     "failed": "Registreerumine ebaõnnestus",
+    "secretOnce": "client_secret kuvatakse ainult üks kord - salvesta see kohe turvalisse kohta.",
+    "title": "Registreerumine",
     "unknownError": "Tundmatu viga",
-    "alreadyIssued": "Selle makse client_id ja client_secret kuvati ühe korra ja neid ei saa uuesti näidata. Kui sa neid ei salvestanud, palun {link}.",
-    "contact": "võta meiega ühendust",
-    "alreadyIssuedTitle": "Tunnused on juba väljastatud",
-    "contactWithError": "Palun {link} ja lisa ülaltoodud teade."
+    "welcome": "Tere tulemast!"
+  },
+  "smartId": {
+    "keepOpen": "Hoia see leht avatuna, kuni autentimine on lõppenud.",
+    "language": "est",
+    "qrLabel": "Smart-ID QR-kood",
+    "scan": "Skaneeri QR-kood Smart-ID rakendusega või puuduta seda, et avada Smart-ID selles seadmes.",
+    "starting": "Smart-ID sessiooni alustamine…"
+  },
+  "usage": {
+    "lastMonth": "eelmine kuu",
+    "month": "see kuu",
+    "title": "kasutus",
+    "today": "täna",
+    "year": "see aasta",
+    "yesterday": "eile"
   }
 }

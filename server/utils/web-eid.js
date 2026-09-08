@@ -22,11 +22,11 @@ export async function verifyWebEidToken (token, nonce, origin) {
   const { unverifiedCertificate, algorithm, signature, format } = token ?? {}
 
   // Minor versions within web-eid:1 are backwards compatible
-  if (!/^web-eid:1(\.\d+)?$/.test(format ?? '')) throw authError('Unsupported authentication token format')
+  if (!/^web-eid:1(\.\d+)?$/.test(format ?? '')) throw authError('invalid.authTokenFormat')
 
   const match = /^(ES|PS|RS)(256|384|512)$/.exec(algorithm ?? '')
 
-  if (!match || !unverifiedCertificate || !signature) throw authError('Invalid authentication token')
+  if (!match || !unverifiedCertificate || !signature) throw authError('invalid.authToken')
 
   const [, family, bits] = match
   const hashAlg = `sha${bits}`
@@ -37,11 +37,11 @@ export async function verifyWebEidToken (token, nonce, origin) {
     cert = new X509Certificate(Buffer.from(unverifiedCertificate, 'base64'))
   }
   catch {
-    throw authError('Invalid certificate')
+    throw authError('cert.invalid')
   }
 
-  if (!cert.keyUsage?.includes(CLIENT_AUTH_OID)) throw authError('Certificate is not for authentication')
-  if (hasDisallowedPolicy(cert)) throw authError('Certificate policy is not allowed for ID-card authentication')
+  if (!cert.keyUsage?.includes(CLIENT_AUTH_OID)) throw authError('cert.notAuth')
+  if (hasDisallowedPolicy(cert)) throw authError('cert.policy')
 
   const issuer = await checkTrustedCertificate(cert, 'id-card')
 
@@ -59,7 +59,7 @@ export async function verifyWebEidToken (token, nonce, origin) {
   if (family === 'PS') Object.assign(keyOptions, { padding: constants.RSA_PKCS1_PSS_PADDING, saltLength: constants.RSA_PSS_SALTLEN_DIGEST })
   if (family === 'RS') keyOptions.padding = constants.RSA_PKCS1_PADDING
 
-  if (!safeVerify(hashAlg, data, keyOptions, Buffer.from(signature, 'base64'))) throw authError('Signature verification failed')
+  if (!safeVerify(hashAlg, data, keyOptions, Buffer.from(signature, 'base64'))) throw authError('signature.failed')
 
   return cert
 }

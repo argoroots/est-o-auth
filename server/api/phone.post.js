@@ -6,8 +6,8 @@ export default defineEventHandler(async (event) => {
 
   const session = isPhone(body.phone) ? await verifyOtp('phone', body.phone, body.code) : undefined
 
-  if (!session) throw createError({ statusCode: 403, statusMessage: 'Invalid phone or code' })
-  if (session.client_id !== body.client_id) throw createError({ statusCode: 403, statusMessage: 'Code belongs to another client' })
+  if (!session) throw apiError(403, 'invalid.phoneOrCode')
+  if (session.client_id !== body.client_id) throw apiError(403, 'session.codeOtherClient')
 
   const code = await saveUser({
     id: session.phone,

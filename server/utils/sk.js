@@ -8,6 +8,8 @@ export async function skFetch (url, options) {
     const message = error.data?.detail || error.data?.title || error.data?.error || error.message
     const status = error.statusCode >= 400 && error.statusCode < 500 ? 400 : 502
 
-    throw createError({ statusCode: status, statusMessage: message || 'SK request failed' })
+    console.warn(`[sk] ${url} ${error.statusCode ?? '-'}: ${logSafe(message)}`)
+
+    throw apiError(status, 'sk.failed')
   }
 }

@@ -52,7 +52,7 @@ governs physical cleanup.
 | `providers` | SS | Enabled providers: `smart-id`, `mobile-id`, `id-card`, `e-mail`, `phone`, `google`, `apple` |
 | `skidText` | S | Service name shown in the Smart-ID and Mobile-ID apps (max 60 characters) |
 | `description` | S or M | Text shown above the login options. Either one string or a map keyed by language, e.g. `{ "en": {"S": "..."}, "et": {"S": "..."} }`; the UI language (`lang` parameter) selects, falling back to `en`. |
-| `redirectUris` | SS | Registered redirect URIs. Stored but not enforced. |
+| `redirectUris` | SS | Registered redirect URIs. Not enforced yet: every request logs `[redirect] client … redirect_uri … registered=true/false` so values can be collected first. Once enforced, the match is exact (RFC 6749 simple string comparison); carry per-login data in `state`, not in the URI. |
 | `stripeId` | S | Stripe customer id. Usage is metered to it; clients without one are not billed. |
 
 Self-service sign-up at `/api/signup` creates rows through Stripe Checkout. Rows can also be

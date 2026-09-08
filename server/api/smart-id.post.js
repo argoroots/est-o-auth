@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
   if (skResponse.state === 'RUNNING') return { status: 'RUNNING' }
 
   if (skResponse.state !== 'COMPLETE' || skResponse.result?.endResult !== 'OK') {
-    throw createError({ statusCode: 400, statusMessage: skResponse.result?.endResult || 'Smart-ID authentication failed' })
+    throw sidResultError(skResponse.result?.endResult)
   }
 
   // Web2App flow completes via the callback endpoint, not here

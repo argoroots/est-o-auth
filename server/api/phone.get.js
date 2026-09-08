@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
 
   const client = await validateRequest(query, 'phone', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'phone'])
 
-  if (!isPhone(query.phone)) throw createError({ statusCode: 400, statusMessage: 'Invalid phone number' })
+  if (!isPhone(query.phone)) throw apiError(400, 'invalid.phone')
 
   await checkUsageLimit(client.id, 'phone')
 
