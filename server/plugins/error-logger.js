@@ -24,8 +24,9 @@ export default defineNitroPlugin((nitroApp) => {
   nitroApp.hooks.hook('error', async (error, { event } = {}) => {
     const { path, provider, clientId, method } = await requestContext(event)
     const status = error?.statusCode ?? 500
-    const context = [clientId && `client=${clientId}`, provider && `provider=${provider}`].filter(Boolean).join(' ')
-    const line = `${status} ${method} ${path}${context ? ` ${context}` : ''}: ${error?.statusMessage || error?.message}`
+    // Client id comes from the request and the message may echo provider responses: neither is trusted
+    const context = [clientId && `client=${logSafe(clientId)}`, provider && `provider=${provider}`].filter(Boolean).join(' ')
+    const line = `${status} ${method} ${logSafe(path)}${context ? ` ${context}` : ''}: ${logSafe(error?.statusMessage || error?.message)}`
 
     if (status >= 400 && status < 500) {
       console.warn(`[warn] ${line}`)

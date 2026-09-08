@@ -22,7 +22,7 @@ export async function validateRequest (data, provider, requiredParams = []) {
     const hasRegistered = client.redirectUris?.length > 0
     const isRegistered = hasRegistered && client.redirectUris.some((r) => isRegisteredRedirect(r, data.redirect_uri))
 
-    console.info(`[redirect] client ${client.id} redirect_uri ${data.redirect_uri} registered=${isRegistered}${hasRegistered ? '' : ' (none configured)'}`)
+    console.info(`[redirect] client ${client.id} redirect_uri ${logSafe(data.redirect_uri)} registered=${isRegistered}${hasRegistered ? '' : ' (none configured)'}`)
 
     // Enforcement, once every active client's redirectUris is filled in from the logs:
     // if (hasRegistered && !isRegistered) throw createError({ statusCode: 400, statusMessage: 'The redirect URI (redirect_uri) do not match a registered redirect URI!' })

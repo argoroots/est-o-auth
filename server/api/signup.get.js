@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
   const redirectUri = validRedirectUri(session.redirectUri)
 
   // The payment is done, so a bad URL must not fail the signup; it is left empty and filled in by hand
-  if (session.redirectUri && !redirectUri) console.warn(`[signup] client ${clientId} redirect_uri rejected: ${JSON.stringify(session.redirectUri)}`)
+  if (session.redirectUri && !redirectUri) console.warn(`[signup] client ${clientId} redirect_uri rejected: ${logSafe(session.redirectUri)}`)
 
   await saveClient({
     id: clientId,

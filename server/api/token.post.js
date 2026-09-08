@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
   setResponseHeaders(event, { 'Cache-Control': 'no-store', Pragma: 'no-cache' })
 
   const fail = (status, error, description) => {
-    console.warn(`[warn] ${status} POST /api/token client=${body.client_id ?? '-'}: ${error}: ${description}`)
+    console.warn(`[warn] ${status} POST /api/token client=${logSafe(body.client_id ?? '-')}: ${error}: ${description}`)
     setResponseStatus(event, status)
 
     return { error, error_description: description }

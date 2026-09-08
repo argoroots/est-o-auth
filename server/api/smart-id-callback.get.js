@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
     return sendRedirect(event, `${sidSession.redirect_uri}?${search}`)
   }
   catch (error) {
-    console.warn(`[warn] ${error.statusCode ?? 500} GET /api/smart-id-callback client=${sidSession.client_id} provider=smart-id: ${error.statusMessage || error.message}`)
+    console.warn(`[warn] ${error.statusCode ?? 500} GET /api/smart-id-callback client=${sidSession.client_id} provider=smart-id: ${logSafe(error.statusMessage || error.message)}`)
 
     // Smart-ID reports a user cancellation as USER_REFUSED, USER_REFUSED_DISPLAYTEXTANDPIN, ...
     const providerError = /^USER_REFUSED/.test(error.statusMessage ?? '') ? 'access_denied' : undefined
