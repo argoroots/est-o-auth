@@ -17,13 +17,17 @@ export default defineEventHandler(async (event) => {
 
   const clientId = toBase62(createHash('sha256').update(sessionId + config.jwtSecret).digest()).substring(0, 16)
   const clientSecret = toBase62(randomBytes(48)).substring(0, 32)
+  const redirectUri = validRedirectUri(session.redirectUri)
+
+  // The payment is done, so a bad URL must not fail the signup; it is left empty and filled in by hand
+  if (session.redirectUri && !redirectUri) console.warn(`[signup] client ${clientId} redirect_uri rejected: ${JSON.stringify(session.redirectUri)}`)
 
   await saveClient({
     id: clientId,
     secret: await bcrypt.hash(clientSecret, 10),
     skidText: (session.name || 'Log in').substring(0, 60),
     providers: session.providers,
-    redirectUris: session.redirectUri ? [session.redirectUri] : [],
+    redirectUris: redirectUri ? [redirectUri] : [],
     stripeId: session.customer
   })
 
@@ -35,4 +39,22 @@ export default defineEventHandler(async (event) => {
 
 function toBase62 (buffer) {
   return Array.from(buffer, (byte) => BASE62[byte % 62]).join('')
+}
+
+// A usable redirect URI is absolute https (http only for localhost, for development clients) and
+// has no fragment (RFC 6749 §3.1.2). Returns the value as typed, since registered URIs are compared
+// as strings, or undefined.
+function validRedirectUri (value) {
+  if (!value) return
+
+  try {
+    const url = new URL(value)
+    const isLocal = ['localhost', '127.0.0.1'].includes(url.hostname)
+    const isAllowedScheme = url.protocol === 'https:' || (url.protocol === 'http:' && isLocal)
+
+    return isAllowedScheme && !url.hash ? value : undefined
+  }
+  catch {
+    return undefined
+  }
 }
