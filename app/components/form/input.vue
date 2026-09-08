@@ -13,7 +13,6 @@ const props = defineProps({
 
 const emit = defineEmits([
   'update:modelValue',
-  'submit',
   'blur'
 ])
 
@@ -51,7 +50,6 @@ defineExpose({ focus })
       :placeholder="placeholder"
       :autofocus="autofocus"
       class="peer"
-      @keydown.enter="emit('submit')"
       @blur="emit('blur')"
     >
     <label :for="id">{{ label }}</label>

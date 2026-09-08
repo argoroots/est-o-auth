@@ -1,8 +1,8 @@
 <template>
   <div id="blobs">
     <div class="blob yellow" />
-    <div class="blob red" />
-    <div class="blob orange" />
+    <div class="blob red animation-delay-2000" />
+    <div class="blob orange animation-delay-4000" />
   </div>
 </template>
 

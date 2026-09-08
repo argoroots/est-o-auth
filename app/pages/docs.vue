@@ -20,6 +20,8 @@ useHead({ title: 'Documentation' })
           <li><a href="/auth/smart-id">/auth/smart-id</a></li>
           <li><a href="/auth/e-mail">/auth/e-mail</a></li>
           <li><a href="/auth/phone">/auth/phone</a></li>
+          <li><a href="/auth/google">/auth/google</a></li>
+          <li><a href="/auth/apple">/auth/apple</a></li>
           <li><a href="/auth">/auth</a> - <em>will ask user the preferred auth method</em></li>
         </ul>
         <p>Required query parameters:</p>
@@ -32,29 +34,23 @@ useHead({ title: 'Documentation' })
         </ul>
         <p>Optional parameters - if not set, user must input required ones (depends of auth method):</p>
         <ul>
-          <li>idcode - <em>only for <a href="/auth/mobile-id">/auth/mobile-id</a> and <a href="/auth/smart-id">/auth/smart-id</a></em></li>
+          <li>idcode - <em>only for <a href="/auth/mobile-id">/auth/mobile-id</a></em></li>
           <li>phone - <em>only for <a href="/auth/mobile-id">/auth/mobile-id</a> and <a href="/auth/phone">/auth/phone</a></em></li>
           <li>email - <em>only for <a href="/auth/e-mail">/auth/e-mail</a></em></li>
           <li>lang - <em>user interface language: "en" (default), "et" or "fi"</em></li>
         </ul>
         <pre>https://oauth.ee/auth?response_type=code&client_id=QVnPZGdcXQ8Ev4mx&redirect_uri=https://example.com/auth/callback&scope=openid&state=5600684163565994</pre>
         <p>
-          After authentication user is redirected back to url set in <em>redirect_uri</em> parameter. Query
-          parameter <em>code</em> contains the authorization code which Your service will exchange for an access
-          token.
+          After authentication user is redirected back to url set in <em>redirect_uri</em> parameter. Query parameter <em>code</em> contains the authorization code which Your service will exchange for an access token.
         </p>
         <p>
-          If the initial request contained a <em>state</em> parameter, the response also includes the exact value
-          from the request. Your service must check if it matches one from initial request.
+          The response also includes the exact <em>state</em> value from the request. Your service must check that it matches the one it sent, and reject the response otherwise.
         </p>
         <pre>https://example.com/auth/callback?code=CYD9MDm8gY2F8EhV&state=5600684163565994</pre>
       </li>
       <li>
         <p>
-          Make POST request to <a href="/api/token">/api/token</a> sending <em>client_id</em>, <em>client_secret</em>,
-          <em>grant_type</em> and <em>code</em> (got from previous step). Parameter grant_type must always be
-          "authorization_code". The code can only be exchanged by the client that started the authentication.
-          Optionally send <em>redirect_uri</em> too; if present it must equal the one used in step 3.
+          Make POST request to <a href="/api/token">/api/token</a> sending <em>client_id</em>, <em>client_secret</em>, <em>grant_type</em> and <em>code</em> (got from previous step). Parameter grant_type must always be "authorization_code". The code can only be exchanged by the client that started the authentication. Optionally send <em>redirect_uri</em> too; if present it must equal the one used in step 3.
         </p>
         <pre>POST /api/token HTTP/1.1
 Host: oauth.ee
@@ -74,8 +70,7 @@ Content-Length: 165
   "expires_in": 3600
 }</pre>
         <p>
-          On failure the response is 400 (or 401 for a wrong <em>client_secret</em>) with the standard OAuth error body,
-          e.g. <em>invalid_client</em>, <em>invalid_grant</em> or <em>invalid_request</em>.
+          On failure the response is 400 (or 401 for a wrong <em>client_secret</em>) with the standard OAuth error body, e.g. <em>invalid_client</em>, <em>invalid_grant</em> or <em>invalid_request</em>.
         </p>
         <pre>{
   "error": "invalid_grant",
@@ -84,8 +79,7 @@ Content-Length: 165
       </li>
       <li>
         <p>
-          To get user information make GET request to <a href="/api/user">/api/user</a> with <em>access_token</em> (got from
-          previous step) as Bearer authorization header.
+          To get user information make GET request to <a href="/api/user">/api/user</a> with <em>access_token</em> (got from previous step) as Bearer authorization header.
         </p>
         <pre>GET /api/user HTTP/1.1
 Host: oauth.ee
@@ -94,7 +88,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9</pre>
         <pre>{
   "id": "38001085718",
   "email": "38001085718@eesti.ee",
-  "name": "JAAK-KRISTJAN JÕEORG"
+  "name": "JAAK-KRISTJAN JÕEORG",
+  "provider": "id-card"
 }</pre>
       </li>
     </ol>
