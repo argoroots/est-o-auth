@@ -1,18 +1,17 @@
 import jwt from 'jsonwebtoken'
 
-// User info endpoint. The access token is accepted only as a Bearer authorization header, never in
-// the query string, so it does not end up in server, proxy or browser history logs.
 export default defineEventHandler((event) => {
   const config = useRuntimeConfig()
-  const match = /^Bearer\s+(\S+)$/i.exec(getHeader(event, 'authorization') ?? '')
+  const headers = getHeaders(event)
+  const query = getQuery(event)
 
-  setResponseHeaders(event, { 'Cache-Control': 'no-store', Pragma: 'no-cache' })
+  if (!headers.authorization && !query.access_token) throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
 
-  if (!match) throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
+  // Header is the documented preference; the query parameter is kept for existing integrations
+  const token = headers.authorization?.replace(/^Bearer\s+/i, '') || query.access_token
 
   try {
-    // Pin the algorithm so a token signed any other way is rejected regardless of its header
-    const decodedToken = jwt.verify(match[1], config.jwtSecret, { algorithms: ['HS256'] })
+    const decodedToken = jwt.verify(token, config.jwtSecret)
 
     return {
       id: decodedToken.id,

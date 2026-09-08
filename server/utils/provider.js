@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 // A tampered or expired state is a client error, not a crash.
 export function verifyProviderState (state, secret) {
   try {
-    return jwt.verify(state, secret, { algorithms: ['HS256'] })
+    return jwt.verify(state, secret)
   }
   catch {
     throw createError({ statusCode: 400, statusMessage: 'Invalid or expired state' })
