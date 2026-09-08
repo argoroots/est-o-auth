@@ -40,6 +40,40 @@ export default defineNuxtConfig({
     stripeKey: '',
     testUser: ''
   },
+  // Security headers for every response. Scripts come only from this origin and the analytics host;
+  // the login pages must never be framed (clickjacking of the QR and code screens); referrers to
+  // third parties carry only the origin so OAuth codes in our URLs never leak that way.
+  // 'unsafe-inline' is required: Nuxt injects an inline importmap and an inline config script on
+  // every page, and Vite injects inline styles in dev. Replacing it with per-response hashes
+  // needs a Nitro render:html plugin.
+  routeRules: {
+    '/**': {
+      headers: {
+        'Content-Security-Policy': [
+          `base-uri 'self'`,
+          `connect-src 'self' https://analytics.entu.dev`,
+          `default-src 'self'`,
+          `frame-ancestors 'none'`,
+          `object-src 'none'`,
+          `script-src 'self' 'unsafe-inline' https://analytics.entu.dev`,
+          `style-src 'self' 'unsafe-inline'`
+        ].join('; '),
+        'Permissions-Policy': [
+          'camera=()',
+          'geolocation=()',
+          'microphone=()',
+          'payment=()'
+        ].join(', '),
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+        'Strict-Transport-Security': [
+          'includeSubDomains',
+          'max-age=31536000'
+        ].join('; '),
+        'X-Content-Type-Options': 'nosniff',
+        'X-Frame-Options': 'DENY'
+      }
+    }
+  },
   compatibilityDate: '2026-09-07',
   vite: {
     plugins: [tailwindcss()]
