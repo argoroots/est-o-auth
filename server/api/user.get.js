@@ -17,6 +17,7 @@ export default defineEventHandler((event) => {
     return {
       id: decodedToken.id,
       email: decodedToken.email,
+      phone: decodedToken.phone,
       name: decodedToken.name,
       provider: decodedToken.provider
     }

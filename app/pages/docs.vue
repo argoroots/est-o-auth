@@ -84,7 +84,7 @@ Content-Length: 165
         <pre>GET /api/user HTTP/1.1
 Host: oauth.ee
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9</pre>
-        <p>Response contains user information as JSON object.</p>
+        <p>Response contains user information as JSON object. Which fields are present depends on the provider: <em>id</em> and <em>provider</em> always, <em>email</em> for every method except phone, <em>phone</em> for the phone method, <em>name</em> when the provider supplies it (eID methods, Google, Apple on first login).</p>
         <pre>{
   "id": "38001085718",
   "email": "38001085718@eesti.ee",
