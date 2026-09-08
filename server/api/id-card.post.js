@@ -3,8 +3,6 @@ export default defineEventHandler(async (event) => {
 
   const client = await validateRequest(body, 'id-card', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'nonce'])
 
-  await checkUsageLimit(client.id, 'id-card')
-
   // Nonce is single-use and short-lived: consumed atomically on lookup, and must belong to this client
   const nonceSession = await getSessionData(`id-card:${body.nonce}`, true, SESSION_TTL.NONCE)
 
@@ -22,9 +20,6 @@ export default defineEventHandler(async (event) => {
   }, nonceSession)
 
   const search = new URLSearchParams({ code, state: nonceSession.state }).toString()
-
-  await setBillingUsage(client.stripeId, 'id-card')
-  await setUsage(client.id, 'id-card')
 
   return { url: `${nonceSession.redirect_uri}?${search}` }
 })
