@@ -85,7 +85,7 @@ Content-Length: 165
       <li>
         <p>
           To get user information make GET request to <a href="/api/user">/api/user</a> with <em>access_token</em> (got from
-          previous step) as query parameter or as Bearer authorization header (preferred!).
+          previous step) as Bearer authorization header.
         </p>
         <pre>GET /api/user HTTP/1.1
 Host: oauth.ee
