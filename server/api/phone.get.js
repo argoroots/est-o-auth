@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
 
   await checkUsageLimit(client.id, 'phone')
 
-  const code = await createOtp(`phone:${query.phone}`, {
+  const code = await createOtp('phone', query.phone, {
     client_id: client.id,
     redirect_uri: query.redirect_uri,
     state: query.state,

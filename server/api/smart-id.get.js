@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
     initialCallbackUrl,
     callbackValue,
     startTime: result.startTime
-  })
+  }, SESSION_TTL.SK)
 
   await setBillingUsage(client.stripeId, 'smart-id')
   await setUsage(client.id, 'smart-id')

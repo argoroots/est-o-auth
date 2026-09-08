@@ -1,48 +1,53 @@
-import { randomUUID } from 'crypto'
+import { createHash, randomUUID } from 'crypto'
 import { BatchGetItemCommand, DeleteItemCommand, GetItemCommand, PutItemCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb'
 import jwt from 'jsonwebtoken'
 
 const config = useRuntimeConfig()
 
-// Per-target rate limit: rejects with 429 if the key was used within windowMs, otherwise records the use.
-export async function checkCooldown (key, windowMs) {
-  // Marker only needs to outlive its window; expire it soon after rather than the default day
-  const recorded = await setSessionDataUnlessRecent(`cooldown:${key}`, {}, windowMs, Math.ceil(windowMs / 1000) + 60)
+// Session key for a personal identifier (e-mail, phone, ID code). Hashed, so the identifier itself
+// is never a row key and a leaked table listing shows nothing personal.
+export function targetKey (prefix, target) {
+  return `${prefix}:${createHash('sha256').update(target).digest('hex')}`
+}
+
+// Per-target rate limit: rejects with 429 if the target was used within windowMs, otherwise records the use.
+export async function checkCooldown (type, target, windowMs) {
+  const recorded = await setSessionDataUnlessRecent(targetKey(`cooldown:${type}`, target), {}, windowMs)
 
   if (!recorded) throw createError({ statusCode: 429, statusMessage: 'Please wait before trying again' })
 }
 
 // DynamoDB TTL (epoch seconds in the `ttl` attribute; enable TTL on oauth-session with that attribute name).
-// Logical expiry is enforced on read via SESSION_TTL; this only governs physical cleanup.
-const SESSION_ITEM_TTL_S = 24 * 60 * 60
+// Rows are removed shortly after they logically expire, so an abandoned session holding an ID code,
+// phone or e-mail does not outlive the authentication attempt. Logical expiry is still enforced on read.
+const TTL_GRACE_S = 60
 
-function sessionItem (id, data, createdAt, ttlSeconds) {
+function sessionItem (id, data, createdAt, maxAgeMs) {
   return {
     id: { S: id },
     created: { S: new Date(createdAt).toISOString() },
-    ttl: { N: String(Math.floor(createdAt / 1000) + ttlSeconds) },
+    ttl: { N: String(Math.floor(createdAt / 1000) + Math.ceil(maxAgeMs / 1000) + TTL_GRACE_S) },
     data: { S: JSON.stringify(data) }
   }
 }
 
-// Stores a session. Pass createdAt (ms) when rewriting an existing session so its expiry is not extended;
-// ttlSeconds overrides how long DynamoDB keeps the row.
-export async function setSessionData (id, data, createdAt = Date.now(), ttlSeconds = SESSION_ITEM_TTL_S) {
+// Stores a session that is valid for maxAgeMs (one of SESSION_TTL)
+export async function setSessionData (id, data, maxAgeMs) {
   await getDynamo().send(new PutItemCommand({
     TableName: 'oauth-session',
-    Item: sessionItem(id, data, createdAt, ttlSeconds)
+    Item: sessionItem(id, data, Date.now(), maxAgeMs)
   }))
 }
 
 // Stores a session unless one was created within windowMs. The check and the write are one
 // conditional DynamoDB call, so two concurrent requests cannot both pass. Returns false if refused.
-export async function setSessionDataUnlessRecent (id, data, windowMs, ttlSeconds = SESSION_ITEM_TTL_S) {
+export async function setSessionDataUnlessRecent (id, data, windowMs, maxAgeMs = windowMs) {
   const now = Date.now()
 
   try {
     await getDynamo().send(new PutItemCommand({
       TableName: 'oauth-session',
-      Item: sessionItem(id, data, now, ttlSeconds),
+      Item: sessionItem(id, data, now, maxAgeMs),
       // ISO timestamps compare correctly as strings
       ConditionExpression: 'attribute_not_exists(id) OR created <= :threshold',
       ExpressionAttributeValues: { ':threshold': { S: new Date(now - windowMs).toISOString() } }
@@ -119,7 +124,7 @@ export async function getSessionData (id, deleteItem, maxAgeMs) {
 export async function saveUser (user, { client_id: clientId, redirect_uri: redirectUri }) {
   const code = randomUUID().replaceAll('-', '').toUpperCase()
 
-  await setSessionData(`user:${code}`, { user, clientId, redirectUri })
+  await setSessionData(`user:${code}`, { user, clientId, redirectUri }, SESSION_TTL.AUTH_CODE)
 
   return code
 }

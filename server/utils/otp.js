@@ -43,11 +43,11 @@ export function isIdcode (value) {
   return check === digits[10]
 }
 
-// Creates and stores a fresh code for the target, replacing any earlier one that is past the resend
-// cooldown. fixedCode is for the test user.
-export async function createOtp (key, data, fixedCode) {
+// Creates and stores a fresh code for the target (type is 'email' or 'phone'), replacing any earlier
+// one that is past the resend cooldown. fixedCode is for the test user.
+export async function createOtp (type, target, data, fixedCode) {
   const code = fixedCode ?? String(randomInt(0, 1_000_000)).padStart(6, '0')
-  const stored = await setSessionDataUnlessRecent(key, { ...data, code }, RESEND_COOLDOWN_MS)
+  const stored = await setSessionDataUnlessRecent(targetKey(type, target), { ...data, code }, RESEND_COOLDOWN_MS, SESSION_TTL.OTP)
 
   if (!stored) throw createError({ statusCode: 429, statusMessage: 'Please wait before requesting a new code' })
 
@@ -57,7 +57,8 @@ export async function createOtp (key, data, fixedCode) {
 // Checks a submitted code. Every call counts as an attempt before the code is compared, so at most
 // MAX_ATTEMPTS comparisons ever happen for one code. A correct code consumes the session and returns
 // its data. Returns undefined on any failure.
-export async function verifyOtp (key, code) {
+export async function verifyOtp (type, target, code) {
+  const key = targetKey(type, target)
   const session = await countSessionAttempt(key, MAX_ATTEMPTS, SESSION_TTL.OTP)
 
   if (!session) return

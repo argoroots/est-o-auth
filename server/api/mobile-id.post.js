@@ -3,7 +3,7 @@ export default defineEventHandler(async (event) => {
 
   await validateRequest(body, 'mobile-id', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'idcode', 'session'])
 
-  const midSession = await getSessionData(`mobile-id:${body.idcode}:${body.session}`, false, SESSION_TTL.SK)
+  const midSession = await getSessionData(`mobile-id:${body.session}`, false, SESSION_TTL.SK)
 
   if (!midSession) throw createError({ statusCode: 403, statusMessage: 'Invalid or expired session' })
 
@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // Consume the session exactly once; a concurrent completion loses here
-  if (!await getSessionData(`mobile-id:${body.idcode}:${body.session}`, true)) throw createError({ statusCode: 403, statusMessage: 'Session already used' })
+  if (!await getSessionData(`mobile-id:${body.session}`, true)) throw createError({ statusCode: 403, statusMessage: 'Session already used' })
 
   const code = await saveUser({
     id: identity.idcode,

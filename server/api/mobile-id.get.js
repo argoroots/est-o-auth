@@ -12,11 +12,11 @@ export default defineEventHandler(async (event) => {
   await checkUsageLimit(client.id, 'mobile-id')
 
   // Starting a session prompts the phone of the person with this ID code; one prompt per minute per person
-  await checkCooldown(`mobile-id:${query.idcode}`, 60 * 1000)
+  await checkCooldown('mobile-id', query.idcode, 60 * 1000)
 
   const { skSession, consent, message } = await startMidSession(query.idcode, query.phone, client.skidText || getLocale(query.lang).common.logIn, getLocale(query.lang).mobileId.language)
 
-  await setSessionData(`mobile-id:${query.idcode}:${session}`, {
+  await setSessionData(`mobile-id:${session}`, {
     client_id: client.id,
     redirect_uri: query.redirect_uri,
     state: query.state,
@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
     phone: query.phone,
     skSession,
     message
-  })
+  }, SESSION_TTL.SK)
 
   await setBillingUsage(client.stripeId, 'mobile-id')
   await setUsage(client.id, 'mobile-id')

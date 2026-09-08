@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
     client_id: client.id,
     redirect_uri: query.redirect_uri,
     state: query.state
-  })
+  }, SESSION_TTL.NONCE)
 
   return { nonce }
 })

@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
   const [testClient, testEmail, testCode] = config.testUser?.split(':') ?? []
   const fixedCode = testCode && client.id === testClient && query.email === testEmail ? testCode : undefined
 
-  const code = await createOtp(`email:${query.email}`, {
+  const code = await createOtp('email', query.email, {
     client_id: client.id,
     redirect_uri: query.redirect_uri,
     state: query.state,
