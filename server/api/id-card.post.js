@@ -1,25 +1,17 @@
+// Finishes an ID-card login: verifies the Web eID token and returns the client redirect with an authorization code
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
   const client = await validateRequest(body, 'id-card', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'nonce'])
 
-  // Nonce is single-use and short-lived: consumed atomically on lookup, and must belong to this client
-  const nonceSession = await getSessionData(`id-card:${body.nonce}`, true, SESSION_TTL.NONCE)
+  // Nonce is single-use: consumed atomically on lookup, and must belong to this client
+  const session = await getSessionData(`id-card:${body.nonce}`, true, SESSION_TTL.NONCE)
 
-  if (!nonceSession || nonceSession.client_id !== client.id) throw authError('Unknown, used or expired nonce')
+  if (!session || session.client_id !== client.id) throw authError('Unknown, used or expired nonce')
 
   // The Web eID extension signs the page origin; ours comes from config in production
   const cert = await verifyWebEidToken(body, body.nonce, getOrigin(event))
-  const { idcode, givenName, surname } = getCertificateIdentity(cert)
+  const code = await saveUser(identityUser(getCertificateIdentity(cert), 'id-card'), session)
 
-  const code = await saveUser({
-    id: idcode,
-    email: `${idcode}@eesti.ee`,
-    name: `${givenName} ${surname}`,
-    provider: 'id-card'
-  }, nonceSession)
-
-  const search = new URLSearchParams({ code, state: nonceSession.state }).toString()
-
-  return { url: `${nonceSession.redirect_uri}?${search}` }
+  return { url: codeRedirectUrl(session, code) }
 })

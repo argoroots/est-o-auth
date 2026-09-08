@@ -1,13 +1,14 @@
+// Google callback (form_post): exchanges the code, verifies the id_token and redirects to the client
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
   await validateRequest(body, 'google', ['state'])
 
   const config = useRuntimeConfig()
-  const decodedState = verifyProviderState(body.state, config.jwtSecret)
+  const session = verifyProviderState(body.state)
 
-  // User declined (or the provider failed): send them back to the client per RFC 6749 §4.1.2.1
-  if (body.error || !body.code) return sendRedirect(event, providerErrorUrl(decodedState, body.error))
+  // User declined (or the provider failed): back to the client per RFC 6749 §4.1.2.1
+  if (body.error || !body.code) return sendRedirect(event, errorRedirectUrl(session, body.error))
 
   const { id_token: idToken } = await $fetch('https://oauth2.googleapis.com/token', {
     method: 'POST',
@@ -20,7 +21,6 @@ export default defineEventHandler(async (event) => {
     })
   })
 
-  // Verified against Google's public keys, with issuer and audience checked
   const profile = await verifyIdToken(idToken, {
     jwksUrl: 'https://www.googleapis.com/oauth2/v3/certs',
     issuer: ['https://accounts.google.com', 'accounts.google.com'],
@@ -33,9 +33,7 @@ export default defineEventHandler(async (event) => {
     email: profile.email,
     name: profile.name,
     provider: 'google'
-  }, { client_id: decodedState.client, redirect_uri: decodedState.uri })
+  }, session)
 
-  const search = new URLSearchParams({ code, state: decodedState.state }).toString()
-
-  return sendRedirect(event, `${decodedState.uri}?${search}`)
+  return sendRedirect(event, codeRedirectUrl(session, code))
 })

@@ -3,10 +3,10 @@ import bcrypt from 'bcrypt'
 
 const BASE62 = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 
+// Signup: without a session starts Stripe Checkout, with a completed one creates the client and returns its credentials
 export default defineEventHandler(async (event) => {
   const { session_id: sessionId } = getQuery(event)
 
-  // No session yet: start Checkout and send the browser to Stripe
   if (!sessionId) return sendRedirect(event, await createCheckoutSession(), 303)
 
   const config = useRuntimeConfig()
@@ -15,6 +15,7 @@ export default defineEventHandler(async (event) => {
   if (session.status !== 'complete' || !session.customer) throw createError({ statusCode: 402, statusMessage: 'Payment is not completed' })
   if (session.providers.length === 0) throw createError({ statusCode: 400, statusMessage: 'No authentication providers were selected' })
 
+  // Client id is derived from the Checkout session, so a reload yields the same id (and a 409), never a second client
   const clientId = toBase62(createHash('sha256').update(sessionId + config.jwtSecret).digest(), 16)
   const clientSecret = toBase62(randomBytes(48), 32)
   const redirectUri = validRedirectUri(session.redirectUri)
@@ -37,9 +38,7 @@ export default defineEventHandler(async (event) => {
   }
 })
 
-// The buffer as a big-endian integer, written in base 62 and cut to `length` characters. Dividing
-// the whole number keeps every character uniformly distributed (a per-byte `% 62` would favour
-// the first eight characters of the alphabet). The buffer has far more bits than the output uses.
+// The buffer as one big integer in base 62, cut to `length` characters; whole-number division keeps every character uniform
 function toBase62 (buffer, length) {
   let value = BigInt(`0x${buffer.toString('hex')}`)
   let result = ''
@@ -52,9 +51,7 @@ function toBase62 (buffer, length) {
   return result
 }
 
-// A usable redirect URI is absolute https (http only for localhost, for development clients) and
-// has no fragment (RFC 6749 §3.1.2). Returns the value as typed, since registered URIs are compared
-// as strings, or undefined.
+// The value as typed if it is an absolute https URL (http only for localhost) without a fragment, else undefined
 function validRedirectUri (value) {
   if (!value) return
 

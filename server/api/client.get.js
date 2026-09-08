@@ -1,3 +1,4 @@
+// Client details for the auth pages: id, description in the UI language and enabled providers
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
@@ -5,7 +6,7 @@ export default defineEventHandler(async (event) => {
 
   return {
     client: client.id,
-    // Text for the requested UI language, falling back to English, then to whatever language exists
+    // Requested UI language, then English, then whatever language exists
     description: client.description?.[getLang(query.lang)] ?? client.description?.en ?? Object.values(client.description ?? {})[0],
     redirect_uri: true, // client.redirect_uris.includes(query.redirect_uri),
     providers: client.providers

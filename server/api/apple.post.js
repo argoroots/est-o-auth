@@ -1,15 +1,16 @@
 import jwt from 'jsonwebtoken'
 
+// Apple callback (form_post): exchanges the code, verifies the id_token and redirects to the client
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
   await validateRequest(body, 'apple', ['state'])
 
   const config = useRuntimeConfig()
-  const decodedState = verifyProviderState(body.state, config.jwtSecret)
+  const session = verifyProviderState(body.state)
 
-  // User declined (or the provider failed): send them back to the client per RFC 6749 §4.1.2.1
-  if (body.error || !body.code) return sendRedirect(event, providerErrorUrl(decodedState, body.error))
+  // User declined (or the provider failed): back to the client per RFC 6749 §4.1.2.1
+  if (body.error || !body.code) return sendRedirect(event, errorRedirectUrl(session, body.error))
 
   const { id_token: idToken } = await $fetch('https://appleid.apple.com/auth/token', {
     method: 'POST',
@@ -22,7 +23,6 @@ export default defineEventHandler(async (event) => {
     })
   })
 
-  // Verified against Apple's public keys, with issuer and audience checked
   const profile = await verifyIdToken(idToken, {
     jwksUrl: 'https://appleid.apple.com/auth/keys',
     issuer: 'https://appleid.apple.com',
@@ -34,11 +34,9 @@ export default defineEventHandler(async (event) => {
     email: profile.email,
     name: appleName(body.user),
     provider: 'apple'
-  }, { client_id: decodedState.client, redirect_uri: decodedState.uri })
+  }, session)
 
-  const search = new URLSearchParams({ code, state: decodedState.state }).toString()
-
-  return sendRedirect(event, `${decodedState.uri}?${search}`)
+  return sendRedirect(event, codeRedirectUrl(session, code))
 })
 
 // Apple has no static client secret: it is a short-lived JWT signed with the team's private key
@@ -52,7 +50,7 @@ function appleClientSecret (config) {
   })
 }
 
-// Apple sends the name only on the very first authorization, as a JSON string in the `user` field
+// Full name from the `user` JSON field, which Apple sends only on the very first authorization
 function appleName (userField) {
   try {
     const { name } = JSON.parse(userField)

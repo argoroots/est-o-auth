@@ -1,7 +1,4 @@
-// Logs request failures as one line each: status, method, path (without query), client id and
-// provider when known, then the message. 4xx are warnings (client mistakes, limits, abuse); 5xx get
-// the stack. Never the whole error object: ofetch errors embed request and response bodies, which for
-// SK calls contain ID codes and phone numbers.
+// Path without query, provider from the path, client id from query or body, and method of a failed request
 async function requestContext (event) {
   const path = event?.path?.split('?')[0] ?? 'unknown'
   const provider = PROVIDER_IDS.find((p) => path.startsWith(`/api/${p}`) || path.startsWith(`/auth/${p}`))
@@ -20,11 +17,11 @@ async function requestContext (event) {
   return { path, provider, clientId, method: event?.method ?? '-' }
 }
 
+// Logs every request failure as one line; 4xx as warnings, 5xx with the stack, never the whole error (bodies hold ID codes)
 export default defineNitroPlugin((nitroApp) => {
   nitroApp.hooks.hook('error', async (error, { event } = {}) => {
     const { path, provider, clientId, method } = await requestContext(event)
     const status = error?.statusCode ?? 500
-    // Client id comes from the request and the message may echo provider responses: neither is trusted
     const context = [clientId && `client=${logSafe(clientId)}`, provider && `provider=${provider}`].filter(Boolean).join(' ')
     const line = `${status} ${method} ${logSafe(path)}${context ? ` ${context}` : ''}: ${logSafe(error?.statusMessage || error?.message)}`
 

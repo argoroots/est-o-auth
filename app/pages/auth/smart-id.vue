@@ -22,29 +22,32 @@ onMounted(async () => {
 
 onUnmounted(() => {
   document.removeEventListener('visibilitychange', onVisibilityChange)
-  stopPolling()
+  stopLoops()
 })
 
-function startPollingLoops () {
-  stopPolling()
+// Starts the QR rotation and the status poll
+function startLoops () {
+  stopLoops()
   stopQr = startPolling(nextQr, 1000)
   stopPoll = startPolling(pollStatus, 5000)
 }
 
-function stopPolling () {
+// Stops both loops, if running
+function stopLoops () {
   stopQr?.()
   stopPoll?.()
   stopQr = stopPoll = undefined
 }
 
-// Nobody scans a QR code in a background tab; pause there and pick up again when the tab returns
+// Nobody scans a QR code in a background tab: pause there, resume when the tab returns
 function onVisibilityChange () {
   if (!session.value || isError.value) return
 
-  if (document.hidden) stopPolling()
-  else startPollingLoops()
+  if (document.hidden) stopLoops()
+  else startLoops()
 }
 
+// Opens the SK session and starts the loops
 async function startSession () {
   try {
     const data = await $fetch('/api/smart-id', { query })
@@ -56,7 +59,7 @@ async function startSession () {
 
     session.value = data.session
 
-    startPollingLoops()
+    startLoops()
   }
   catch {
     isError.value = true
@@ -73,7 +76,7 @@ async function nextQr () {
       deviceLinkUrl.value = data.deviceLinkUrl
     }
     catch {
-      // session may have expired — let poll handle the error state
+      // Session may have expired; the status poll reports the error
       return
     }
   }
@@ -81,6 +84,7 @@ async function nextQr () {
   qrUrl.value = qrUrls.shift()
 }
 
+// One status poll; success leaves for the client's redirect_uri
 async function pollStatus () {
   try {
     const data = await $fetch('/api/smart-id', {
@@ -90,25 +94,21 @@ async function pollStatus () {
 
     if (data.status === 'RUNNING') return
 
-    stopPolling()
+    stopLoops()
 
-    if (data.url) {
-      await navigateTo(data.url, { external: true })
-    }
-    else {
-      isError.value = true
-    }
+    if (data.url) return navigateTo(data.url, { external: true })
+
+    isError.value = true
   }
   catch {
-    stopPolling()
-
+    stopLoops()
     isError.value = true
   }
 }
 
-// Stop waiting and return to the method chooser; the SK session simply expires on its own
+// Stops waiting and returns to the method chooser; the SK session expires on its own
 async function onCancel () {
-  stopPolling()
+  stopLoops()
 
   await navigateTo({ path: '/auth', query })
 }

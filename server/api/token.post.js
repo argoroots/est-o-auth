@@ -2,14 +2,14 @@ import bcrypt from 'bcrypt'
 
 const TOKEN_LIFETIME_S = 3600
 
-// Token endpoint per RFC 6749 §4.1.3 / §5. Failures use the §5.2 shape ({ error, error_description })
-// with 400, or 401 for a failed client authentication, so standard OAuth client libraries understand them.
+// Token endpoint (RFC 6749 §4.1.3 / §5): exchanges an authorization code for an access token; failures use the §5.2 shape
 export default defineEventHandler(async (event) => {
   const body = await readBody(event) ?? {}
 
   // Token responses must not be cached (§5.1)
   setResponseHeaders(event, { 'Cache-Control': 'no-store', Pragma: 'no-cache' })
 
+  // OAuth error response with the given status, logged as a warning
   const fail = (status, error, description) => {
     console.warn(`[warn] ${status} POST /api/token client=${logSafe(body.client_id ?? '-')}: ${error}: ${description}`)
     setResponseStatus(event, status)

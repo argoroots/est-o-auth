@@ -1,6 +1,4 @@
-// Validates the OAuth query and loads the client once per navigation. The server checks the
-// parameters and the client id; its message is shown as-is so a failure explains itself.
-// The client is kept in useState('client') for the page.
+// Validates the OAuth query on the server and keeps the client in useState('client'); a failure shows the server's message
 export default defineNuxtRouteMiddleware(async (to) => {
   const client = useState('client')
 

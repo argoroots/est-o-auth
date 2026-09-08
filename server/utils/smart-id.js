@@ -1,14 +1,14 @@
 import { X509Certificate, createHash, constants } from 'crypto'
 
-// Smart-ID RP API v3 response verification, per
-// https://sk-eid.github.io/smart-id-documentation/rp-api/response_verification.html
+// Smart-ID RP API v3 response verification, per https://sk-eid.github.io/smart-id-documentation/rp-api/response_verification.html
 
-// What we request in smart-id.get.js; the response must not fall below it
+// What smart-id.get.js requests; the response must not fall below it
 const REQUIRED_LEVEL = 'QUALIFIED'
 const LEVELS = { ADVANCED: 1, QUALIFIED: 2 }
 const REQUESTED_INTERACTIONS = ['displayTextAndPIN']
 
-export async function verifyAndExtractIdentity (skResponse, sidSession) {
+// Verifies a completed Smart-ID session (protocol, level, certificate chain, ACSP_V2 signature) and returns the identity
+export async function verifySmartIdResponse (skResponse, sidSession) {
   const { signature: sig, cert } = skResponse
 
   if (skResponse.signatureProtocol !== 'ACSP_V2' || sig?.signatureAlgorithm !== 'rsassa-pss') throw authError('Unexpected signature protocol')
@@ -19,16 +19,14 @@ export async function verifyAndExtractIdentity (skResponse, sidSession) {
 
   await checkTrustedCertificate(x509, 'smart-id')
 
-  // ACSP_V2 payload: 'smart-id'|'ACSP_V2'|serverRandom|rpChallenge|userChallenge|B64(rpName)|B64(brokeredRpName)|B64(SHA-256(interactions))|interactionTypeUsed|initialCallbackUrl|flowType
-  // Smart-ID includes initialCallbackUrl in the signed payload only for the Web2App flow
-  const config = useRuntimeConfig()
+  // ACSP_V2 payload; initialCallbackUrl is part of it only for the Web2App flow
   const payload = [
     'smart-id',
     'ACSP_V2',
     sig.serverRandom,
     sidSession.rpChallenge,
     sig.userChallenge ?? '',
-    Buffer.from(config.skidName).toString('base64'),
+    Buffer.from(useRuntimeConfig().skidName).toString('base64'),
     '',
     createHash('sha256').update(sidSession.interactions).digest('base64'),
     skResponse.interactionTypeUsed,
@@ -45,5 +43,5 @@ export async function verifyAndExtractIdentity (skResponse, sidSession) {
 
   if (!safeVerify(hashAlg, Buffer.from(payload), keyOptions, Buffer.from(sig.value, 'base64'))) throw authError('Signature verification failed')
 
-  return getCertificateIdentity(x509).idcode
+  return getCertificateIdentity(x509)
 }

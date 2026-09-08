@@ -1,5 +1,4 @@
-// Usage counters for a client. Public by decision (statistics), needs only the client id, and lives
-// apart from /api/client so the login flow does not pay for the batch read on every page.
+// Usage counters for a client; public by decision and apart from /api/client so the login flow never pays for it
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 

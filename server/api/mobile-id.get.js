@@ -1,10 +1,10 @@
 import { randomUUID, randomBytes, createHash } from 'crypto'
 
+// Starts a Mobile-ID login: opens an SK session and returns the control code to show and our session id
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
   const client = await validateRequest(query, 'mobile-id', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'idcode', 'phone'])
-  const session = randomUUID().replaceAll('-', '')
 
   if (!isIdcode(query.idcode)) throw createError({ statusCode: 400, statusMessage: 'Invalid ID code' })
   if (!isPhone(query.phone)) throw createError({ statusCode: 400, statusMessage: 'Invalid phone number' })
@@ -14,7 +14,9 @@ export default defineEventHandler(async (event) => {
   // Starting a session prompts the phone of the person with this ID code; one prompt per minute per person
   await checkCooldown('mobile-id', query.idcode, 60 * 1000)
 
-  const { skSession, consent, message } = await startMidSession(query.idcode, query.phone, client.skidText || getLocale(query.lang).common.logIn, getLocale(query.lang).mobileId.language)
+  const locale = getLocale(query.lang)
+  const { skSession, consent, message } = await startMidSession(query.idcode, query.phone, client.skidText || locale.common.logIn, locale.mobileId.language)
+  const session = randomUUID().replaceAll('-', '')
 
   await setSessionData(`mobile-id:${session}`, {
     client_id: client.id,
@@ -26,17 +28,16 @@ export default defineEventHandler(async (event) => {
     message
   }, SESSION_TTL.SK)
 
-  await setBillingUsage(client.stripeId, 'mobile-id')
-  await setUsage(client.id, 'mobile-id')
+  await recordUsage(client, 'mobile-id')
 
   return { consent, session }
 })
 
-// Starts a Mobile-ID authentication session, per https://github.com/SK-EID/MID#authentication
+// Starts an SK Mobile-ID authentication session, per https://github.com/SK-EID/MID#authentication
 async function startMidSession (idcode, phone, displayText, language) {
   const config = useRuntimeConfig()
 
-  // Mobile-ID signs the hash we send; keep the message so the signature can be verified later
+  // The SIM signs the hash we send; the message is kept so the signature can be verified later
   const message = randomBytes(64)
   const hash = createHash('sha256').update(message).digest()
 
@@ -61,7 +62,7 @@ async function startMidSession (idcode, phone, displayText, language) {
   return { skSession, consent: verificationCode(hash), message: message.toString('base64') }
 }
 
-// Control code shown to the user: 6 bits from the start of the hash and 7 bits from its end, as a 4-digit number
+// Control code shown to the user: 6 bits from the start of the hash and 7 bits from its end, as 4 digits
 function verificationCode (hash) {
   const value = ((hash[0] >> 2) << 7) | (hash[hash.length - 1] & 0x7f)
 

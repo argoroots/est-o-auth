@@ -1,5 +1,4 @@
-import jwt from 'jsonwebtoken'
-
+// Starts an Apple login: returns the Sign in with Apple URL carrying our signed state
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
@@ -15,11 +14,10 @@ export default defineEventHandler(async (event) => {
     response_type: 'code',
     response_mode: 'form_post',
     scope: 'email name',
-    state: jwt.sign({ client: client.id, uri: query.redirect_uri, state: query.state }, config.jwtSecret, { expiresIn: '5m' })
-  }).toString()
+    state: signProviderState(client, query)
+  })
 
-  await setBillingUsage(client.stripeId, 'apple')
-  await setUsage(client.id, 'apple')
+  await recordUsage(client, 'apple')
 
   return { url: `https://appleid.apple.com/auth/authorize?${search}` }
 })

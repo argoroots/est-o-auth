@@ -1,5 +1,5 @@
 <script setup>
-// Sets <html lang> from the active locale; SEO tags (hreflang, canonical) are pointless on auth pages
+// <html lang> from the active locale; SEO tags are pointless on auth pages
 useHead(useLocaleHead({ seo: false }))
 
 useHead({

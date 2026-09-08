@@ -1,5 +1,4 @@
-// Runs after check-query on /auth/<provider> pages: the provider in the path must be one the
-// client has enabled, otherwise the page would start a request the server rejects anyway.
+// After check-query on /auth/<provider>: the provider in the path must be enabled for the client
 export default defineNuxtRouteMiddleware((to) => {
   const client = useState('client')
   const provider = to.path.split('/').pop()

@@ -14,35 +14,31 @@ const session = ref(null)
 
 let stopPoll
 
+// Opened with prefilled details: start right away
 if (idcode.value && phone.value) onStartSession()
 
-// Stop polling if the user navigates away mid-authentication
 onUnmounted(stopPolling)
 
+// Stops the status poll, if one is running
 function stopPolling () {
   stopPoll?.()
   stopPoll = undefined
 }
 
-function validateIdcode () {
-  if (!idcode.value) return
-
-  idcode.value = idcode.value.replace(/\D/g, '')
+// Cleans the ID code field
+function onIdcodeBlur () {
+  idcode.value = normalizeIdcode(idcode.value)
 }
 
-function validatePhone () {
-  if (!phone.value) return
-
-  phone.value = phone.value.replace(/\D/g, '')
-
-  if (phone.value.length <= 8) phone.value = '372' + phone.value
-
-  phone.value = '+' + phone.value
+// Cleans the phone field
+function onPhoneBlur () {
+  phone.value = normalizePhone(phone.value)
 }
 
+// Starts the SK session, shows the control code and begins polling
 async function onStartSession () {
-  validateIdcode()
-  validatePhone()
+  onIdcodeBlur()
+  onPhoneBlur()
 
   if (!idcode.value || !phone.value || isSending.value) return
 
@@ -64,15 +60,12 @@ async function onStartSession () {
   }
 }
 
+// One status poll; success leaves for the client's redirect_uri, anything else returns to the form with an error
 async function onAuthenticate () {
   try {
     const data = await $fetch('/api/mobile-id', {
       method: 'POST',
-      body: {
-        ...query,
-        idcode: idcode.value,
-        session: session.value
-      }
+      body: { ...query, idcode: idcode.value, session: session.value }
     })
 
     if (data.status === 'RUNNING') return
@@ -85,13 +78,12 @@ async function onAuthenticate () {
     stopPolling()
   }
 
-  // Cancelled, timed out, or failed: back to the form with an error
   consent.value = null
   session.value = null
   isError.value = true
 }
 
-// Stop waiting for the phone and return to the form; the SK session simply expires on its own
+// Stops waiting for the phone and returns to the form; the SK session expires on its own
 function onCancel () {
   stopPolling()
   consent.value = null
@@ -113,7 +105,7 @@ function onCancel () {
         placeholder="38001085718"
         maxlength="11"
         autofocus
-        @blur="validateIdcode"
+        @blur="onIdcodeBlur"
         @keydown.enter="phoneInput?.focus()"
       />
       <form-input
@@ -124,7 +116,7 @@ function onCancel () {
         :label="$t('phone.label')"
         placeholder="+37200000000"
         autocomplete="tel"
-        @blur="validatePhone"
+        @blur="onPhoneBlur"
         @keydown.enter="onStartSession"
       />
       <p

@@ -4,19 +4,15 @@ const { t } = useI18n()
 useHead({ title: t('provider.id-card') })
 
 const { query } = useRoute()
-
 const { data: nonceData, error: nonceError, refresh } = await useFetch('/api/id-card', { query })
 const isError = ref(!!nonceError.value)
 
+// Sends the signed Web eID token for verification; success leaves for the client's redirect_uri
 async function onAuthenticate (authResponse) {
   try {
     const data = await $fetch('/api/id-card', {
       method: 'POST',
-      body: {
-        ...query,
-        ...authResponse,
-        nonce: nonceData.value.nonce
-      }
+      body: { ...query, ...authResponse, nonce: nonceData.value.nonce }
     })
 
     if (data.url) await navigateTo(data.url, { external: true })
@@ -27,7 +23,7 @@ async function onAuthenticate (authResponse) {
   }
 }
 
-// A fresh nonce; the web-eid component remounts and starts the card dialog again
+// Fetches a fresh nonce; the web-eid component remounts and opens the card dialog again
 async function onRetry () {
   await refresh()
 

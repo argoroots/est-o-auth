@@ -1,5 +1,6 @@
 import { SendEmailCommand } from '@aws-sdk/client-ses'
 
+// Starts an e-mail login: creates a one-time code and mails it with a magic link
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
@@ -10,6 +11,7 @@ export default defineEventHandler(async (event) => {
   await checkUsageLimit(client.id, 'e-mail')
 
   const config = useRuntimeConfig()
+
   // NUXT_TEST_USER=client_id:email:code fixes the code for that e-mail, on that client only
   const [testClient, testEmail, testCode] = config.testUser?.split(':') ?? []
   const fixedCode = testCode && client.id === testClient && query.email === testEmail ? testCode : undefined
@@ -21,8 +23,7 @@ export default defineEventHandler(async (event) => {
     email: query.email
   }, fixedCode)
 
-  const search = new URLSearchParams({ ...query, code }).toString()
-  const url = `${getOrigin(event)}/auth/e-mail?${search}`
+  const url = `${getOrigin(event)}/auth/e-mail?${new URLSearchParams({ ...query, code })}`
   const { email: text } = getLocale(query.lang)
 
   await getSes().send(new SendEmailCommand({
@@ -44,8 +45,7 @@ export default defineEventHandler(async (event) => {
     }
   }))
 
-  await setBillingUsage(client.stripeId, 'e-mail')
-  await setUsage(client.id, 'e-mail')
+  await recordUsage(client, 'e-mail')
 
   return { sent: true }
 })

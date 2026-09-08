@@ -1,48 +1,39 @@
 import { randomUUID, randomBytes } from 'crypto'
 
+// Starts a Smart-ID login: opens an anonymous device-link SK session and returns our session id
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
   const client = await validateRequest(query, 'smart-id', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state'])
-  const session = randomUUID().replaceAll('-', '')
-  const callbackValue = randomBytes(16).toString('base64url')
-  const initialCallbackUrl = `${getOrigin(event)}/api/smart-id-callback?session=${session}&value=${callbackValue}`
 
   await checkUsageLimit(client.id, 'smart-id')
 
-  const result = await startSidSession(client.skidText || getLocale(query.lang).common.logIn, initialCallbackUrl)
+  const session = randomUUID().replaceAll('-', '')
+  const callbackValue = randomBytes(16).toString('base64url')
+  const initialCallbackUrl = `${getOrigin(event)}/api/smart-id-callback?session=${session}&value=${callbackValue}`
+  const locale = getLocale(query.lang)
+  const result = await startSidSession(client.skidText || locale.common.logIn, initialCallbackUrl)
 
   await setSessionData(`smart-id:${session}`, {
     client_id: client.id,
     redirect_uri: query.redirect_uri,
     state: query.state,
-    lang: getLocale(query.lang).smartId.language,
-    skSession: result.skSession,
-    sessionToken: result.sessionToken,
-    sessionSecret: result.sessionSecret,
-    deviceLinkBase: result.deviceLinkBase,
-    rpChallenge: result.rpChallenge,
-    interactions: result.interactions,
+    lang: locale.smartId.language,
     initialCallbackUrl,
     callbackValue,
-    startTime: result.startTime
+    ...result
   }, SESSION_TTL.SK)
 
-  await setBillingUsage(client.stripeId, 'smart-id')
-  await setUsage(client.id, 'smart-id')
+  await recordUsage(client, 'smart-id')
 
   return { session }
 })
 
+// Starts an SK Smart-ID v3 anonymous device-link session and returns what the links and verification need
 async function startSidSession (displayText60, initialCallbackUrl) {
   const config = useRuntimeConfig()
-
   const rpChallenge = randomBytes(64).toString('base64')
-
-  const interactionsArray = [
-    { type: 'displayTextAndPIN', displayText60 }
-  ]
-  const interactions = Buffer.from(JSON.stringify(interactionsArray)).toString('base64')
+  const interactions = Buffer.from(JSON.stringify([{ type: 'displayTextAndPIN', displayText60 }])).toString('base64')
 
   const response = await skFetch('https://rp-api.smart-id.com/v3/authentication/device-link/anonymous', {
     method: 'POST',

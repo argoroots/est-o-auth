@@ -1,14 +1,12 @@
+// Polls a Smart-ID login (QR flow): RUNNING or the client redirect with an authorization code
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
   await validateRequest(body, 'smart-id', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'session'])
 
-  const sidSession = await getSessionData(`smart-id:${body.session}`, false, SESSION_TTL.SK)
-
-  if (!sidSession) throw createError({ statusCode: 403, statusMessage: 'Invalid or expired session' })
-  if (sidSession.client_id !== body.client_id) throw createError({ statusCode: 403, statusMessage: 'Session belongs to another client' })
-
-  const skResponse = await skFetch(`https://rp-api.smart-id.com/v3/session/${sidSession.skSession}?timeoutMs=2000`)
+  const key = `smart-id:${body.session}`
+  const session = await requireSession(key, SESSION_TTL.SK, body.client_id)
+  const skResponse = await skFetch(`https://rp-api.smart-id.com/v3/session/${session.skSession}?timeoutMs=2000`)
 
   if (skResponse.state === 'RUNNING') return { status: 'RUNNING' }
 
@@ -19,18 +17,11 @@ export default defineEventHandler(async (event) => {
   // Web2App flow completes via the callback endpoint, not here
   if (skResponse.signature?.flowType === 'Web2App') return { status: 'RUNNING' }
 
-  const idcode = await verifyAndExtractIdentity(skResponse, sidSession)
+  const identity = await verifySmartIdResponse(skResponse, session)
 
-  // Consume the session exactly once; a concurrent completion loses here
-  if (!await getSessionData(`smart-id:${body.session}`, true)) throw createError({ statusCode: 403, statusMessage: 'Session already used' })
+  await consumeSession(key)
 
-  const code = await saveUser({
-    id: idcode,
-    email: `${idcode}@eesti.ee`,
-    provider: 'smart-id'
-  }, sidSession)
+  const code = await saveUser(identityUser(identity, 'smart-id'), session)
 
-  const search = new URLSearchParams({ code, state: sidSession.state }).toString()
-
-  return { url: `${sidSession.redirect_uri}?${search}` }
+  return { url: codeRedirectUrl(session, code) }
 })

@@ -1,5 +1,6 @@
 import { randomBytes } from 'crypto'
 
+// Starts an ID-card login: issues the Web eID nonce, which opens the card dialog in the browser
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
@@ -7,8 +8,7 @@ export default defineEventHandler(async (event) => {
 
   await checkUsageLimit(client.id, 'id-card')
 
-  // 32 random bytes -> 44 base64 chars, as required by the Web eID spec. The nonce is bound to the
-  // client and redirect URI that requested it.
+  // 32 random bytes -> 44 base64 chars, as the Web eID spec requires
   const nonce = randomBytes(32).toString('base64')
 
   await setSessionData(`id-card:${nonce}`, {
@@ -17,9 +17,7 @@ export default defineEventHandler(async (event) => {
     state: query.state
   }, SESSION_TTL.NONCE)
 
-  // Issuing the nonce starts the card dialog, so like every other method this is the billed request
-  await setBillingUsage(client.stripeId, 'id-card')
-  await setUsage(client.id, 'id-card')
+  await recordUsage(client, 'id-card')
 
   return { nonce }
 })

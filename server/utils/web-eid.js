@@ -1,15 +1,14 @@
 import { X509Certificate, createHash, verify, constants } from 'crypto'
 import * as pkijs from 'pkijs'
 
-// Web eID authentication token validation, per
-// https://github.com/web-eid/web-eid-system-architecture-doc#authentication-token-validation
+// Web eID token validation, per https://github.com/web-eid/web-eid-system-architecture-doc#authentication-token-validation
 
-// Certificate policies not accepted for ID-card login: Estonian Mobile-ID certificates
-// (1.3.6.1.4.1.10015.1.3.*) chain to the same CA but are not smart cards
+// Mobile-ID certificates (1.3.6.1.4.1.10015.1.3.*) chain to the same CA but are not smart cards
 const DISALLOWED_POLICY_PREFIX = '1.3.6.1.4.1.10015.1.3'
 const CERTIFICATE_POLICIES_OID = '2.5.29.32'
 const CLIENT_AUTH_OID = '1.3.6.1.5.5.7.3.2'
 
+// True when the certificate carries a policy that is not accepted for ID-card login
 function hasDisallowedPolicy (x509) {
   const cert = pkijs.Certificate.fromBER(new Uint8Array(x509.raw).buffer)
   const extension = cert.extensions?.find((ext) => ext.extnID === CERTIFICATE_POLICIES_OID)
@@ -18,8 +17,7 @@ function hasDisallowedPolicy (x509) {
   return policies.some((oid) => oid === DISALLOWED_POLICY_PREFIX || oid.startsWith(`${DISALLOWED_POLICY_PREFIX}.`))
 }
 
-// Returns the verified user certificate. Signed data is hash(origin) || hash(nonce) where the hash
-// is the one named by the algorithm (ES384 -> SHA-384); EC signatures are raw R||S.
+// Verifies a Web eID token (format, usage, policy, chain, OCSP, signature over hash(origin)||hash(nonce)) and returns the certificate
 export async function verifyWebEidToken (token, nonce, origin) {
   const { unverifiedCertificate, algorithm, signature, format } = token ?? {}
 
@@ -54,6 +52,7 @@ export async function verifyWebEidToken (token, nonce, origin) {
     createHash(hashAlg).update(nonce, 'utf8').digest()
   ])
 
+  // EC signatures are raw R||S
   const keyOptions = { key: cert.publicKey }
 
   if (family === 'ES') keyOptions.dsaEncoding = 'ieee-p1363'
@@ -65,7 +64,7 @@ export async function verifyWebEidToken (token, nonce, origin) {
   return cert
 }
 
-// crypto.verify throws on malformed input; treat that the same as a bad signature
+// crypto.verify that treats malformed input the same as a bad signature
 export function safeVerify (hashAlg, data, keyOptions, signature) {
   try {
     return verify(hashAlg, data, keyOptions, signature)

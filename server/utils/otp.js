@@ -1,30 +1,26 @@
 import { randomInt, timingSafeEqual } from 'crypto'
 
-// One-time codes for e-mail and phone login. One live code per target (the session key), a resend
-// cooldown so a public client_id cannot be used to flood a mailbox or phone, and a bounded number
-// of guesses per code. Both limits are enforced with conditional DynamoDB writes, so concurrent
-// requests cannot slip past them.
+// One live code per target, a resend cooldown, and a bounded number of guesses; both enforced atomically in DynamoDB
 const RESEND_COOLDOWN_MS = 60 * 1000
 const MAX_ATTEMPTS = 5
 
+// Plausible e-mail address of at most 254 characters
 export function isEmail (value) {
   return typeof value === 'string' && value.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
 }
 
-// Estonian number only, +372 and 7 or 8 digits: this service authenticates Estonian users, and refusing
-// every other country removes the premium-rate ranges that SMS pumping relies on
+// Estonian number only (+372 and 7 or 8 digits); other countries are where SMS pumping targets live
 export function isPhone (value) {
   return typeof value === 'string' && /^\+372\d{7,8}$/.test(value)
 }
 
-// Estonian personal identification code, GYYMMDDSSSC: G is sex and century (1-2: 1800s, 3-4: 1900s,
-// 5-6: 2000s, 7-8: 2100s; odd male, even female), YYMMDD the date of birth, SSS a serial number and
-// C a modulo 11 check digit. Requires a real calendar date not in the future and a correct check digit.
+// Estonian personal code GYYMMDDSSSC: century/sex digit, real past birth date, modulo 11 check digit
 export function isIdcode (value) {
   if (typeof value !== 'string' || !/^[1-8]\d{10}$/.test(value)) return false
 
   const digits = Array.from(value, Number)
 
+  // G: 1-2 = 1800s, 3-4 = 1900s, 5-6 = 2000s, 7-8 = 2100s
   const century = 1800 + Math.floor((digits[0] - 1) / 2) * 100
   const year = century + Number(value.substring(1, 3))
   const month = Number(value.substring(3, 5))
@@ -44,8 +40,7 @@ export function isIdcode (value) {
   return check === digits[10]
 }
 
-// Creates and stores a fresh code for the target (type is 'email' or 'phone'), replacing any earlier
-// one that is past the resend cooldown. fixedCode is for the test user.
+// Creates and stores a fresh code for the target ('email' or 'phone'); 429 within the resend cooldown
 export async function createOtp (type, target, data, fixedCode) {
   const code = fixedCode ?? String(randomInt(0, 1_000_000)).padStart(6, '0')
   const stored = await setSessionDataUnlessRecent(targetKey(type, target), { ...data, code }, RESEND_COOLDOWN_MS, SESSION_TTL.OTP)
@@ -55,9 +50,7 @@ export async function createOtp (type, target, data, fixedCode) {
   return code
 }
 
-// Checks a submitted code. Every call counts as an attempt before the code is compared, so at most
-// MAX_ATTEMPTS comparisons ever happen for one code. A correct code consumes the session and returns
-// its data. Returns undefined on any failure.
+// Checks a submitted code, counting the attempt first; a match consumes the code and returns its data
 export async function verifyOtp (type, target, code) {
   const key = targetKey(type, target)
   const session = await countSessionAttempt(key, MAX_ATTEMPTS, SESSION_TTL.OTP)

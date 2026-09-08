@@ -1,21 +1,34 @@
 import jwt from 'jsonwebtoken'
 
-// Google and Apple callbacks carry our signed state (client, redirect URI, client state).
-// A tampered or expired state is a client error, not a crash.
-export function verifyProviderState (state, secret) {
+// How long a Google/Apple round trip may take before the signed state expires
+const STATE_LIFETIME = '5m'
+
+// Signs the OAuth request into the state sent to Google/Apple, so the callback can finish the flow
+export function signProviderState (client, query) {
+  const payload = { client_id: client.id, redirect_uri: query.redirect_uri, state: query.state }
+
+  return jwt.sign(payload, useRuntimeConfig().jwtSecret, { expiresIn: STATE_LIFETIME })
+}
+
+// Verifies the state a provider sent back; tampered or expired is a 400, not a crash
+export function verifyProviderState (state) {
   try {
-    return jwt.verify(state, secret, { algorithms: ['HS256'] })
+    return jwt.verify(state, useRuntimeConfig().jwtSecret, { algorithms: ['HS256'] })
   }
   catch {
     throw createError({ statusCode: 400, statusMessage: 'Invalid or expired state' })
   }
 }
 
-// Redirect URL for a declined or failed provider login, per RFC 6749 §4.1.2.1. Anything other than
-// a user cancellation is reported as server_error so the client can distinguish the two.
-export function providerErrorUrl (decodedState, providerError) {
-  const cancelled = ['access_denied', 'user_cancelled_authorize'].includes(providerError)
-  const search = new URLSearchParams({ error: cancelled ? 'access_denied' : 'server_error', state: decodedState.state }).toString()
+// Client redirect carrying the authorization code (RFC 6749 §4.1.2)
+export function codeRedirectUrl (session, code) {
+  return `${session.redirect_uri}?${new URLSearchParams({ code, state: session.state })}`
+}
 
-  return `${decodedState.uri}?${search}`
+// Client redirect for a declined or failed login (RFC 6749 §4.1.2.1); only a user cancellation is access_denied
+export function errorRedirectUrl (session, providerError) {
+  const cancelled = ['access_denied', 'user_cancelled_authorize'].includes(providerError)
+  const error = cancelled ? 'access_denied' : 'server_error'
+
+  return `${session.redirect_uri}?${new URLSearchParams({ error, state: session.state })}`
 }

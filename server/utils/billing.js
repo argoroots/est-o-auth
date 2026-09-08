@@ -1,6 +1,6 @@
 const { url } = useRuntimeConfig()
 
-// Returns { priceId: 'smart-id', ... } for active recurring prices attached to a meter named oauth_<provider>
+// Maps active recurring Stripe price ids to provider ids via meters named oauth_<provider>
 async function getProviderPrices () {
   const { billing, prices } = getStripe()
 
@@ -20,6 +20,7 @@ async function getProviderPrices () {
   )
 }
 
+// Starts a Stripe Checkout subscription for every provider price and returns its URL
 export async function createCheckoutSession () {
   const { checkout } = getStripe()
   const providerByPrice = await getProviderPrices()
@@ -28,7 +29,7 @@ export async function createCheckoutSession () {
 
   if (priceIds.length === 0) throw createError({ statusCode: 500, statusMessage: 'No OAuth prices found in Stripe' })
 
-  // Align billing periods to calendar months: first invoice on the 1st of next month (UTC)
+  // First invoice on the 1st of next month (UTC), so billing periods are calendar months
   const now = new Date()
   const billingCycleAnchor = Math.floor(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1) / 1000)
 
@@ -57,6 +58,7 @@ export async function createCheckoutSession () {
   return session.url
 }
 
+// Reads a finished Checkout session: status, customer, service name, redirect URL and chosen providers
 export async function getCheckoutSession (id) {
   const { checkout } = getStripe()
 
@@ -77,6 +79,7 @@ export async function getCheckoutSession (id) {
   }
 }
 
+// Reports one authentication to the client's Stripe meter; clients without Stripe are not billed
 export async function setBillingUsage (stripeId, provider) {
   if (!stripeId) return
 
@@ -89,4 +92,9 @@ export async function setBillingUsage (stripeId, provider) {
       stripe_customer_id: stripeId
     }
   })
+}
+
+// Counts one authentication start for both billing and statistics
+export async function recordUsage (client, provider) {
+  await Promise.all([setBillingUsage(client.stripeId, provider), setUsage(client.id, provider)])
 }

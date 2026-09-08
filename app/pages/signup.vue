@@ -4,10 +4,10 @@ useHead({ title: t('signup.title') })
 
 const { query } = useRoute()
 
-// ?mock=true renders the callback screen with fake credentials (development only)
+// ?mock=true renders the credentials screen with fake values (development only)
 const isMock = import.meta.dev && query.mock === 'true'
 
-// Visited without a Checkout session: start one
+// Without a Checkout session: start one
 if (!query.session_id && !isMock) await navigateTo('/api/signup', { external: true })
 
 const { data, error } = isMock
@@ -16,6 +16,7 @@ const { data, error } = isMock
 
 const copied = ref(null)
 
+// Copies the value to the clipboard, or selects it when the clipboard is blocked
 async function onCopy (key) {
   try {
     await navigator.clipboard.writeText(data.value[key])

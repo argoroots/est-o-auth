@@ -11,22 +11,17 @@ const props = defineProps({
   placeholder: { type: String, required: true }
 })
 
-const emit = defineEmits([
-  'update:modelValue',
-  'blur'
-])
+const emit = defineEmits(['update:modelValue', 'blur'])
 
+// v-model passthrough
 const text = computed({
-  get () {
-    return props.modelValue
-  },
-  set (val) {
-    emit('update:modelValue', val)
-  }
+  get: () => props.modelValue,
+  set: (value) => emit('update:modelValue', value)
 })
 
 const inputEl = ref()
 
+// Focuses the input; exposed so a parent can move focus between fields
 function focus () {
   inputEl.value?.focus()
 }

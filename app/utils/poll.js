@@ -1,9 +1,9 @@
-// Runs fn immediately and then again `ms` after each run finishes, so a slow request never overlaps
-// the next one (setInterval would fire regardless). Returns a function that stops the loop.
+// Runs fn now and again `ms` after each run finishes, so requests never overlap; returns a stop function
 export function startPolling (fn, ms) {
   let active = true
   let timer
 
+  // One run, then schedules the next unless stopped meanwhile
   const tick = async () => {
     if (!active) return
 

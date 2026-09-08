@@ -4,19 +4,18 @@ import * as pkijs from 'pkijs'
 pkijs.setEngine('node', new pkijs.CryptoEngine({ name: 'node', crypto: globalThis.crypto }))
 
 const OCSP_TIMEOUT_MS = 5000
-// AIA responders answer with a fresh thisUpdate per request; allow 2 min age plus 15 min clock skew,
-// matching the Web eID reference validator defaults
+// 2 min age plus 15 min clock skew, matching the Web eID reference validator defaults
 const OCSP_MAX_AGE_MS = 2 * 60 * 1000
 const OCSP_CLOCK_SKEW_MS = 15 * 60 * 1000
 
 const STATUS = { 0: 'good', 1: 'revoked', 2: 'unknown' }
 
+// Node X509Certificate as a pkijs Certificate
 function toPkijs (x509) {
   return pkijs.Certificate.fromBER(new Uint8Array(x509.raw).buffer)
 }
 
-// Checks certificate revocation against the given OCSP responder (pinned per issuer, not read from
-// the user certificate). Certificates are Node X509Certificate instances. Fails closed.
+// Checks revocation against the issuer's pinned OCSP responder; any doubt (unreachable, stale, unknown) fails closed
 export async function checkRevocation (certX509, issuerX509, url) {
   const cert = toPkijs(certX509)
   const issuer = toPkijs(issuerX509)
@@ -46,7 +45,7 @@ export async function checkRevocation (certX509, issuerX509, url) {
 
   const basic = pkijs.BasicOCSPResponse.fromBER(response.responseBytes.response.valueBlock.valueHexView)
 
-  // Verifies the response signature and that the signer chains to the certificate's issuer
+  // Response signature must chain to the certificate's issuer
   let signatureValid = false
 
   try {

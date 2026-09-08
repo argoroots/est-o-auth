@@ -1,10 +1,10 @@
 <script setup>
 const route = useRoute()
 
-// Loaded by the check-query middleware on auth pages; absent elsewhere
+// Set by the check-query middleware on auth pages; absent elsewhere
 const client = useState('client')
 
-// Layouts persist across navigations, so read the query through the reactive route each time
+// Layouts persist across navigations, so the link follows the reactive route
 const homeLink = computed(() => route.query.client_id ? { path: '/auth', query: route.query } : '/')
 </script>
 

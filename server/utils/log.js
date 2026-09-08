@@ -1,5 +1,4 @@
-// Makes an untrusted value safe to put in a one-line log entry: control characters (newlines above
-// all) are escaped so a request cannot forge extra log lines, and the length is capped.
+// Makes an untrusted value safe for a one-line log entry: control characters escaped, length capped
 export function logSafe (value, maxLength = 200) {
   const text = String(value ?? '')
   // eslint-disable-next-line no-control-regex

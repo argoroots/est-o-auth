@@ -1,8 +1,6 @@
 import { X509Certificate, constants } from 'crypto'
 
-// Mobile-ID authentication response verification, per https://github.com/SK-EID/MID#authentication
-// We submitted hash = SHA-256(message) and kept the message, so the returned signature can be checked
-// as an ordinary message signature. SIMs produce ECDSA as raw R||S or RSA PKCS#1 v1.5.
+// Verifies a completed Mobile-ID session (certificate chain, signature over our message) and returns the identity
 export async function verifyMobileIdResponse (skResponse, midSession) {
   const { signature, cert } = skResponse
   const match = /^SHA256With(EC|RSA)Encryption$/i.exec(signature?.algorithm ?? '')
@@ -13,6 +11,7 @@ export async function verifyMobileIdResponse (skResponse, midSession) {
 
   await checkTrustedCertificate(x509, 'mobile-id')
 
+  // SIMs sign SHA-256(message) as raw R||S ECDSA or RSA PKCS#1 v1.5
   const keyOptions = match[1].toUpperCase() === 'EC'
     ? { key: x509.publicKey, dsaEncoding: 'ieee-p1363' }
     : { key: x509.publicKey, padding: constants.RSA_PKCS1_PADDING }

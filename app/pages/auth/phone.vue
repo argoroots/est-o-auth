@@ -8,34 +8,18 @@ const phone = ref(query.phone)
 const code = ref(query.code)
 const isSending = ref(false)
 const isError = ref(false)
-const isPhoneSent = ref(false)
-const waitSeconds = ref(0)
-const waitInterval = ref()
+const isSent = ref(false)
+const wait = useCountdown()
 
-if (phone.value && !code.value) onStartSession()
+// Opened with a prefilled number (and possibly a code)
 if (phone.value && code.value) onAuthenticate()
+else if (phone.value) onStartSession()
 
-onUnmounted(() => clearInterval(waitInterval.value))
-
-// Resend cooldown from the server (429): count it down and block the button meanwhile
-function startWait (seconds) {
-  waitSeconds.value = seconds
-  clearInterval(waitInterval.value)
-  waitInterval.value = setInterval(() => {
-    waitSeconds.value -= 1
-
-    if (waitSeconds.value <= 0) clearInterval(waitInterval.value)
-  }, 1000)
-}
-
+// Asks the server to text a code; a 429 starts the resend countdown
 async function onStartSession () {
-  if (!phone.value || waitSeconds.value > 0) return
+  phone.value = normalizePhone(phone.value)
 
-  phone.value = phone.value.replace(/\D/g, '')
-
-  if (phone.value.length <= 8) phone.value = '372' + phone.value
-
-  phone.value = '+' + phone.value
+  if (!phone.value || wait.seconds.value > 0) return
 
   isSending.value = true
   isError.value = false
@@ -43,19 +27,20 @@ async function onStartSession () {
   try {
     const data = await $fetch('/api/phone', { query: { ...query, phone: phone.value } })
 
-    if (data.sent) isPhoneSent.value = true
+    isSent.value = !!data.sent
   }
   catch (error) {
-    if (error.statusCode === 429) startWait(60)
+    if (error.statusCode === 429) wait.start(60)
     else isError.value = true
   }
-
-  isSending.value = false
+  finally {
+    isSending.value = false
+  }
 }
 
+// Submits the code; success leaves for the client's redirect_uri
 async function onAuthenticate () {
-  if (!phone.value?.trim()) return
-  if (!code.value?.trim()) return
+  if (!phone.value?.trim() || !code.value?.trim()) return
 
   isSending.value = true
   isError.value = false
@@ -63,11 +48,7 @@ async function onAuthenticate () {
   try {
     const data = await $fetch('/api/phone', {
       method: 'POST',
-      body: {
-        ...query,
-        phone: phone.value,
-        code: code.value
-      }
+      body: { ...query, phone: phone.value, code: code.value }
     })
 
     if (data.url) return navigateTo(data.url, { external: true })
@@ -75,7 +56,6 @@ async function onAuthenticate () {
     isError.value = true
   }
   catch {
-    // Wrong or expired code is a 403 from the server
     isError.value = true
   }
   finally {
@@ -88,7 +68,7 @@ async function onAuthenticate () {
   <form-wrapper>
     <form-spinner v-if="isSending" />
 
-    <template v-else-if="!isPhoneSent">
+    <template v-else-if="!isSent">
       <form-input
         id="phone"
         v-model="phone"
@@ -107,14 +87,14 @@ async function onAuthenticate () {
         {{ $t('common.somethingWrong') }}
       </p>
       <p
-        v-else-if="waitSeconds > 0"
+        v-else-if="wait.seconds.value > 0"
         class="text-red-700"
         aria-live="polite"
       >
-        {{ $t('code.wait', { seconds: waitSeconds }) }}
+        {{ $t('code.wait', { seconds: wait.seconds.value }) }}
       </p>
       <form-button
-        :disabled="waitSeconds > 0"
+        :disabled="wait.seconds.value > 0"
         @click="onStartSession"
       >
         {{ $t('common.authenticate') }}

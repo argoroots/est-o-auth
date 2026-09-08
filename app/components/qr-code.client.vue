@@ -4,6 +4,7 @@ import QRCode from 'qrcode'
 const props = defineProps({ url: String })
 const canvas = ref()
 
+// Redraws the canvas whenever the link changes
 watch(() => props.url, async (url) => {
   if (!url || !canvas.value) return
 

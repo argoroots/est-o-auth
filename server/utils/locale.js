@@ -9,8 +9,7 @@ export function getLang (lang) {
   return lang in LOCALES ? lang : 'en'
 }
 
-// Messages for a UI locale (i18n/locales/*.json), used server-side for provider language codes
-// (`smartId.language`, `mobileId.language`) and for the e-mail and SMS texts
+// Messages for a UI locale, used server-side for provider language codes and e-mail/SMS texts
 export function getLocale (lang) {
   return LOCALES[getLang(lang)]
 }

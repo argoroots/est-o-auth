@@ -1,5 +1,6 @@
 import { PublishCommand } from '@aws-sdk/client-sns'
 
+// Starts a phone login: creates a one-time code and sends it by SMS
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
@@ -21,8 +22,7 @@ export default defineEventHandler(async (event) => {
     Message: interpolate(getLocale(query.lang).phone.sms, { code })
   }))
 
-  await setBillingUsage(client.stripeId, 'phone')
-  await setUsage(client.id, 'phone')
+  await recordUsage(client, 'phone')
 
   return { sent: true }
 })

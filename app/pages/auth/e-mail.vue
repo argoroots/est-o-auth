@@ -8,28 +8,16 @@ const email = ref(query.email)
 const code = ref(query.code)
 const isSending = ref(false)
 const isError = ref(false)
-const isEmailSent = ref(false)
-const waitSeconds = ref(0)
-const waitInterval = ref()
+const isSent = ref(false)
+const wait = useCountdown()
 
-if (email.value && !code.value) onStartSession()
+// Opened from the magic link (email and code in the query) or with a prefilled address
 if (email.value && code.value) onAuthenticate()
+else if (email.value) onStartSession()
 
-onUnmounted(() => clearInterval(waitInterval.value))
-
-// Resend cooldown from the server (429): count it down and block the button meanwhile
-function startWait (seconds) {
-  waitSeconds.value = seconds
-  clearInterval(waitInterval.value)
-  waitInterval.value = setInterval(() => {
-    waitSeconds.value -= 1
-
-    if (waitSeconds.value <= 0) clearInterval(waitInterval.value)
-  }, 1000)
-}
-
+// Asks the server to mail a code; a 429 starts the resend countdown
 async function onStartSession () {
-  if (!email.value?.trim() || waitSeconds.value > 0) return
+  if (!email.value?.trim() || wait.seconds.value > 0) return
 
   isSending.value = true
   isError.value = false
@@ -37,19 +25,20 @@ async function onStartSession () {
   try {
     const data = await $fetch('/api/e-mail', { query: { ...query, email: email.value } })
 
-    if (data.sent) isEmailSent.value = true
+    isSent.value = !!data.sent
   }
   catch (error) {
-    if (error.statusCode === 429) startWait(60)
+    if (error.statusCode === 429) wait.start(60)
     else isError.value = true
   }
-
-  isSending.value = false
+  finally {
+    isSending.value = false
+  }
 }
 
+// Submits the code; success leaves for the client's redirect_uri
 async function onAuthenticate () {
-  if (!email.value?.trim()) return
-  if (!code.value?.trim()) return
+  if (!email.value?.trim() || !code.value?.trim()) return
 
   isSending.value = true
   isError.value = false
@@ -57,11 +46,7 @@ async function onAuthenticate () {
   try {
     const data = await $fetch('/api/e-mail', {
       method: 'POST',
-      body: {
-        ...query,
-        email: email.value,
-        code: code.value
-      }
+      body: { ...query, email: email.value, code: code.value }
     })
 
     if (data.url) return navigateTo(data.url, { external: true })
@@ -69,7 +54,6 @@ async function onAuthenticate () {
     isError.value = true
   }
   catch {
-    // Wrong or expired code is a 403 from the server
     isError.value = true
   }
   finally {
@@ -82,7 +66,7 @@ async function onAuthenticate () {
   <form-wrapper>
     <form-spinner v-if="isSending" />
 
-    <template v-else-if="!isEmailSent">
+    <template v-else-if="!isSent">
       <form-input
         id="email"
         v-model="email"
@@ -101,14 +85,14 @@ async function onAuthenticate () {
         {{ $t('common.somethingWrong') }}
       </p>
       <p
-        v-else-if="waitSeconds > 0"
+        v-else-if="wait.seconds.value > 0"
         class="text-red-700"
         aria-live="polite"
       >
-        {{ $t('code.wait', { seconds: waitSeconds }) }}
+        {{ $t('code.wait', { seconds: wait.seconds.value }) }}
       </p>
       <form-button
-        :disabled="waitSeconds > 0"
+        :disabled="wait.seconds.value > 0"
         @click="onStartSession"
       >
         {{ $t('common.authenticate') }}

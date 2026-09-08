@@ -1,5 +1,4 @@
-import jwt from 'jsonwebtoken'
-
+// Starts a Google login: returns the Google OAuth URL carrying our signed state
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
@@ -16,11 +15,10 @@ export default defineEventHandler(async (event) => {
     response_mode: 'form_post',
     scope: 'openid email profile',
     hl: getLang(query.lang),
-    state: jwt.sign({ client: client.id, uri: query.redirect_uri, state: query.state }, config.jwtSecret, { expiresIn: '5m' })
-  }).toString()
+    state: signProviderState(client, query)
+  })
 
-  await setBillingUsage(client.stripeId, 'google')
-  await setUsage(client.id, 'google')
+  await recordUsage(client, 'google')
 
   return { url: `https://accounts.google.com/o/oauth2/v2/auth?${search}` }
 })

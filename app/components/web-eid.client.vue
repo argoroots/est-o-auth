@@ -11,7 +11,7 @@ const errorMessage = ref()
 const showInstallLink = ref(false)
 const errorHeading = ref()
 
-// Move focus to the error heading so screen readers announce it and keyboard users land on it
+// Moves focus to the error heading so screen readers announce it
 watch(errorMessage, async (message) => {
   if (!message) return
 
@@ -19,52 +19,55 @@ watch(errorMessage, async (message) => {
   errorHeading.value?.focus()
 })
 
+// Opens the card dialog as soon as the component shows; the extension signs origin and nonce
 onMounted(async () => {
   try {
-    // The Web eID dialog follows the page language
     const authResponse = await authenticate(props.nonce, { lang: locale.value })
 
     emit('authenticate', authResponse)
   }
   catch (error) {
-    switch (error.code) {
-      case ErrorCode.ERR_WEBEID_USER_CANCELLED:
-        // Back to the method chooser with the same OAuth query; history.back() would do nothing
-        // when this page was opened directly by the client
-        await navigateTo({ path: '/auth', query: useRoute().query })
-        break
-      case ErrorCode.ERR_WEBEID_ACTION_TIMEOUT:
-      case ErrorCode.ERR_WEBEID_USER_TIMEOUT:
-        errorMessage.value = t('idCard.timeout')
-        break
-      case ErrorCode.ERR_WEBEID_ACTION_PENDING:
-        errorMessage.value = t('idCard.pending')
-        break
-      case ErrorCode.ERR_WEBEID_CONTEXT_INSECURE:
-        errorMessage.value = t('idCard.insecure')
-        break
-      case ErrorCode.ERR_WEBEID_VERSION_MISMATCH:
-        if (error.requiresUpdate?.nativeApp) errorMessage.value = t('idCard.updateApp')
-        else if (error.requiresUpdate?.extension) errorMessage.value = t('idCard.updateExtension')
-        else errorMessage.value = t('idCard.updateBoth')
-
-        showInstallLink.value = true
-        break
-      case ErrorCode.ERR_WEBEID_EXTENSION_UNAVAILABLE:
-        errorMessage.value = t('idCard.noExtension')
-        showInstallLink.value = true
-        break
-      case ErrorCode.ERR_WEBEID_NATIVE_UNAVAILABLE:
-        errorMessage.value = t('idCard.noApp')
-        showInstallLink.value = true
-        break
-      default:
-        console.error(error)
-        errorMessage.value = t('idCard.failed')
-        break
-    }
+    await onError(error)
   }
 })
+
+// Maps a Web eID error to a message, or returns to the method chooser when the user cancelled
+async function onError (error) {
+  switch (error.code) {
+    case ErrorCode.ERR_WEBEID_USER_CANCELLED:
+      // history.back() would do nothing when the client opened this page directly
+      await navigateTo({ path: '/auth', query: useRoute().query })
+      break
+    case ErrorCode.ERR_WEBEID_ACTION_TIMEOUT:
+    case ErrorCode.ERR_WEBEID_USER_TIMEOUT:
+      errorMessage.value = t('idCard.timeout')
+      break
+    case ErrorCode.ERR_WEBEID_ACTION_PENDING:
+      errorMessage.value = t('idCard.pending')
+      break
+    case ErrorCode.ERR_WEBEID_CONTEXT_INSECURE:
+      errorMessage.value = t('idCard.insecure')
+      break
+    case ErrorCode.ERR_WEBEID_VERSION_MISMATCH:
+      if (error.requiresUpdate?.nativeApp) errorMessage.value = t('idCard.updateApp')
+      else if (error.requiresUpdate?.extension) errorMessage.value = t('idCard.updateExtension')
+      else errorMessage.value = t('idCard.updateBoth')
+
+      showInstallLink.value = true
+      break
+    case ErrorCode.ERR_WEBEID_EXTENSION_UNAVAILABLE:
+      errorMessage.value = t('idCard.noExtension')
+      showInstallLink.value = true
+      break
+    case ErrorCode.ERR_WEBEID_NATIVE_UNAVAILABLE:
+      errorMessage.value = t('idCard.noApp')
+      showInstallLink.value = true
+      break
+    default:
+      console.error(error)
+      errorMessage.value = t('idCard.failed')
+  }
+}
 </script>
 
 <template>

@@ -12,6 +12,7 @@ if (error.value) {
   })
 }
 
+// Total across providers for one period
 function sum (data) {
   return Object.values(data).reduce((a, b) => a + b, 0)
 }

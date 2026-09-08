@@ -40,12 +40,7 @@ export default defineNuxtConfig({
     stripeKey: '',
     testUser: ''
   },
-  // Security headers for every response. Scripts come only from this origin and the analytics host;
-  // the login pages must never be framed (clickjacking of the QR and code screens); referrers to
-  // third parties carry only the origin so OAuth codes in our URLs never leak that way.
-  // 'unsafe-inline' is required: Nuxt injects an inline importmap and an inline config script on
-  // every page, and Vite injects inline styles in dev. Replacing it with per-response hashes
-  // needs a Nitro render:html plugin.
+  // Security headers for every response: no framing, no foreign scripts, referrers carry only the origin; 'unsafe-inline' stays because Nuxt injects an inline importmap and config script, hashes would need a render:html plugin
   routeRules: {
     '/**': {
       headers: {
