@@ -1,8 +1,11 @@
 <script setup>
-const { query } = useRoute()
+const route = useRoute()
 
 // Loaded by the check-query middleware on auth pages; absent elsewhere
 const client = useState('client')
+
+// Layouts persist across navigations, so read the query through the reactive route each time
+const homeLink = computed(() => route.query.client_id ? { path: '/auth', query: route.query } : '/')
 </script>
 
 <template>
@@ -11,7 +14,7 @@ const client = useState('client')
     <section>
       <header>
         <h1>
-          <nuxt-link :to="query.client_id ? { path: '/auth', query } : '/'">
+          <nuxt-link :to="homeLink">
             OAuth.ee <span>by Argo Roots</span>
           </nuxt-link>
         </h1>
