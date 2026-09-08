@@ -86,7 +86,9 @@
     "docs": "dokumentaatioon",
     "failed": "Rekisteröityminen epäonnistui",
     "unknownError": "Tuntematon virhe",
-    "alreadyIssued": "Jos olet jo saanut tunnuksesi, niitä ei voi näyttää uudelleen. Muussa tapauksessa {link}.",
-    "contact": "ota meihin yhteyttä"
+    "alreadyIssued": "Tämän maksun client_id ja client_secret näytettiin kerran, eikä niitä voi näyttää uudelleen. Jos et tallentanut niitä, {link}.",
+    "contact": "ota meihin yhteyttä",
+    "alreadyIssuedTitle": "Tunnukset on jo myönnetty",
+    "contactWithError": "{link} ja liitä yllä oleva viesti mukaan."
   }
 }

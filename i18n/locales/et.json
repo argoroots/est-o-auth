@@ -86,7 +86,9 @@
     "docs": "dokumentatsiooniga",
     "failed": "Registreerumine ebaõnnestus",
     "unknownError": "Tundmatu viga",
-    "alreadyIssued": "Kui oled oma tunnused juba kätte saanud, ei saa neid uuesti kuvada. Muul juhul palun {link}.",
-    "contact": "võta meiega ühendust"
+    "alreadyIssued": "Selle makse client_id ja client_secret kuvati ühe korra ja neid ei saa uuesti näidata. Kui sa neid ei salvestanud, palun {link}.",
+    "contact": "võta meiega ühendust",
+    "alreadyIssuedTitle": "Tunnused on juba väljastatud",
+    "contactWithError": "Palun {link} ja lisa ülaltoodud teade."
   }
 }

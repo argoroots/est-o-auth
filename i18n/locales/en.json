@@ -86,7 +86,9 @@
     "docs": "documentation",
     "failed": "Sign up failed",
     "unknownError": "Unknown error",
-    "alreadyIssued": "If you have already received your credentials, they can not be shown again. Otherwise please {link}.",
-    "contact": "contact us"
+    "alreadyIssued": "The client_id and client_secret for this payment were shown once and can not be shown again. If you did not save them, please {link}.",
+    "contact": "contact us",
+    "alreadyIssuedTitle": "Credentials already issued",
+    "contactWithError": "Please {link} and include the message above."
   }
 }

@@ -176,7 +176,8 @@ export async function checkUsageLimit (client, provider) {
 
   console.warn(`[limit] client ${client} reached monthly limit of ${limit} ${provider} authentications (${used})`)
 
-  throw createError({ statusCode: 429, statusMessage: 'Something went wrong' })
+  // Reaches the client operator through the API response; end users still see the generic page error
+  throw createError({ statusCode: 429, statusMessage: 'Monthly limit reached' })
 }
 
 export async function getUsage (client) {

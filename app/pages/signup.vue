@@ -64,6 +64,19 @@ async function onCopy (key) {
       </i18n-t>
     </template>
 
+    <!-- 409: the page was reloaded after the credentials were already shown once -->
+    <template v-else-if="error?.statusCode === 409">
+      <h2>{{ $t('signup.alreadyIssuedTitle') }}</h2>
+      <i18n-t
+        keypath="signup.alreadyIssued"
+        tag="p"
+      >
+        <template #link>
+          <a href="mailto:argo@roots.ee?subject=OAuth.ee credentials">{{ $t('signup.contact') }}</a>
+        </template>
+      </i18n-t>
+    </template>
+
     <template v-else>
       <h2>{{ $t('signup.failed') }}</h2>
       <p
@@ -73,7 +86,7 @@ async function onCopy (key) {
         {{ error?.statusMessage || $t('signup.unknownError') }}
       </p>
       <i18n-t
-        keypath="signup.alreadyIssued"
+        keypath="signup.contactWithError"
         tag="p"
       >
         <template #link>
