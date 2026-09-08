@@ -9,16 +9,40 @@ const qrUrl = ref(null)
 const deviceLinkUrl = ref(null)
 const isError = ref(false)
 
-const qrInterval = ref()
-const pollInterval = ref()
+// QR links come in batches of one per second; the page steps through them locally
+let qrUrls = []
+let stopQr
+let stopPoll
 
-onMounted(startSession)
+onMounted(async () => {
+  document.addEventListener('visibilitychange', onVisibilityChange)
 
-onUnmounted(stopPolling)
+  await startSession()
+})
+
+onUnmounted(() => {
+  document.removeEventListener('visibilitychange', onVisibilityChange)
+  stopPolling()
+})
+
+function startPollingLoops () {
+  stopPolling()
+  stopQr = startPolling(nextQr, 1000)
+  stopPoll = startPolling(pollStatus, 5000)
+}
 
 function stopPolling () {
-  clearInterval(qrInterval.value)
-  clearInterval(pollInterval.value)
+  stopQr?.()
+  stopPoll?.()
+  stopQr = stopPoll = undefined
+}
+
+// Nobody scans a QR code in a background tab; pause there and pick up again when the tab returns
+function onVisibilityChange () {
+  if (!session.value || isError.value) return
+
+  if (document.hidden) stopPolling()
+  else startPollingLoops()
 }
 
 async function startSession () {
@@ -32,25 +56,29 @@ async function startSession () {
 
     session.value = data.session
 
-    await refreshQR()
-
-    qrInterval.value = setInterval(refreshQR, 1000)
-    pollInterval.value = setInterval(pollStatus, 5000)
+    startPollingLoops()
   }
   catch {
     isError.value = true
   }
 }
 
-async function refreshQR () {
-  try {
-    const data = await $fetch('/api/smart-id-link', { query: { session: session.value } })
-    qrUrl.value = data.qrUrl
-    deviceLinkUrl.value = data.deviceLinkUrl
+// Shows the next QR link from the batch, fetching a new batch when this one runs out
+async function nextQr () {
+  if (qrUrls.length === 0) {
+    try {
+      const data = await $fetch('/api/smart-id-link', { query: { session: session.value } })
+
+      qrUrls = data.qrUrls
+      deviceLinkUrl.value = data.deviceLinkUrl
+    }
+    catch {
+      // session may have expired — let poll handle the error state
+      return
+    }
   }
-  catch {
-    // session may have expired — let poll handle the error state
-  }
+
+  qrUrl.value = qrUrls.shift()
 }
 
 async function pollStatus () {

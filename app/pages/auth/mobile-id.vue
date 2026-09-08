@@ -9,14 +9,20 @@ const phone = ref(query.phone)
 const phoneInput = ref()
 const isSending = ref(false)
 const isError = ref(false)
-const interval = ref()
 const consent = ref(null)
 const session = ref(null)
+
+let stopPoll
 
 if (idcode.value && phone.value) onStartSession()
 
 // Stop polling if the user navigates away mid-authentication
-onUnmounted(() => clearInterval(interval.value))
+onUnmounted(stopPolling)
+
+function stopPolling () {
+  stopPoll?.()
+  stopPoll = undefined
+}
 
 function validateIdcode () {
   if (!idcode.value) return
@@ -48,7 +54,7 @@ async function onStartSession () {
 
     consent.value = data.consent
     session.value = data.session
-    interval.value = setInterval(onAuthenticate, 5000)
+    stopPoll = startPolling(onAuthenticate, 5000)
   }
   catch {
     isError.value = true
@@ -71,12 +77,12 @@ async function onAuthenticate () {
 
     if (data.status === 'RUNNING') return
 
-    clearInterval(interval.value)
+    stopPolling()
 
     if (data.url) return navigateTo(data.url, { external: true })
   }
   catch {
-    clearInterval(interval.value)
+    stopPolling()
   }
 
   // Cancelled, timed out, or failed: back to the form with an error
@@ -87,7 +93,7 @@ async function onAuthenticate () {
 
 // Stop waiting for the phone and return to the form; the SK session simply expires on its own
 function onCancel () {
-  clearInterval(interval.value)
+  stopPolling()
   consent.value = null
   session.value = null
 }
