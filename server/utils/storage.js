@@ -157,10 +157,13 @@ export async function setUsage (client, provider) {
     }
   })
 
-  await getDynamo().send(counter(now.substring(0, 4)))
-  await getDynamo().send(counter(now.substring(0, 7)))
-  await getDynamo().send(counter(now.substring(0, 10)))
-  await getDynamo().send(counter(now))
+  // Year, month, day and per-request rows are independent; write them concurrently
+  await Promise.all([
+    now.substring(0, 4),
+    now.substring(0, 7),
+    now.substring(0, 10),
+    now
+  ].map((date) => getDynamo().send(counter(date))))
 }
 
 export async function checkUsageLimit (client, provider) {
