@@ -6,32 +6,86 @@ const config = useRuntimeConfig()
 
 // Per-target rate limit: rejects with 429 if the key was used within windowMs, otherwise records the use.
 export async function checkCooldown (key, windowMs) {
-  if (await getSessionData(`cooldown:${key}`, false, windowMs)) {
-    throw createError({ statusCode: 429, statusMessage: 'Please wait before trying again' })
-  }
-
   // Marker only needs to outlive its window; expire it soon after rather than the default day
-  await setSessionData(`cooldown:${key}`, {}, Date.now(), Math.ceil(windowMs / 1000) + 60)
+  const recorded = await setSessionDataUnlessRecent(`cooldown:${key}`, {}, windowMs, Math.ceil(windowMs / 1000) + 60)
+
+  if (!recorded) throw createError({ statusCode: 429, statusMessage: 'Please wait before trying again' })
 }
 
 // DynamoDB TTL (epoch seconds in the `ttl` attribute; enable TTL on oauth-session with that attribute name).
 // Logical expiry is enforced on read via SESSION_TTL; this only governs physical cleanup.
 const SESSION_ITEM_TTL_S = 24 * 60 * 60
 
+function sessionItem (id, data, createdAt, ttlSeconds) {
+  return {
+    id: { S: id },
+    created: { S: new Date(createdAt).toISOString() },
+    ttl: { N: String(Math.floor(createdAt / 1000) + ttlSeconds) },
+    data: { S: JSON.stringify(data) }
+  }
+}
+
 // Stores a session. Pass createdAt (ms) when rewriting an existing session so its expiry is not extended;
 // ttlSeconds overrides how long DynamoDB keeps the row.
 export async function setSessionData (id, data, createdAt = Date.now(), ttlSeconds = SESSION_ITEM_TTL_S) {
-  const command = {
+  await getDynamo().send(new PutItemCommand({
     TableName: 'oauth-session',
-    Item: {
-      id: { S: id },
-      created: { S: new Date(createdAt).toISOString() },
-      ttl: { N: String(Math.floor(createdAt / 1000) + ttlSeconds) },
-      data: { S: JSON.stringify(data) }
-    }
+    Item: sessionItem(id, data, createdAt, ttlSeconds)
+  }))
+}
+
+// Stores a session unless one was created within windowMs. The check and the write are one
+// conditional DynamoDB call, so two concurrent requests cannot both pass. Returns false if refused.
+export async function setSessionDataUnlessRecent (id, data, windowMs, ttlSeconds = SESSION_ITEM_TTL_S) {
+  const now = Date.now()
+
+  try {
+    await getDynamo().send(new PutItemCommand({
+      TableName: 'oauth-session',
+      Item: sessionItem(id, data, now, ttlSeconds),
+      // ISO timestamps compare correctly as strings
+      ConditionExpression: 'attribute_not_exists(id) OR created <= :threshold',
+      ExpressionAttributeValues: { ':threshold': { S: new Date(now - windowMs).toISOString() } }
+    }))
+
+    return true
+  }
+  catch (error) {
+    if (error.name === 'ConditionalCheckFailedException') return false
+
+    throw error
+  }
+}
+
+// Counts one attempt against a session and returns { data, attempts }, or undefined when the session
+// is missing, expired, or has already used up maxAttempts. The increment and the limit check are one
+// conditional DynamoDB call, so concurrent attempts cannot exceed the limit.
+export async function countSessionAttempt (id, maxAttempts, maxAgeMs) {
+  let item
+
+  try {
+    ({ Attributes: item } = await getDynamo().send(new UpdateItemCommand({
+      TableName: 'oauth-session',
+      Key: { id: { S: id } },
+      UpdateExpression: 'SET attempts = if_not_exists(attempts, :zero) + :one',
+      ConditionExpression: 'attribute_exists(id) AND (attribute_not_exists(attempts) OR attempts < :max)',
+      ExpressionAttributeValues: {
+        ':zero': { N: '0' },
+        ':one': { N: '1' },
+        ':max': { N: String(maxAttempts) }
+      },
+      ReturnValues: 'ALL_NEW'
+    })))
+  }
+  catch (error) {
+    if (error.name === 'ConditionalCheckFailedException') return
+
+    throw error
   }
 
-  await getDynamo().send(new PutItemCommand(command))
+  if (maxAgeMs && Date.now() - Date.parse(item.created.S) > maxAgeMs) return
+
+  return { data: JSON.parse(item.data.S), attempts: parseInt(item.attempts.N) }
 }
 
 // Maximum age of stored sessions, enforced on read regardless of table TTL
