@@ -1,8 +1,16 @@
 <script setup>
-definePageMeta({ layout: 'text', middleware: ['check-query'] })
+definePageMeta({ layout: 'text' })
 
-// Loaded by the check-query middleware
-const client = useState('client')
+// Only the client id is needed here, not the full OAuth query the auth pages require
+const { query } = useRoute()
+const { data: client, error } = await useFetch('/api/usage', { query: { client_id: query.client_id } })
+
+if (error.value) {
+  throw createError({
+    statusCode: error.value.statusCode || 502,
+    statusMessage: error.value.data?.statusMessage || error.value.statusMessage || 'Could not load usage'
+  })
+}
 
 function sum (data) {
   return Object.values(data).reduce((a, b) => a + b, 0)
