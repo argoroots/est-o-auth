@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     redirect_uri: `${config.url}/api/google`,
     response_type: 'code',
     response_mode: 'form_post',
-    scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+    scope: 'openid email profile',
     hl: getLang(query.lang),
     state: jwt.sign({ client: client.id, uri: query.redirect_uri, state: query.state }, config.jwtSecret, { expiresIn: '5m' })
   }).toString()
