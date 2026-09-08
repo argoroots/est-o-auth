@@ -6,7 +6,9 @@
     "terms": "Kasutustingimused",
     "redirecting": "Suunamine {provider} lehele...",
     "logIn": "Sisene",
-    "tryAgain": "Proovi uuesti"
+    "tryAgain": "Proovi uuesti",
+    "cancel": "Tühista",
+    "loading": "Laadimine"
   },
   "provider": {
     "apple": "Apple",
@@ -19,7 +21,8 @@
   },
   "code": {
     "label": "Kinnituskood",
-    "invalid": "Vale kinnituskood!"
+    "invalid": "Vale kinnituskood!",
+    "wait": "Palun oota {seconds} sekundit enne uue koodi küsimist."
   },
   "email": {
     "label": "E-posti aadress",
@@ -45,7 +48,8 @@
     "scan": "Skaneeri QR-kood Smart-ID rakendusega või puuduta seda, et avada Smart-ID selles seadmes.",
     "keepOpen": "Hoia see leht avatuna, kuni autentimine on lõppenud.",
     "starting": "Smart-ID sessiooni alustamine…",
-    "language": "est"
+    "language": "est",
+    "qrLabel": "Smart-ID QR-kood"
   },
   "idCard": {
     "insert": "Sisesta ID-kaart kaardilugejasse ja järgi ekraanil kuvatavaid juhiseid.",
@@ -67,5 +71,22 @@
     "month": "see kuu",
     "lastMonth": "eelmine kuu",
     "year": "see aasta"
+  },
+  "home": {
+    "intro": "Kasuta Eesti ID-kaarti, Mobiil-ID-d, Smart-ID-d, e-posti või telefoni OAuth autentimisteenusena.",
+    "getStarted": "Alusta"
+  },
+  "signup": {
+    "title": "Registreerumine",
+    "welcome": "Tere tulemast!",
+    "secretOnce": "client_secret kuvatakse ainult üks kord - salvesta see kohe turvalisse kohta.",
+    "copy": "kopeeri",
+    "copied": "kopeeritud",
+    "continue": "Jätka {link}.",
+    "docs": "dokumentatsiooniga",
+    "failed": "Registreerumine ebaõnnestus",
+    "unknownError": "Tundmatu viga",
+    "alreadyIssued": "Kui oled oma tunnused juba kätte saanud, ei saa neid uuesti kuvada. Muul juhul palun {link}.",
+    "contact": "võta meiega ühendust"
   }
 }

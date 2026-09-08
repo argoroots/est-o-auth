@@ -6,7 +6,9 @@
     "terms": "Terms & Conditions",
     "redirecting": "Redirecting to {provider}...",
     "logIn": "Log in",
-    "tryAgain": "Try again"
+    "tryAgain": "Try again",
+    "cancel": "Cancel",
+    "loading": "Loading"
   },
   "provider": {
     "apple": "Apple",
@@ -19,7 +21,8 @@
   },
   "code": {
     "label": "Verification Code",
-    "invalid": "Invalid verification code!"
+    "invalid": "Invalid verification code!",
+    "wait": "Please wait {seconds} seconds before requesting a new code."
   },
   "email": {
     "label": "Email address",
@@ -45,7 +48,8 @@
     "scan": "Scan the QR code with your Smart-ID app, or tap it to open Smart-ID on this device.",
     "keepOpen": "Keep this page open until authentication is complete.",
     "starting": "Starting Smart-ID session…",
-    "language": "eng"
+    "language": "eng",
+    "qrLabel": "Smart-ID QR code"
   },
   "idCard": {
     "insert": "Please insert your ID-card into the card reader and follow the instructions on the screen.",
@@ -67,5 +71,22 @@
     "month": "this month",
     "lastMonth": "last month",
     "year": "this year"
+  },
+  "home": {
+    "intro": "Use Estonian ID-card, Mobile-ID, Smart-ID, E-mail or Phone as OAuth authentication provider.",
+    "getStarted": "Get Started"
+  },
+  "signup": {
+    "title": "Sign up",
+    "welcome": "Welcome!",
+    "secretOnce": "The client_secret is shown only once - store it in a safe place now.",
+    "copy": "copy",
+    "copied": "copied",
+    "continue": "Continue with the {link}.",
+    "docs": "documentation",
+    "failed": "Sign up failed",
+    "unknownError": "Unknown error",
+    "alreadyIssued": "If you have already received your credentials, they can not be shown again. Otherwise please {link}.",
+    "contact": "contact us"
   }
 }

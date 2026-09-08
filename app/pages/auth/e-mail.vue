@@ -1,6 +1,7 @@
 <script setup>
 definePageMeta({ middleware: ['check-query', 'check-provider'] })
-useHead({ title: useI18n().t('provider.e-mail') })
+const { t } = useI18n()
+useHead({ title: t('provider.e-mail') })
 
 const { query } = useRoute()
 const email = ref(query.email)
@@ -8,22 +9,39 @@ const code = ref(query.code)
 const isSending = ref(false)
 const isError = ref(false)
 const isEmailSent = ref(false)
+const waitSeconds = ref(0)
+const waitInterval = ref()
 
 if (email.value && !code.value) onStartSession()
 if (email.value && code.value) onAuthenticate()
 
+onUnmounted(() => clearInterval(waitInterval.value))
+
+// Resend cooldown from the server (429): count it down and block the button meanwhile
+function startWait (seconds) {
+  waitSeconds.value = seconds
+  clearInterval(waitInterval.value)
+  waitInterval.value = setInterval(() => {
+    waitSeconds.value -= 1
+
+    if (waitSeconds.value <= 0) clearInterval(waitInterval.value)
+  }, 1000)
+}
+
 async function onStartSession () {
-  if (!email.value?.trim()) return
+  if (!email.value?.trim() || waitSeconds.value > 0) return
 
   isSending.value = true
+  isError.value = false
 
   try {
     const data = await $fetch('/api/e-mail', { query: { ...query, email: email.value } })
 
     if (data.sent) isEmailSent.value = true
   }
-  catch {
-    isError.value = true
+  catch (error) {
+    if (error.statusCode === 429) startWait(60)
+    else isError.value = true
   }
 
   isSending.value = false
@@ -71,16 +89,28 @@ async function onAuthenticate () {
         :label="$t('email.label')"
         type="email"
         placeholder="jaak-kristjan@jõeorg.ee"
+        autocomplete="email"
         autofocus
-        @keypress.enter="onStartSession"
+        @keydown.enter="onStartSession"
       />
       <p
         v-if="isError"
         class="text-red-700"
+        aria-live="polite"
       >
         {{ $t('common.somethingWrong') }}
       </p>
-      <form-button @click="onStartSession">
+      <p
+        v-else-if="waitSeconds > 0"
+        class="text-red-700"
+        aria-live="polite"
+      >
+        {{ $t('code.wait', { seconds: waitSeconds }) }}
+      </p>
+      <form-button
+        :disabled="waitSeconds > 0"
+        @click="onStartSession"
+      >
         {{ $t('common.authenticate') }}
       </form-button>
     </template>
@@ -92,13 +122,17 @@ async function onAuthenticate () {
         id="code"
         v-model="code"
         :label="$t('code.label')"
-        placeholder="123ABC"
+        placeholder="123456"
+        inputmode="numeric"
+        autocomplete="one-time-code"
+        maxlength="6"
         autofocus
-        @keypress.enter="onAuthenticate"
+        @keydown.enter="onAuthenticate"
       />
       <p
         v-if="isError"
         class="text-red-700"
+        aria-live="polite"
       >
         {{ $t('code.invalid') }}
       </p>

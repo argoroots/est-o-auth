@@ -1,4 +1,7 @@
 <script setup>
+// Attributes such as inputmode, autocomplete, maxlength and key listeners go on the <input>, not the wrapper
+defineOptions({ inheritAttrs: false })
+
 const props = defineProps({
   modelValue: { type: String, default: '' },
   id: { type: String, required: true },
@@ -43,11 +46,12 @@ defineExpose({ focus })
       :id="id"
       ref="inputEl"
       v-model="text"
+      v-bind="$attrs"
       :type="type"
       :placeholder="placeholder"
       :autofocus="autofocus"
       class="peer"
-      @keypress.enter="emit('submit')"
+      @keydown.enter="emit('submit')"
       @blur="emit('blur')"
     >
     <label :for="id">{{ label }}</label>

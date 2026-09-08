@@ -1,9 +1,17 @@
 <script setup>
+defineProps({
+  disabled: { type: Boolean, default: false }
+})
+
 const emit = defineEmits(['click'])
 </script>
 
 <template>
-  <button @click.prevent="emit('click')">
+  <button
+    type="button"
+    :disabled="disabled"
+    @click.prevent="emit('click')"
+  >
     <slot />
   </button>
 </template>
@@ -22,5 +30,8 @@ button {
   @apply hover:bg-stone-100;
   @apply hover:text-stone-600;
   @apply active:bg-stone-200;
+  @apply disabled:opacity-50;
+  @apply disabled:hover:bg-transparent;
+  @apply disabled:cursor-not-allowed;
 }
 </style>

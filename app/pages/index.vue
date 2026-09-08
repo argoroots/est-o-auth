@@ -1,10 +1,10 @@
 <template>
   <form-wrapper>
     <p class="text-center">
-      Use Estonian ID-card, Mobile-ID, Smart-ID, E-mail or Phone as OAuth authentication provider.
+      {{ $t('home.intro') }}
     </p>
     <router-link to="/docs">
-      Get Started <icon-arrow-right />
+      {{ $t('home.getStarted') }} <icon-arrow-right />
     </router-link>
   </form-wrapper>
 </template>

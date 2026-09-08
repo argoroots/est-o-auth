@@ -9,6 +9,15 @@ const emit = defineEmits(['authenticate'])
 const { t, locale } = useI18n()
 const errorMessage = ref()
 const showInstallLink = ref(false)
+const errorHeading = ref()
+
+// Move focus to the error heading so screen readers announce it and keyboard users land on it
+watch(errorMessage, async (message) => {
+  if (!message) return
+
+  await nextTick()
+  errorHeading.value?.focus()
+})
 
 onMounted(async () => {
   try {
@@ -60,8 +69,15 @@ onMounted(async () => {
 
 <template>
   <template v-if="errorMessage">
-    <h2>{{ $t('common.error') }}</h2>
-    <p>{{ errorMessage }}</p>
+    <h2
+      ref="errorHeading"
+      tabindex="-1"
+    >
+      {{ $t('common.error') }}
+    </h2>
+    <p aria-live="polite">
+      {{ errorMessage }}
+    </p>
     <i18n-t
       v-if="showInstallLink"
       keypath="idCard.download"

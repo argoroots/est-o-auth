@@ -1,6 +1,7 @@
 <script setup>
 definePageMeta({ middleware: ['check-query', 'check-provider'] })
-useHead({ title: useI18n().t('provider.smart-id') })
+const { t } = useI18n()
+useHead({ title: t('provider.smart-id') })
 
 const { query } = useRoute()
 const session = ref(null)
@@ -13,10 +14,12 @@ const pollInterval = ref()
 
 onMounted(startSession)
 
-onUnmounted(() => {
+onUnmounted(stopPolling)
+
+function stopPolling () {
   clearInterval(qrInterval.value)
   clearInterval(pollInterval.value)
-})
+}
 
 async function startSession () {
   try {
@@ -59,8 +62,7 @@ async function pollStatus () {
 
     if (data.status === 'RUNNING') return
 
-    clearInterval(qrInterval.value)
-    clearInterval(pollInterval.value)
+    stopPolling()
 
     if (data.url) {
       await navigateTo(data.url, { external: true })
@@ -70,18 +72,27 @@ async function pollStatus () {
     }
   }
   catch {
-    clearInterval(qrInterval.value)
-    clearInterval(pollInterval.value)
+    stopPolling()
 
     isError.value = true
   }
+}
+
+// Stop waiting and return to the method chooser; the SK session simply expires on its own
+async function onCancel () {
+  stopPolling()
+
+  await navigateTo({ path: '/auth', query })
 }
 </script>
 
 <template>
   <form-wrapper>
     <template v-if="isError">
-      <p class="text-red-700">
+      <p
+        class="text-red-700"
+        aria-live="polite"
+      >
         {{ $t('common.somethingWrong') }}
       </p>
     </template>
@@ -99,6 +110,9 @@ async function pollStatus () {
       <p class="text-center text-sm text-gray-500">
         {{ $t('smartId.keepOpen') }}
       </p>
+      <form-button @click="onCancel">
+        {{ $t('common.cancel') }}
+      </form-button>
     </template>
 
     <template v-else>

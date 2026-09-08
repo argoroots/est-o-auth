@@ -12,5 +12,9 @@ watch(() => props.url, async (url) => {
 </script>
 
 <template>
-  <canvas ref="canvas" />
+  <canvas
+    ref="canvas"
+    role="img"
+    :aria-label="$t('smartId.qrLabel')"
+  />
 </template>

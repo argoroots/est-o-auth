@@ -1,5 +1,6 @@
 <script setup>
-useHead({ title: 'Sign up' })
+const { t } = useI18n()
+useHead({ title: t('signup.title') })
 
 const { query } = useRoute()
 
@@ -18,30 +19,26 @@ const copied = ref(null)
 async function onCopy (key) {
   try {
     await navigator.clipboard.writeText(data.value[key])
+    copied.value = key
+    setTimeout(() => {
+      copied.value = null
+    }, 2000)
   }
   catch {
-    // Clipboard API blocked: select the value and use the legacy copy command
+    // Clipboard API blocked: select the value so the user can copy it with the keyboard
     const range = document.createRange()
     range.selectNodeContents(document.getElementById(key))
     window.getSelection().removeAllRanges()
     window.getSelection().addRange(range)
-    document.execCommand('copy')
   }
-
-  copied.value = key
-  setTimeout(() => {
-    copied.value = null
-  }, 2000)
 }
 </script>
 
 <template>
   <form-wrapper v-if="query.session_id || isMock">
     <template v-if="data">
-      <h2>Welcome!</h2>
-      <p>
-        The <em>client_secret</em> is shown only once - store it in a safe place now.
-      </p>
+      <h2>{{ $t('signup.welcome') }}</h2>
+      <p>{{ $t('signup.secretOnce') }}</p>
       <div
         v-for="key in ['client_id', 'client_secret']"
         :key="key"
@@ -52,25 +49,37 @@ async function onCopy (key) {
             type="button"
             @click="onCopy(key)"
           >
-            {{ copied === key ? 'copied' : 'copy' }}
+            {{ copied === key ? $t('signup.copied') : $t('signup.copy') }}
           </button>
         </label>
         <pre :id="key">{{ data[key] }}</pre>
       </div>
-      <p>
-        Continue with the <a href="/docs">documentation</a>.
-      </p>
+      <i18n-t
+        keypath="signup.continue"
+        tag="p"
+      >
+        <template #link>
+          <a href="/docs">{{ $t('signup.docs') }}</a>
+        </template>
+      </i18n-t>
     </template>
 
     <template v-else>
-      <h2>Sign up failed</h2>
-      <p class="text-red-700">
-        {{ error?.statusMessage || 'Unknown error' }}
+      <h2>{{ $t('signup.failed') }}</h2>
+      <p
+        class="text-red-700"
+        aria-live="polite"
+      >
+        {{ error?.statusMessage || $t('signup.unknownError') }}
       </p>
-      <p>
-        If You have already received Your credentials, they can not be shown again. Otherwise please
-        <a href="mailto:argo@roots.ee?subject=OAuth.ee sign up failed">contact us</a>.
-      </p>
+      <i18n-t
+        keypath="signup.alreadyIssued"
+        tag="p"
+      >
+        <template #link>
+          <a href="mailto:argo@roots.ee?subject=OAuth.ee sign up failed">{{ $t('signup.contact') }}</a>
+        </template>
+      </i18n-t>
     </template>
   </form-wrapper>
 </template>

@@ -1,10 +1,15 @@
 <template>
-  <div class="py-10 text-yellow-600">
+  <div
+    class="py-10 text-yellow-600"
+    role="status"
+    :aria-label="$t('common.loading')"
+  >
     <svg
       class="mx-auto size-10 animate-spin"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
+      aria-hidden="true"
     >
       <circle
         class="opacity-10"

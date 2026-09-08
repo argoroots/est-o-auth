@@ -1,6 +1,7 @@
 <script setup>
 definePageMeta({ middleware: ['check-query', 'check-provider'] })
-useHead({ title: useI18n().t('provider.mobile-id') })
+const { t } = useI18n()
+useHead({ title: t('provider.mobile-id') })
 
 const { query } = useRoute()
 const idcode = ref(query.idcode)
@@ -83,6 +84,13 @@ async function onAuthenticate () {
   session.value = null
   isError.value = true
 }
+
+// Stop waiting for the phone and return to the form; the SK session simply expires on its own
+function onCancel () {
+  clearInterval(interval.value)
+  consent.value = null
+  session.value = null
+}
 </script>
 
 <template>
@@ -93,12 +101,14 @@ async function onAuthenticate () {
       <form-input
         id="idcode"
         v-model="idcode"
-        type="tel"
+        type="text"
+        inputmode="numeric"
         :label="$t('mobileId.idcode')"
         placeholder="38001085718"
+        maxlength="11"
         autofocus
         @blur="validateIdcode"
-        @keypress.enter="phoneInput?.focus()"
+        @keydown.enter="phoneInput?.focus()"
       />
       <form-input
         id="phone"
@@ -107,12 +117,14 @@ async function onAuthenticate () {
         type="tel"
         :label="$t('phone.label')"
         placeholder="+37200000000"
+        autocomplete="tel"
         @blur="validatePhone"
-        @keypress.enter="onStartSession"
+        @keydown.enter="onStartSession"
       />
       <p
         v-if="isError"
         class="text-red-700"
+        aria-live="polite"
       >
         {{ $t('mobileId.checkDetails') }}
       </p>
@@ -125,9 +137,15 @@ async function onAuthenticate () {
       <p>
         {{ $t('mobileId.enterPin') }}
       </p>
-      <p class="consent">
+      <p
+        class="consent"
+        aria-live="polite"
+      >
         {{ consent }}
       </p>
+      <form-button @click="onCancel">
+        {{ $t('common.cancel') }}
+      </form-button>
     </template>
   </form-wrapper>
 </template>

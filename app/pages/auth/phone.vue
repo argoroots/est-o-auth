@@ -1,6 +1,7 @@
 <script setup>
 definePageMeta({ middleware: ['check-query', 'check-provider'] })
-useHead({ title: useI18n().t('provider.phone') })
+const { t } = useI18n()
+useHead({ title: t('provider.phone') })
 
 const { query } = useRoute()
 const phone = ref(query.phone)
@@ -8,12 +9,27 @@ const code = ref(query.code)
 const isSending = ref(false)
 const isError = ref(false)
 const isPhoneSent = ref(false)
+const waitSeconds = ref(0)
+const waitInterval = ref()
 
 if (phone.value && !code.value) onStartSession()
 if (phone.value && code.value) onAuthenticate()
 
+onUnmounted(() => clearInterval(waitInterval.value))
+
+// Resend cooldown from the server (429): count it down and block the button meanwhile
+function startWait (seconds) {
+  waitSeconds.value = seconds
+  clearInterval(waitInterval.value)
+  waitInterval.value = setInterval(() => {
+    waitSeconds.value -= 1
+
+    if (waitSeconds.value <= 0) clearInterval(waitInterval.value)
+  }, 1000)
+}
+
 async function onStartSession () {
-  if (!phone.value) return
+  if (!phone.value || waitSeconds.value > 0) return
 
   phone.value = phone.value.replace(/\D/g, '')
 
@@ -22,14 +38,16 @@ async function onStartSession () {
   phone.value = '+' + phone.value
 
   isSending.value = true
+  isError.value = false
 
   try {
     const data = await $fetch('/api/phone', { query: { ...query, phone: phone.value } })
 
     if (data.sent) isPhoneSent.value = true
   }
-  catch {
-    isError.value = true
+  catch (error) {
+    if (error.statusCode === 429) startWait(60)
+    else isError.value = true
   }
 
   isSending.value = false
@@ -77,16 +95,28 @@ async function onAuthenticate () {
         type="tel"
         :label="$t('phone.label')"
         placeholder="+37200000000"
+        autocomplete="tel"
         autofocus
-        @keypress.enter="onStartSession"
+        @keydown.enter="onStartSession"
       />
       <p
         v-if="isError"
         class="text-red-700"
+        aria-live="polite"
       >
         {{ $t('common.somethingWrong') }}
       </p>
-      <form-button @click="onStartSession">
+      <p
+        v-else-if="waitSeconds > 0"
+        class="text-red-700"
+        aria-live="polite"
+      >
+        {{ $t('code.wait', { seconds: waitSeconds }) }}
+      </p>
+      <form-button
+        :disabled="waitSeconds > 0"
+        @click="onStartSession"
+      >
         {{ $t('common.authenticate') }}
       </form-button>
     </template>
@@ -98,13 +128,17 @@ async function onAuthenticate () {
         id="code"
         v-model="code"
         :label="$t('code.label')"
-        placeholder="123ABC"
+        placeholder="123456"
+        inputmode="numeric"
+        autocomplete="one-time-code"
+        maxlength="6"
         autofocus
-        @keypress.enter="onAuthenticate"
+        @keydown.enter="onAuthenticate"
       />
       <p
         v-if="isError"
         class="text-red-700"
+        aria-live="polite"
       >
         {{ $t('code.invalid') }}
       </p>

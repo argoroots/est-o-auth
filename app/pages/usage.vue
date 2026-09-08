@@ -8,7 +8,8 @@ function sum (data) {
   return Object.values(data).reduce((a, b) => a + b, 0)
 }
 
-useHead({ title: `${client.value.client} ${useI18n().t('usage.title')}` })
+const { t } = useI18n()
+useHead({ title: `${client.value.client} ${t('usage.title')}` })
 </script>
 
 <template>

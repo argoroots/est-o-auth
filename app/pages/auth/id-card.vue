@@ -1,6 +1,7 @@
 <script setup>
 definePageMeta({ middleware: ['check-query', 'check-provider'] })
-useHead({ title: useI18n().t('provider.id-card') })
+const { t } = useI18n()
+useHead({ title: t('provider.id-card') })
 
 const { query } = useRoute()
 
@@ -37,7 +38,10 @@ async function onRetry () {
 <template>
   <form-wrapper class="text-center">
     <template v-if="isError">
-      <p class="text-red-700">
+      <p
+        class="text-red-700"
+        aria-live="polite"
+      >
         {{ $t('common.somethingWrong') }}
       </p>
       <form-button @click="onRetry">

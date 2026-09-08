@@ -6,7 +6,9 @@
     "terms": "Käyttöehdot",
     "redirecting": "Ohjataan palveluun {provider}...",
     "logIn": "Kirjaudu sisään",
-    "tryAgain": "Yritä uudelleen"
+    "tryAgain": "Yritä uudelleen",
+    "cancel": "Peruuta",
+    "loading": "Ladataan"
   },
   "provider": {
     "apple": "Apple",
@@ -19,7 +21,8 @@
   },
   "code": {
     "label": "Vahvistuskoodi",
-    "invalid": "Virheellinen vahvistuskoodi!"
+    "invalid": "Virheellinen vahvistuskoodi!",
+    "wait": "Odota {seconds} sekuntia ennen uuden koodin pyytämistä."
   },
   "email": {
     "label": "Sähköpostiosoite",
@@ -45,7 +48,8 @@
     "scan": "Skannaa QR-koodi Smart-ID-sovelluksella tai napauta sitä avataksesi Smart-ID:n tällä laitteella.",
     "keepOpen": "Pidä tämä sivu auki, kunnes tunnistautuminen on valmis.",
     "starting": "Aloitetaan Smart-ID-istuntoa…",
-    "language": "eng"
+    "language": "eng",
+    "qrLabel": "Smart-ID QR-koodi"
   },
   "idCard": {
     "insert": "Aseta ID-kortti kortinlukijaan ja seuraa näytön ohjeita.",
@@ -67,5 +71,22 @@
     "month": "tämä kuukausi",
     "lastMonth": "viime kuukausi",
     "year": "tämä vuosi"
+  },
+  "home": {
+    "intro": "Käytä virolaista ID-korttia, Mobiili-ID:tä, Smart-ID:tä, sähköpostia tai puhelinta OAuth-tunnistautumispalveluna.",
+    "getStarted": "Aloita"
+  },
+  "signup": {
+    "title": "Rekisteröityminen",
+    "welcome": "Tervetuloa!",
+    "secretOnce": "client_secret näytetään vain kerran - tallenna se heti turvalliseen paikkaan.",
+    "copy": "kopioi",
+    "copied": "kopioitu",
+    "continue": "Jatka {link}.",
+    "docs": "dokumentaatioon",
+    "failed": "Rekisteröityminen epäonnistui",
+    "unknownError": "Tuntematon virhe",
+    "alreadyIssued": "Jos olet jo saanut tunnuksesi, niitä ei voi näyttää uudelleen. Muussa tapauksessa {link}.",
+    "contact": "ota meihin yhteyttä"
   }
 }

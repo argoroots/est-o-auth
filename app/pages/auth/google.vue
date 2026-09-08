@@ -1,6 +1,7 @@
 <script setup>
 definePageMeta({ middleware: ['check-query', 'check-provider'] })
-useHead({ title: useI18n().t('provider.google') })
+const { t } = useI18n()
+useHead({ title: t('provider.google') })
 
 const { query } = useRoute()
 const { data, error } = await useFetch('/api/google', { query })
@@ -15,6 +16,7 @@ onMounted(async () => {
     <p
       v-if="error || !data?.url"
       class="text-red-700"
+      aria-live="polite"
     >
       {{ $t('common.somethingWrong') }}
     </p>
