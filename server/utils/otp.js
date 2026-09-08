@@ -11,9 +11,10 @@ export function isEmail (value) {
   return typeof value === 'string' && value.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
 }
 
-// E.164: leading + and 7 to 15 digits
+// Estonian number only, +372 and 7 or 8 digits: this service authenticates Estonian users, and refusing
+// every other country removes the premium-rate ranges that SMS pumping relies on
 export function isPhone (value) {
-  return typeof value === 'string' && /^\+\d{7,15}$/.test(value)
+  return typeof value === 'string' && /^\+372\d{7,8}$/.test(value)
 }
 
 // Estonian personal identification code, GYYMMDDSSSC: G is sex and century (1-2: 1800s, 3-4: 1900s,
