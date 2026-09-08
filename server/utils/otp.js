@@ -16,6 +16,33 @@ export function isPhone (value) {
   return typeof value === 'string' && /^\+\d{7,15}$/.test(value)
 }
 
+// Estonian personal identification code, GYYMMDDSSSC: G is sex and century (1-2: 1800s, 3-4: 1900s,
+// 5-6: 2000s, 7-8: 2100s; odd male, even female), YYMMDD the date of birth, SSS a serial number and
+// C a modulo 11 check digit. Requires a real calendar date not in the future and a correct check digit.
+export function isIdcode (value) {
+  if (typeof value !== 'string' || !/^[1-8]\d{10}$/.test(value)) return false
+
+  const digits = Array.from(value, Number)
+
+  const century = 1800 + Math.floor((digits[0] - 1) / 2) * 100
+  const year = century + Number(value.substring(1, 3))
+  const month = Number(value.substring(3, 5))
+  const day = Number(value.substring(5, 7))
+  const birthDate = new Date(Date.UTC(year, month - 1, day))
+  const isRealDate = birthDate.getUTCFullYear() === year && birthDate.getUTCMonth() === month - 1 && birthDate.getUTCDate() === day
+
+  if (!isRealDate || birthDate > new Date()) return false
+
+  const checksum = (weights) => weights.reduce((sum, weight, i) => sum + weight * digits[i], 0) % 11
+
+  let check = checksum([1, 2, 3, 4, 5, 6, 7, 8, 9, 1])
+
+  if (check === 10) check = checksum([3, 4, 5, 6, 7, 8, 9, 1, 2, 3])
+  if (check === 10) check = 0
+
+  return check === digits[10]
+}
+
 // Creates and stores a fresh code for the target, replacing any earlier one that is past the resend
 // cooldown. fixedCode is for the test user.
 export async function createOtp (key, data, fixedCode) {

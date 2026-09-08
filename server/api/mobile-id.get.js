@@ -6,6 +6,9 @@ export default defineEventHandler(async (event) => {
   const client = await validateRequest(query, 'mobile-id', ['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'idcode', 'phone'])
   const session = randomUUID().replaceAll('-', '')
 
+  if (!isIdcode(query.idcode)) throw createError({ statusCode: 400, statusMessage: 'Invalid ID code' })
+  if (!isPhone(query.phone)) throw createError({ statusCode: 400, statusMessage: 'Invalid phone number' })
+
   await checkUsageLimit(client.id, 'mobile-id')
 
   // Starting a session prompts the phone of the person with this ID code; one prompt per minute per person
