@@ -5,7 +5,8 @@
     "somethingWrong": "Jokin meni pieleen. Yritä uudelleen.",
     "terms": "Käyttöehdot",
     "redirecting": "Ohjataan palveluun {provider}...",
-    "logIn": "Kirjaudu sisään"
+    "logIn": "Kirjaudu sisään",
+    "tryAgain": "Yritä uudelleen"
   },
   "provider": {
     "apple": "Apple",

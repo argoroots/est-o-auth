@@ -20,7 +20,9 @@ onMounted(async () => {
   catch (error) {
     switch (error.code) {
       case ErrorCode.ERR_WEBEID_USER_CANCELLED:
-        history.back()
+        // Back to the method chooser with the same OAuth query; history.back() would do nothing
+        // when this page was opened directly by the client
+        await navigateTo({ path: '/auth', query: useRoute().query })
         break
       case ErrorCode.ERR_WEBEID_ACTION_TIMEOUT:
       case ErrorCode.ERR_WEBEID_USER_TIMEOUT:

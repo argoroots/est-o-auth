@@ -3,16 +3,26 @@ definePageMeta({ middleware: ['check-query', 'check-provider'] })
 useHead({ title: useI18n().t('provider.google') })
 
 const { query } = useRoute()
-const { data } = await useFetch('/api/google', { query })
+const { data, error } = await useFetch('/api/google', { query })
 
-onMounted(async () => await navigateTo(data.value.url, { external: true }))
+onMounted(async () => {
+  if (data.value?.url) await navigateTo(data.value.url, { external: true })
+})
 </script>
 
 <template>
   <form-wrapper>
-    <p class="mt-4 text-center">
-      {{ $t('common.redirecting', { provider: 'Google' }) }}
+    <p
+      v-if="error || !data?.url"
+      class="text-red-700"
+    >
+      {{ $t('common.somethingWrong') }}
     </p>
-    <form-spinner />
+    <template v-else>
+      <p class="mt-4 text-center">
+        {{ $t('common.redirecting', { provider: 'Google' }) }}
+      </p>
+      <form-spinner />
+    </template>
   </form-wrapper>
 </template>

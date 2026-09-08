@@ -5,7 +5,8 @@
     "somethingWrong": "Something went wrong. Please try again.",
     "terms": "Terms & Conditions",
     "redirecting": "Redirecting to {provider}...",
-    "logIn": "Log in"
+    "logIn": "Log in",
+    "tryAgain": "Try again"
   },
   "provider": {
     "apple": "Apple",

@@ -4,7 +4,7 @@ useHead({ title: useI18n().t('provider.id-card') })
 
 const { query } = useRoute()
 
-const { data: nonceData, error: nonceError } = await useFetch('/api/id-card', { query })
+const { data: nonceData, error: nonceError, refresh } = await useFetch('/api/id-card', { query })
 const isError = ref(!!nonceError.value)
 
 async function onAuthenticate (authResponse) {
@@ -21,19 +21,29 @@ async function onAuthenticate (authResponse) {
     if (data.url) await navigateTo(data.url, { external: true })
   }
   catch {
+    // Signature rejected, or the nonce expired while the card dialog was open
     isError.value = true
   }
+}
+
+// A fresh nonce; the web-eid component remounts and starts the card dialog again
+async function onRetry () {
+  await refresh()
+
+  isError.value = !!nonceError.value
 }
 </script>
 
 <template>
   <form-wrapper class="text-center">
-    <p
-      v-if="isError"
-      class="text-red-700"
-    >
-      {{ $t('common.somethingWrong') }}
-    </p>
+    <template v-if="isError">
+      <p class="text-red-700">
+        {{ $t('common.somethingWrong') }}
+      </p>
+      <form-button @click="onRetry">
+        {{ $t('common.tryAgain') }}
+      </form-button>
+    </template>
     <web-eid
       v-else-if="nonceData"
       :nonce="nonceData.nonce"
