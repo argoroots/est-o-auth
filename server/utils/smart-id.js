@@ -17,7 +17,7 @@ export async function verifySmartIdResponse (skResponse, sidSession) {
 
   const x509 = new X509Certificate(Buffer.from(cert.value, 'base64'))
 
-  await checkTrustedCertificate(x509, 'smart-id')
+  await checkTrustedCertificate(x509, 'smart-id', `level=${cert.certificateLevel}`)
 
   // ACSP_V2 payload; initialCallbackUrl is part of it only for the Web2App flow
   const payload = [
