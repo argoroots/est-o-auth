@@ -54,7 +54,12 @@ export async function checkTrustedCertificate (cert, method) {
   const issuers = await getTrustedIssuers(method)
   const issuer = issuers.find(({ cert: ca }) => cert.checkIssued(ca))
 
-  if (!issuer || !cert.verify(issuer.cert.publicKey)) throw authError('cert.untrusted')
+  // The issuer name is the CA, not personal data; it tells which CA to add when SK starts using a new one
+  if (!issuer || !cert.verify(issuer.cert.publicKey)) {
+    console.warn(`[cert] ${method} certificate issuer not trusted: ${logSafe(cert.issuer.replaceAll('\n', ', '))}`)
+
+    throw authError('cert.untrusted')
+  }
 
   return issuer
 }
