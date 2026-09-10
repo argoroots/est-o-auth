@@ -7,12 +7,13 @@ const TRUSTED_ISSUERS = {
     { file: 'esteid2018.pem.crt', ocsp: 'http://aia.sk.ee/esteid2018' },
     { file: 'ESTEID-SK_2015.pem.crt', ocsp: 'http://aia.sk.ee/esteid2015' }
   ],
-  // Smart-ID QUALIFIED accounts (E = active issuing CA, R = backup CA)
+  // Smart-ID QUALIFIED accounts (E = active issuing CA, R = backup CA); EID-SK 2016 issued accounts before 2021 and those certificates are still in use
   'smart-id': [
     { file: 'EID_Q_2024E.pem.crt' },
     { file: 'EID_Q_2024R.pem.crt' },
     { file: 'EID_Q_2021E.pem.crt' },
-    { file: 'EID_Q_2021R.pem.crt' }
+    { file: 'EID_Q_2021R.pem.crt' },
+    { file: 'EID-SK_2016.pem.crt' }
   ],
   // Mobile-ID, per https://github.com/SK-EID/MID/wiki/Environment-technical-parameters
   'mobile-id': [

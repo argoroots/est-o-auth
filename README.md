@@ -68,7 +68,7 @@ issuing CAs in `server/assets/certs/`:
 |---|---|---|
 | `esteid2018.pem.crt` | ESTEID2018 | ID-card |
 | `ESTEID-SK_2015.pem.crt` | ESTEID-SK 2015 | ID-card, Mobile-ID |
-| `EID-SK_2016.pem.crt` | EID-SK 2016 | Mobile-ID |
+| `EID-SK_2016.pem.crt` | EID-SK 2016 | Smart-ID (accounts from before 2021), Mobile-ID |
 | `EID_Q_2021E.pem.crt`, `EID_Q_2021R.pem.crt` | SK ID Solutions EID-Q 2021E / 2021R | Smart-ID, Mobile-ID |
 | `EID_Q_2024E.pem.crt`, `EID_Q_2024R.pem.crt` | SK ID Solutions EID-Q 2024E / 2024R | Smart-ID |
 
