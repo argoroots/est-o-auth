@@ -10,8 +10,6 @@ const qrUrl = ref(null)
 const deviceLinkUrl = ref(null)
 const errorText = ref('')
 
-// QR links come in batches of one per second; the page steps through them locally
-let qrUrls = []
 let stopQr
 let stopPoll
 
@@ -29,7 +27,7 @@ onUnmounted(() => {
 // Starts the QR rotation and the status poll
 function startLoops () {
   stopLoops()
-  stopQr = startPolling(nextQr, 1000)
+  stopQr = startPolling(refreshQr, 1000)
   stopPoll = startPolling(pollStatus, 5000)
 }
 
@@ -67,22 +65,17 @@ async function startSession () {
   }
 }
 
-// Shows the next QR link from the batch, fetching a new batch when this one runs out
-async function nextQr () {
-  if (qrUrls.length === 0) {
-    try {
-      const data = await $fetch('/api/smart-id-link', { query: { session: session.value } })
+// Fetches the QR link for the current second; SK requires a fresh authCode every second, computed on the server
+async function refreshQr () {
+  try {
+    const data = await $fetch('/api/smart-id-link', { query: { session: session.value } })
 
-      qrUrls = data.qrUrls
-      deviceLinkUrl.value = data.deviceLinkUrl
-    }
-    catch {
-      // Session may have expired; the status poll reports the error
-      return
-    }
+    qrUrl.value = data.qrUrl
+    deviceLinkUrl.value = data.deviceLinkUrl
   }
-
-  qrUrl.value = qrUrls.shift()
+  catch {
+    // Session may have expired; the status poll reports the error
+  }
 }
 
 // One status poll; success leaves for the client's redirect_uri

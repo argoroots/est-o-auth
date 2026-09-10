@@ -1,9 +1,6 @@
 import { createHmac } from 'crypto'
 
-// QR links are valid for one second each, so a batch lets the page fetch once per QR_BATCH_SECONDS
-const QR_BATCH_SECONDS = 30
-
-// Smart-ID device links for a session: one QR link per upcoming second and the same-device Web2App link
+// Smart-ID device links for a session: the QR link for this second and the same-device Web2App link; SK forbids generating authCodes ahead of time, so the page asks every second
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
@@ -23,7 +20,7 @@ export default defineEventHandler(async (event) => {
   }
 
   return {
-    qrUrls: Array.from({ length: QR_BATCH_SECONDS }, (_, i) => link('QR', `elapsedSeconds=${elapsedSeconds + i}&`, '')),
+    qrUrl: link('QR', `elapsedSeconds=${elapsedSeconds}&`, ''),
     deviceLinkUrl: link('Web2App', '', initialCallbackUrl)
   }
 })
