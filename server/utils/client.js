@@ -13,12 +13,12 @@ export async function validateRequest (data, provider, requiredParams = []) {
   if (!client) throw apiError(403, 'client.invalid')
   if (provider && !client.providers?.includes(provider)) throw apiError(400, 'client.providerNotEnabled')
 
-  // Not enforced yet: log what each client sends so registered URIs can be filled in first
+  // Not enforced yet: log unregistered URIs so registered URIs can be filled in first
   if (data.redirect_uri) {
     const hasRegistered = client.redirectUris?.length > 0
     const isRegistered = hasRegistered && client.redirectUris.some((r) => isRegisteredRedirect(r, data.redirect_uri))
 
-    console.info(`[redirect] client ${client.id} redirect_uri ${logSafe(data.redirect_uri)} registered=${isRegistered}${hasRegistered ? '' : ' (none configured)'}`)
+    if (!isRegistered) console.info(`[redirect] client ${client.id} redirect_uri ${logSafe(data.redirect_uri)} not registered${hasRegistered ? '' : ' (none configured)'}`)
 
     // Once every active client's redirectUris is filled in from the logs, enforce with: if (hasRegistered && !isRegistered) throw apiError(400, 'client.redirectNotRegistered')
   }
