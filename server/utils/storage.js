@@ -194,34 +194,34 @@ export async function checkUsageLimit (client, provider) {
   throw apiError(429, 'limit.monthly')
 }
 
-// Per-provider counters for today, yesterday, this month, last month and this year (UTC, like setUsage)
-export async function getUsage (client) {
+// Per-provider counters keyed by date: the last 12 months (YYYY-MM), or every day (YYYY-MM-DD) of month; UTC, like setUsage
+export async function getUsage (client, month) {
   const now = new Date()
-  const utc = (y, m, d) => new Date(Date.UTC(y, m, d)).toISOString()
-  const periods = {
-    today: now.toISOString().substring(0, 10),
-    yesterday: utc(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - 1).substring(0, 10),
-    month: now.toISOString().substring(0, 7),
-    lastMonth: utc(now.getUTCFullYear(), now.getUTCMonth() - 1, 1).substring(0, 7),
-    year: now.toISOString().substring(0, 4)
-  }
+  const dates = month
+    ? Array.from({ length: new Date(Date.UTC(...month.split('-').map(Number), 0)).getUTCDate() }, (_, i) => `${month}-${String(i + 1).padStart(2, '0')}`)
+    : Array.from({ length: 12 }, (_, i) => new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 11 + i, 1)).toISOString().substring(0, 7))
 
-  // One batch read for every provider x period (35 keys, under the 100-key limit)
-  const keys = PROVIDER_IDS.flatMap((provider) => Object.values(periods).map((date) => ({
+  const keys = PROVIDER_IDS.flatMap((provider) => dates.map((date) => ({
     client: { S: client },
     date: { S: `${provider}-${date}` }
   })))
 
-  const { Responses } = await getDynamo().send(new BatchGetItemCommand({ RequestItems: { 'oauth-usage': { Keys: keys } } }))
-  const counts = Object.fromEntries((Responses?.['oauth-usage'] ?? []).map((item) => [item.date.S, parseInt(item.requests?.N ?? '0')]))
+  const counts = {}
 
-  const result = {}
+  // BatchGetItem takes at most 100 keys and may return some of them as unprocessed
+  await Promise.all(Array.from({ length: Math.ceil(keys.length / 100) }, async (_, i) => {
+    let request = { 'oauth-usage': { Keys: keys.slice(i * 100, (i + 1) * 100) } }
 
-  for (const [period, date] of Object.entries(periods)) {
-    result[period] = Object.fromEntries(PROVIDER_IDS.map((provider) => [provider, counts[`${provider}-${date}`] ?? 0]))
-  }
+    while (request) {
+      const { Responses, UnprocessedKeys } = await getDynamo().send(new BatchGetItemCommand({ RequestItems: request }))
 
-  return result
+      for (const item of Responses?.['oauth-usage'] ?? []) counts[item.date.S] = parseInt(item.requests?.N ?? '0')
+
+      request = Object.keys(UnprocessedKeys ?? {}).length ? UnprocessedKeys : null
+    }
+  }))
+
+  return Object.fromEntries(dates.map((date) => [date, Object.fromEntries(PROVIDER_IDS.map((provider) => [provider, counts[`${provider}-${date}`] ?? 0]))]))
 }
 
 // Creates a client row; 409 if the id already exists

@@ -55,6 +55,7 @@
       "idcode": "Invalid ID code",
       "idToken": "Invalid id_token",
       "idTokenKey": "Unknown id_token signing key",
+      "month": "Invalid month",
       "phone": "Invalid phone number",
       "phoneOrCode": "Invalid phone or code",
       "responseType": "The response_type must be \"code\"",
@@ -185,11 +186,9 @@
     "starting": "Starting Smart-ID session…"
   },
   "usage": {
-    "lastMonth": "last month",
-    "month": "this month",
+    "back": "Back",
     "title": "usage",
-    "today": "today",
-    "year": "this year",
-    "yesterday": "yesterday"
+    "total": "total",
+    "week": "week {week}"
   }
 }

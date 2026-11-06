@@ -55,6 +55,7 @@
       "idcode": "Vigane isikukood",
       "idToken": "Vigane id_token",
       "idTokenKey": "Tundmatu id_token allkirjavõti",
+      "month": "Vigane kuu",
       "phone": "Vigane telefoninumber",
       "phoneOrCode": "Vigane telefoninumber või kood",
       "responseType": "response_type peab olema \"code\"",
@@ -185,11 +186,9 @@
     "starting": "Smart-ID sessiooni alustamine…"
   },
   "usage": {
-    "lastMonth": "eelmine kuu",
-    "month": "see kuu",
+    "back": "Tagasi",
     "title": "kasutus",
-    "today": "täna",
-    "year": "see aasta",
-    "yesterday": "eile"
+    "total": "kokku",
+    "week": "{week}. nädal"
   }
 }

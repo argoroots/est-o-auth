@@ -55,6 +55,7 @@
       "idcode": "Virheellinen henkilötunnus",
       "idToken": "Virheellinen id_token",
       "idTokenKey": "Tuntematon id_token-allekirjoitusavain",
+      "month": "Virheellinen kuukausi",
       "phone": "Virheellinen puhelinnumero",
       "phoneOrCode": "Virheellinen puhelinnumero tai koodi",
       "responseType": "response_type-arvon on oltava \"code\"",
@@ -185,11 +186,9 @@
     "starting": "Aloitetaan Smart-ID-istuntoa…"
   },
   "usage": {
-    "lastMonth": "viime kuukausi",
-    "month": "tämä kuukausi",
+    "back": "Takaisin",
     "title": "käyttö",
-    "today": "tänään",
-    "year": "tämä vuosi",
-    "yesterday": "eilen"
+    "total": "yhteensä",
+    "week": "viikko {week}"
   }
 }
