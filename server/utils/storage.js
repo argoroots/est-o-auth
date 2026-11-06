@@ -194,11 +194,26 @@ export async function checkUsageLimit (client, provider) {
   throw apiError(429, 'limit.monthly')
 }
 
-// Per-provider counters keyed by date: the last 12 months (YYYY-MM), or every day (YYYY-MM-DD) of month; UTC, like setUsage
+// Every day (YYYY-MM-DD) of the Monday-Sunday weeks that touch month, so its first and last week are whole
+function monthWeekDays (month) {
+  const [y, m] = month.split('-').map(Number)
+  const first = new Date(Date.UTC(y, m - 1, 1))
+  const last = new Date(Date.UTC(y, m, 0))
+  const dates = []
+
+  first.setUTCDate(first.getUTCDate() - (first.getUTCDay() + 6) % 7)
+  last.setUTCDate(last.getUTCDate() + (7 - last.getUTCDay()) % 7)
+
+  for (const d = first; d <= last; d.setUTCDate(d.getUTCDate() + 1)) dates.push(d.toISOString().substring(0, 10))
+
+  return dates
+}
+
+// Per-provider counters keyed by date: the last 12 months (YYYY-MM), or every day (YYYY-MM-DD) of the weeks of month; UTC, like setUsage
 export async function getUsage (client, month) {
   const now = new Date()
   const dates = month
-    ? Array.from({ length: new Date(Date.UTC(...month.split('-').map(Number), 0)).getUTCDate() }, (_, i) => `${month}-${String(i + 1).padStart(2, '0')}`)
+    ? monthWeekDays(month)
     : Array.from({ length: 12 }, (_, i) => new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 11 + i, 1)).toISOString().substring(0, 7))
 
   const keys = PROVIDER_IDS.flatMap((provider) => dates.map((date) => ({

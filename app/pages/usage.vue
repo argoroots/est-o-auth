@@ -67,7 +67,7 @@ function addCounts (a, b) {
   return Object.fromEntries(PROVIDER_IDS.map((p) => [p, (a?.[p] || 0) + (b[p] || 0)]))
 }
 
-// Weeks of the open month, cut to the days inside it, so week totals add up to the month
+// Whole weeks of the open month; the first and last also count days of the neighbouring months
 const weeks = computed(() => {
   const result = []
 
@@ -138,9 +138,6 @@ const range = computed(() => {
   return [dates[0], dates.at(-1)].map((d) => d.split('-').reverse().join('.')).join(' – ')
 })
 
-// Total column only on the 12 months; drilled down, it repeats the column that was opened
-const total = computed(() => month.value ? null : columns.value.reduce((a, c) => addCounts(a, c.counts), null))
-
 // Total across providers for one column
 function sum (data) {
   return Object.values(data).reduce((a, b) => a + b, 0)
@@ -158,7 +155,17 @@ function number (value) {
       <table class="w-full">
         <thead>
           <tr>
-            <th />
+            <th class="text-left!">
+              <button
+                v-if="month"
+                class="cursor-pointer text-2xl leading-none text-gray-500 hover:text-black disabled:cursor-wait"
+                :aria-label="$t('usage.back')"
+                :disabled="loading"
+                @click="week ? openMonth(month) : openMonths()"
+              >
+                ←
+              </button>
+            </th>
             <th
               v-for="c in columns"
               :key="c.key"
@@ -178,12 +185,6 @@ function number (value) {
                 {{ c.subtitle }}
               </div>
             </th>
-            <th
-              v-if="total"
-              class="font-bold"
-            >
-              {{ $t('usage.total') }}
-            </th>
           </tr>
         </thead>
         <tbody>
@@ -200,12 +201,6 @@ function number (value) {
             >
               {{ number(c.counts[p]) }}
             </td>
-            <td
-              v-if="total"
-              class="font-bold"
-            >
-              {{ number(total[p]) }}
-            </td>
           </tr>
         </tbody>
         <tfoot>
@@ -217,35 +212,22 @@ function number (value) {
             >
               {{ number(sum(c.counts)) || 0 }}
             </td>
-            <td
-              v-if="total"
-              class="font-bold"
-            >
-              {{ number(sum(total)) || 0 }}
-            </td>
           </tr>
         </tfoot>
       </table>
     </div>
 
-    <nav class="mt-8.5 flex flex-wrap gap-2 text-sm text-gray-500">
-      <button
-        v-if="month"
-        class="cursor-pointer hover:underline disabled:cursor-wait"
-        :aria-label="$t('usage.back')"
-        :disabled="loading"
-        @click="week ? openMonth(month) : openMonths()"
-      >
-        ←
-      </button>
-      <span>{{ range }}</span>
-      <span v-if="loading">…</span>
-      <span
+    <nav class="mt-8.5 text-center text-sm text-gray-500">
+      <div>
+        {{ range }}
+        <span v-if="loading">…</span>
+      </div>
+      <div
         v-if="failed"
-        class="text-red-600"
+        class="mt-2 text-red-600"
       >
         {{ $t('common.somethingWrong') }}
-      </span>
+      </div>
     </nav>
   </div>
 </template>
@@ -272,10 +254,5 @@ tbody td:not(:last-child) {
 tfoot th,
 tfoot td {
   @apply border-0;
-}
-
-td.font-bold,
-th.font-bold {
-  @apply font-bold;
 }
 </style>

@@ -1,5 +1,5 @@
 // Usage counters for a client; public by decision and apart from /api/client so the login flow never pays for it
-// Without month: the last 12 months; with month=YYYY-MM: every day of that month
+// Without month: the last 12 months; with month=YYYY-MM: every day of the whole weeks that touch that month
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
